@@ -3,13 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <title>Calc Square</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;700&display=swap"
+rel="stylesheet">
 
 <style>
 
 body{
+
 margin:0;
-background:#f2f2f2;
-font-family:Arial;
+
+font-family:'Exo 2',sans-serif;
+
+background:#e7e7e7;
+
+position:relative;
+
+overflow-x:hidden;
+
+font-weight:500;
+}
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+top:50%;
+
+left:50%;
+
+transform:
+translate(-50%,-50%);
+
+width:90vw;
+
+height:90vh;
+
+background:
+
+url("./assets/images/calc_square_logo.png")
+center
+
+no-repeat;
+
+background-size:
+contain;
+
+opacity:.04;
+
+pointer-events:none;
+
+z-index:-1;
+
+filter:
+contrast(.92)
+brightness(.92);
+
 }
 
 .wrap{
@@ -30,10 +86,51 @@ opacity:0.92;
 }
 
 .subtitle{
-font-size:20px;
-font-weight:700;
+
+width:100%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+font-family:'Exo 2',sans-serif;
+
+font-size:72px;
+
+font-style:italic;
+
+font-weight:500;
+
+letter-spacing:10px;
+
+transform:scaleX(1.22) scaleY(1.8);
+
+transform-origin:center;
+
+margin:40px auto 90px;
+
+text-transform:uppercase;
+
+line-height:1;
+
+color:#555B63;
+
+}
+
+.status{
 margin-top:18px;
-letter-spacing:2px;
+font-size:18px;
+opacity:.55;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+height:60px;
 }
 
 .wrap{
@@ -41,44 +138,389 @@ position:relative;
 }
 
 .logo img{
-width:700px;
-max-width:100%;
+max-width:260px;
+width:60%;
 }
 
 .subtitle{
+
+width:100%;
+
+text-align:center;
+
 font-size:28px;
-font-weight:bold;
-margin-top:20px;
+
+font-weight:700;
+
+margin:0 auto 36px;
+
+letter-spacing:1px;
+
 }
 
-.grid{
+
+h1,
+h2,
+.item{
+
+color:#171717;
+
+text-shadow:
+0 1px 2px rgba(255,255,255,.65);
+
+}
+
+.catalog{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+width:min(1500px,95vw);
+
+margin:0 auto;
+
+gap:34px;
+
+}
+
+.cards{
+
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:30px;
+
+grid-template-columns:
+repeat(
+auto-fit,
+minmax(460px,1fr)
+);
+
+gap:40px;
+
+width:100%;
+
+align-items:start;
+
+justify-content:center;
+
+}
+
+.bottom-card{
+
+grid-column:1 / -1;
+
+display:flex;
+
+justify-content:center;
+
+width:100%;
+
+margin:0 auto;
+
+}
+
+.bottom-card .card{
+
+min-width:920px;
+
+max-width:1200px;
+
+width:fit-content;
+
 }
 
 .card{
-background:white;
-padding:30px;
-border-radius:18px;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+display:block;
+
+position:relative;
+
+padding:32px;
+
+width:min(900px,92vw);
+
+min-height:260px;
+
+box-sizing:border-box;
+
+border-radius:28px;
 
 text-decoration:none;
-color:black;
 
-transition:.2s;
+color:#111;
+
+background:rgba(255,255,255,.03);
+
+border:1px solid rgba(255,255,255,.18);
+
+backdrop-filter:blur(1.5px);
+
+-webkit-backdrop-filter:blur(1.5px);
+
+box-shadow:
+
+0 4px 16px rgba(0,0,0,.015)
+
+inset 0 1px 0 rgba(255,255,255,.35);
+
+overflow:hidden;
+
+transition:.35s;
+
 }
 
 .card:hover{
-transform:translateY(-8px);
+
+background:rgba(235,235,235,.006);
+
+border-color:rgba(255,255,255,.55);
+
+transform:translateY(-6px);
+
+backdrop-filter:blur(1px);
+-webkit-backdrop-filter:blur(1px);
+
+
 }
 
-.card h2{
-margin:0 0 20px;
+.card:visited{
+color:black;
 }
+
+
+
+.items{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:flex-start;
+
+    gap:32px;
+
+padding-top:20px;
+
+    flex-wrap:wrap;
+
+}
+
+.item{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
+width:220px;
+
+min-height:180px;
+
+text-align:center;
+
+flex:0 0 auto;
+
+overflow:visible;
+
+}
+
+.item span{
+
+margin-top:2px;
+
+}
+.product-icon{
+
+width:240px;
+
+height:170px;
+
+object-fit:contain;
+
+display:block;
+
+margin:0 auto;
+
+transition:.25s ease;
+
+transform-origin:center center;
+
+}
+
+.round-elbow{
+
+width:390px;
+
+height:300px;
+
+object-fit:contain;
+
+margin-left:25px;
+
+margin-top:-55px;
+
+margin-bottom:-85px;
+
+}
+.rectangular-duct{
+
+width:340px;
+
+height:200px;
+
+object-fit:contain;
+
+margin-left:-30px;
+
+margin-top:-65px;
+
+margin-bottom:-20px;
+
+}
+
+.rectangular-fix{
+
+width:180px;
+
+height:120px;
+
+margin-left:-20px;
+
+margin-top:-10px;
+
+margin-bottom:-30px;
+
+object-fit:contain;
+
+}
+.product-icon:hover{
+
+transform:scale(1.06);
+
+}
+.grid{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:24px;
+
+    width:100%;
+
+    align-items:center;
+
+}
+
+.item:hover{
+
+background:
+
+rgba(255,255,255,.12);
+
+}
+
+.item:hover img{
+transform:scale(1.08);
+}
+
+.icon{
+
+width:90px;
+
+height:90px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:flex-start;
+
+font-size:54px;
+
+margin-bottom:10px;
+
+}
+
+
+
+
+.card h2{
+
+margin:0 0 34px;
+
+text-align:center;
+
+font-size:32px;
+
+font-weight:500;
+
+font-style:normal;
+
+letter-spacing:1px;
+
+color:#CC7428;
+
+opacity:.92;
+
+}
+
 
 .status{
 color:#666;
+}
+
+h1,
+h2,
+.item{
+
+color:#171717;
+
+text-shadow:
+0 1px 2px rgba(255,255,255,.65);
+
+}
+
+
+
+.product-image{
+
+width:180px;
+
+height:140px;
+
+object-fit:contain;
+
+margin-left:0;
+
+margin-top:0;
+
+margin-bottom:-10px;
+
+transition:.25s;
+
+}
+
+.product-image{
+
+width:180px;
+
+height:140px;
+
+object-fit:contain;
+
+margin-left:0;
+
+margin-top:0;
+
+margin-bottom:-10px;
+
+transition:.25s;
+
 }
 
 </style>
@@ -89,29 +531,106 @@ color:#666;
 
 <div class="wrap">
 
-<div class="logo">
-
-<img src="calc_square_logo.png" class="logo-img">
-
 <div class="subtitle">
-Calc Square
+АТЛАС ИЗДЕЛИЙ
 </div>
+
+
 
 </div>
 
 <div class="grid">
 
-<a
-class="card"
-href="./modules/rectangular/"
+<a class="card" href="./modules/round/index.html">
+
+<h2>Круглые воздуховоды</h2>
+
+<div class="items">
+
+<div class="item">
+
+<img
+src="./assets/products/round_elbow.svg"
+class="round-elbow"
+>
+<span>Отвод</span>
+
+</div>
+
+<div class="item">
+<div class="icon">⬡</div>
+Переход
+</div>
+
+<div class="item">
+<div class="icon">⌒</div>
+Утка
+</div>
+
+</div>
+
+</a>
+
+<a class="card" href="./modules/rectangular/index.html">
+
+<h2>Прямоугольные воздуховоды</h2>
+
+<div class="items">
+
+    <div class="item">
+<img
+src="./assets/products/rectangular_duct.svg"
+class="rectangular-duct"
 >
 
-<h2>
-Прямоугольные воздуховоды
-</h2>
+<span>Прямоугольный</span>
+    </div>
 
-<div class="status">
-Версия 1.0
+    <div class="item">
+
+        <div class="icon">┐</div>
+
+        <span>Отвод</span>
+
+    </div>
+
+    <div class="item">
+
+        <div class="icon">▯</div>
+
+        <span>Переход</span>
+
+    </div>
+
+</div>
+
+
+</a>
+
+
+
+<div class="bottom-card">
+<a class="card" href="./modules/combined/index.html">
+
+<h2>Комбинированные изделия</h2>
+
+<div class="items">
+
+<div class="item">
+<div class="icon">◯→▭</div>
+Круг→Прям
+</div>
+
+<div class="item">
+<div class="icon">▭→◯</div>
+Прям→Круг
+</div>
+
+<div class="item">
+<div class="icon">≈</div>
+Смещение
+</div>
+
 </div>
 
 </a>
@@ -121,4 +640,5 @@ href="./modules/rectangular/"
 </div>
 
 </body>
+
 </html>
