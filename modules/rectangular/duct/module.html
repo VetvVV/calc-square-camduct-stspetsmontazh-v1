@@ -2851,6 +2851,26 @@ requestParentResize,
 
 }
 
+document.querySelectorAll(
+"details"
+).forEach(
+(detailsElement)=>{
+detailsElement.addEventListener(
+"toggle",
+()=>{
+setTimeout(
+requestParentResize,
+0
+);
+setTimeout(
+requestParentResize,
+80
+);
+}
+);
+}
+);
+
 }
 
 setTimeout(
