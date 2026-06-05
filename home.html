@@ -1126,7 +1126,7 @@ Date.now()
 moduleContainer.innerHTML =
 '<iframe class="module-frame" scrolling="auto" src="' +
 url.href +
-'" onload="resizeModuleFrame(this)"></iframe>';
+'" onload="prepareModuleFrame(this)"></iframe>';
 
 setTimeout(
 updateCalculatorStickiness,
@@ -1205,6 +1205,78 @@ try{
 
     atlasFrame.style.minHeight =
     '0';
+}
+catch(e){}
+
+}
+
+function prepareModuleFrame(frame){
+
+resizeModuleFrame(frame);
+enableModuleFrameScroll(frame);
+
+}
+
+function enableModuleFrameScroll(frame){
+
+if(!frame){
+    return;
+}
+
+try{
+    const doc =
+    frame.contentDocument ||
+    frame.contentWindow.document;
+
+    doc.documentElement.style.overflowY = 'auto';
+    doc.body.style.overflowY = 'auto';
+
+    if(frame.dataset.scrollProxyAttached === '1'){
+        return;
+    }
+
+    frame.dataset.scrollProxyAttached = '1';
+
+    doc.addEventListener(
+    'wheel',
+    (event)=>{
+        const panel =
+        document.querySelector('.atlas-panel.calculator-sticky');
+
+        if(!panel){
+            return;
+        }
+
+        const win =
+        frame.contentWindow;
+
+        if(!win){
+            return;
+        }
+
+        const before =
+        win.pageYOffset ||
+        doc.documentElement.scrollTop ||
+        doc.body.scrollTop ||
+        0;
+
+        win.scrollBy(
+        event.deltaX,
+        event.deltaY
+        );
+
+        const after =
+        win.pageYOffset ||
+        doc.documentElement.scrollTop ||
+        doc.body.scrollTop ||
+        0;
+
+        if(after !== before){
+            event.preventDefault();
+        }
+    },
+    {passive:false}
+    );
 }
 catch(e){}
 
