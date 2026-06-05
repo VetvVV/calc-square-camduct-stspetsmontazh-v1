@@ -1510,6 +1510,24 @@ fromUrl
 return fromUrl;
 }
 
+let fromParentUrl=null;
+
+try{
+fromParentUrl=
+new URLSearchParams(
+window.parent.location.search
+).get("role");
+}
+catch(e){}
+
+if(
+allowedRoles.includes(
+fromParentUrl
+)
+){
+return fromParentUrl;
+}
+
 const fromStorage=
 appStorage().getItem("calcSquareRole");
 
@@ -2763,6 +2781,18 @@ ${tr("addToProject")}
 `}
 
 `;
+
+if(
+!isAdmin
+){
+out.querySelectorAll(
+".details-toggle, .details-panel, details, small"
+).forEach(
+(element)=>{
+element.remove();
+}
+);
+}
 
 if(
 document.getElementById(

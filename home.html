@@ -1513,6 +1513,15 @@ requestedRole
 :
 'guest';
 
+if(
+validRoles.includes(requestedRole)
+){
+    localStorage.setItem(
+    'calcSquareRole',
+    requestedRole
+    );
+}
+
 let currentModulePath =
 null;
 
