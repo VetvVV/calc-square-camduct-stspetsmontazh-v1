@@ -750,6 +750,27 @@ top:90px;
 align-self:flex-start;
 }
 
+.atlas-panel.module-open #moduleContainer{
+height:100%;
+min-height:0;
+}
+
+.atlas-panel.module-open .module-frame{
+height:100% !important;
+min-height:0;
+}
+
+body.role-guest .project-panel,
+body.role-guest .resizer,
+body.role-guest .project-tab,
+body.role-guest .atlas-tab{
+display:none !important;
+}
+
+body.role-guest .atlas-panel{
+width:100% !important;
+}
+
 .atlas-panel.calculator-sticky #moduleContainer{
 position:fixed;
 top:90px;
@@ -1243,7 +1264,10 @@ try{
     const stickyPanel =
     document.querySelector('.atlas-panel.calculator-sticky');
 
-    if(stickyPanel){
+    const openPanel =
+    document.querySelector('.atlas-panel.module-open');
+
+    if(stickyPanel || openPanel){
         const moduleContainer =
         document.getElementById('moduleContainer');
 
@@ -2726,6 +2750,11 @@ function applyRole(){
 
     const isGuest =
     userRole === 'guest';
+
+    document.body.classList.toggle(
+    'role-guest',
+    isGuest
+    );
 
     const hasClientTools =
     userRole === 'client'
