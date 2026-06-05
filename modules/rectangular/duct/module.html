@@ -1519,7 +1519,31 @@ fromStorage
 ?
 fromStorage
 :
-"client";
+"guest";
+
+}
+
+function isGuestRole(){
+
+return currentRole()==="guest";
+
+}
+
+function isAdminRole(){
+
+return currentRole()==="admin";
+
+}
+
+function canSeeTechnicalDetails(){
+
+return isAdminRole();
+
+}
+
+function hasDailyCalculationLimit(){
+
+return isGuestRole();
 
 }
 
@@ -1570,7 +1594,7 @@ JSON.stringify(state)
 function updateGuestControls(state){
 
 const isGuest=
-currentRole()==="guest";
+hasDailyCalculationLimit();
 
 calcControls.style.display=
 isGuest
@@ -1630,7 +1654,7 @@ force
 ){
 
 if(
-currentRole()!=="guest"
+!hasDailyCalculationLimit()
 ){
 
 updateGuestControls(
@@ -2165,7 +2189,7 @@ T
 rho;
 
 const isAdmin=
-currentRole()==="admin";
+canSeeTechnicalDetails();
 
 currentProjectItem={
 name:tr("productName"),
@@ -2727,7 +2751,7 @@ ${tr("kg")}
 
 </small>
 
-${currentRole()==="guest" ? "" : `
+${hasDailyCalculationLimit() ? "" : `
 <br><br>
 <button
 class="add-project-button"
