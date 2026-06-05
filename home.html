@@ -741,6 +741,15 @@ overflow:visible;
 
 }
 
+.atlas-panel.module-open{
+height:calc(100vh - 90px);
+overflow-y:auto;
+overflow-x:hidden;
+position:sticky;
+top:90px;
+align-self:flex-start;
+}
+
 .atlas-panel.calculator-sticky #moduleContainer{
 position:fixed;
 top:90px;
@@ -1105,6 +1114,10 @@ moduleContainer.style.display = 'block';
 
 atlasContent.style.display = 'none';
 
+rightPanel.classList.add(
+'module-open'
+);
+
 const url =
 new URL(
 modulePath,
@@ -1155,6 +1168,10 @@ document.getElementById('atlasFrame');
 moduleContainer.style.display = 'none';
 
 moduleContainer.innerHTML = '';
+
+rightPanel.classList.remove(
+'module-open'
+);
 
 atlasContent.style.display = 'flex';
 
