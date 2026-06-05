@@ -1405,8 +1405,18 @@ document.getElementById('atlasTab');
 
 
 
+const validRoles =
+['guest','user','client','admin'];
+
+const requestedRole =
+new URLSearchParams(window.location.search).get('role');
+
 let userRole =
-localStorage.getItem('calcSquareRole') || 'client';
+validRoles.includes(requestedRole)
+?
+requestedRole
+:
+'guest';
 
 const heroSection =
 document.querySelector('.hero');
