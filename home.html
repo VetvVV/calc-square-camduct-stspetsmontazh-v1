@@ -738,7 +738,7 @@ display:flex;
 
 flex-direction:column;
 
-overflow:hidden;
+overflow:visible;
 
 }
 
@@ -1288,9 +1288,6 @@ moduleContainer.offsetParent !== null;
 const isMobile =
 window.innerWidth <= 900;
 
-let moduleFitsViewport =
-false;
-
 let moduleContentHeight =
 0;
 
@@ -1310,33 +1307,12 @@ moduleVisible
         doc.body.scrollHeight
         );
 
-        moduleFitsViewport =
-        moduleContentHeight <= window.innerHeight - 90;
     }
     catch(e){}
 }
 
-const panelRect =
-panel.getBoundingClientRect();
-
-panel.style.setProperty(
-'--calculator-sticky-left',
-`${panelRect.left}px`
-);
-
-panel.style.setProperty(
-'--calculator-sticky-width',
-`${panelRect.width}px`
-);
-
 const shouldStick =
-Boolean(
-moduleVisible
-&&
-!isMobile
-&&
-moduleFitsViewport
-);
+false;
 
 panel.classList.toggle(
 'calculator-sticky',
