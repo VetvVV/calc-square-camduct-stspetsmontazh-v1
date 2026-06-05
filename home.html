@@ -1093,6 +1093,9 @@ src="assets/atlas/atlas.html">
 
 function openModule(modulePath){
 
+currentModulePath =
+modulePath;
+
 const moduleContainer =
 document.getElementById('moduleContainer');
 
@@ -1137,6 +1140,9 @@ updateCalculatorStickiness,
 }
 
 function showAtlasCatalog(){
+
+currentModulePath =
+null;
 
 const moduleContainer =
 document.getElementById('moduleContainer');
@@ -1282,6 +1288,34 @@ moduleContainer.offsetParent !== null;
 const isMobile =
 window.innerWidth <= 900;
 
+let moduleFitsViewport =
+false;
+
+let moduleContentHeight =
+0;
+
+if(
+moduleVisible
+&&
+!isMobile
+){
+    try{
+        const doc =
+        frame.contentDocument ||
+        frame.contentWindow.document;
+
+        moduleContentHeight =
+        Math.max(
+        doc.documentElement.scrollHeight,
+        doc.body.scrollHeight
+        );
+
+        moduleFitsViewport =
+        moduleContentHeight <= window.innerHeight - 90;
+    }
+    catch(e){}
+}
+
 const panelRect =
 panel.getBoundingClientRect();
 
@@ -1295,14 +1329,33 @@ panel.style.setProperty(
 `${panelRect.width}px`
 );
 
-panel.classList.toggle(
-'calculator-sticky',
+const shouldStick =
 Boolean(
 moduleVisible
 &&
 !isMobile
-)
+&&
+moduleFitsViewport
 );
+
+panel.classList.toggle(
+'calculator-sticky',
+shouldStick
+);
+
+if(
+moduleVisible
+&&
+!shouldStick
+&&
+moduleContentHeight
+){
+    frame.style.height =
+    Math.max(
+    moduleContentHeight,
+    window.innerHeight - 90
+    ) + 'px';
+}
 
 }
 
@@ -1443,6 +1496,9 @@ validRoles.includes(requestedRole)
 requestedRole
 :
 'guest';
+
+let currentModulePath =
+null;
 
 const heroSection =
 document.querySelector('.hero');
@@ -2750,6 +2806,9 @@ function applyRole(){
 
 function setRole(role){
 
+    const previousRole =
+    userRole;
+
     userRole = role;
 
     localStorage.setItem(
@@ -2758,6 +2817,14 @@ function setRole(role){
     );
 
     applyRole();
+
+    if(
+    previousRole !== role
+    &&
+    currentModulePath
+    ){
+        openModule(currentModulePath);
+    }
 
     loginModal.style.display = 'none';
 
