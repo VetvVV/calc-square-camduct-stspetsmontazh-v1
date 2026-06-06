@@ -1790,6 +1790,9 @@ layoutView="[a│A][b│B][a│A][b│B]";
 
 }
 
+const isAdmin=
+currentRole()==="admin";
+
 out.innerHTML=
 
 `
@@ -1804,6 +1807,9 @@ ${clean.toFixed(3)} м²
 
 <br>
 
+</b>
+
+${isAdmin ? `
 <details id="detailsBlock">
 
 <summary
@@ -1818,6 +1824,7 @@ margin:6px 0;
 
 </summary>
 
+${isAdmin ? `
 <small>
 
 Формула:
@@ -1870,6 +1877,7 @@ Q — кількість виробів
 
 = ${clean.toFixed(3)} м²
 </small>
+` : ""}
 
 </b>
 
@@ -2258,6 +2266,7 @@ ${holeArea.toFixed(3)} м²
 
 </div>
 </details>
+` : ""}
 
 Загальна площа
 
@@ -2271,6 +2280,7 @@ ${full.toFixed(3)} м²
 
 <br>
 
+${isAdmin ? `
 <small>
 
 Sч + Sзам = Sп
@@ -2291,6 +2301,7 @@ ${full.toFixed(3)}
 м²
 
 </small>
+` : ""}
 
 <br><br>
 
@@ -2306,6 +2317,7 @@ ${mass.toFixed(2)} кг
 
 <br>
 
+${isAdmin ? `
 <small>
 
 m = Sп × t × ρ
@@ -2332,6 +2344,7 @@ ${mass.toFixed(2)}
 кг
 
 </small>
+` : ""}
 
 ${currentRole()==="guest" ? "" : `
 <br><br>

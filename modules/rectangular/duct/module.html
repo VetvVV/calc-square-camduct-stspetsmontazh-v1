@@ -2471,6 +2471,7 @@ rusArea
 
 <br><br>
 
+${isAdmin ? `
 <details
 id="holes"
 ontoggle="
@@ -2699,6 +2700,7 @@ ${holeArea.toFixed(3)} м²
 
 </div>
 </details>
+` : ""}
 
 ${tr("totalArea")}
 
@@ -2712,6 +2714,7 @@ ${full.toFixed(3)} м²
 
 <br>
 
+${isAdmin ? `
 <small>
 
 Sч + Sзам = Sп
@@ -2732,6 +2735,7 @@ ${full.toFixed(3)}
 м²
 
 </small>
+` : ""}
 
 <br><br>
 
@@ -2747,6 +2751,7 @@ ${mass.toFixed(2)} ${tr("kg")}
 
 <br>
 
+${isAdmin ? `
 <small>
 
 m = Sп × t × ρ
@@ -2773,6 +2778,7 @@ ${mass.toFixed(2)}
 ${tr("kg")}
 
 </small>
+` : ""}
 
 ${canAddToProject() ? `
 <br><br>
