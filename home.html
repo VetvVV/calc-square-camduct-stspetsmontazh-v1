@@ -1729,9 +1729,11 @@ noMaterial:'Матеріал не вказано'
 ,conn2:"З'єднання 2"
 ,shin20:'Шинорейка 20'
 ,shin30:'Шинорейка 30'
+,shin20Self:'Шинорейка 20 Сам'
+,shin30Self:'Шинорейка 30 Сам'
 ,rail:'Рейка'
 ,gk:'ГК'
-,screwSelf:'Саморіз сам'
+,screwSelf:'Шинорейка 20 Сам'
 ,mm:'мм'
 ,kg:'кг'
 },
@@ -1787,9 +1789,11 @@ noMaterial:'Материал не указан'
 ,conn2:'Соединение 2'
 ,shin20:'Шинорейка 20'
 ,shin30:'Шинорейка 30'
+,shin20Self:'Шинорейка 20 Сам'
+,shin30Self:'Шинорейка 30 Сам'
 ,rail:'Рейка'
 ,gk:'ГК'
-,screwSelf:'Саморез сам'
+,screwSelf:'Шинорейка 20 Сам'
 ,mm:'мм'
 ,kg:'кг'
 },
@@ -1845,9 +1849,11 @@ noMaterial:'Material not specified'
 ,conn2:'Connection 2'
 ,shin20:'Slide rail 20'
 ,shin30:'Slide rail 30'
+,shin20Self:'Slide rail 20 self'
+,shin30Self:'Slide rail 30 self'
 ,rail:'Rail'
 ,gk:'GK'
-,screwSelf:'Self-tapping screw'
+,screwSelf:'Slide rail 20 self'
 ,mm:'mm'
 ,kg:'kg'
 }
@@ -1947,6 +1953,14 @@ function detectConnectionTypeCode(item){
     const value=
     `${item.connectionTypeCode || ''} ${item.size || ''}`.toLowerCase();
 
+    if(value.includes('shin30self') || value.includes('шинорейка 30 сам') || value.includes('slide rail 30 self')){
+        return 'shin30Self';
+    }
+
+    if(value.includes('shin20self') || value.includes('шинорейка 20 сам') || value.includes('slide rail 20 self')){
+        return 'shin20Self';
+    }
+
     if(value.includes('shin30') || value.includes('шинорейка 30') || value.includes('slide rail 30')){
         return 'shin30';
     }
@@ -1960,7 +1974,7 @@ function detectConnectionTypeCode(item){
     }
 
     if(value.includes('screwself') || value.includes('саморез') || value.includes('саморіз') || value.includes('self-tapping')){
-        return 'screwSelf';
+        return 'shin20Self';
     }
 
     if(value.includes('gk') || value.includes('гк')){
@@ -3422,7 +3436,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-1453</div>
+<div class="build-marker">build 2026-06-06-1515</div>
 
 </body>
 

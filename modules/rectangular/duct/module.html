@@ -543,9 +543,10 @@ max="999"
 
 <option>Шинорейка 20</option>
 <option>Шинорейка 30</option>
+<option>Шинорейка 20 Сам</option>
+<option>Шинорейка 30 Сам</option>
 <option>Рейка</option>
 <option>ГК</option>
-<option>Саморіз сам</option>
 
 </select>
 
@@ -619,9 +620,11 @@ conn2:"З'єднання 2",
 connectionType:'Тип {connection}',
 shin20:'Шинорейка 20',
 shin30:'Шинорейка 30',
+shin20Self:'Шинорейка 20 Сам',
+shin30Self:'Шинорейка 30 Сам',
 rail:'Рейка',
 gk:'ГК',
-screwSelf:'Саморіз сам',
+screwSelf:'Шинорейка 20 Сам',
 registrationSoon:'Реєстрацію буде підключено на наступному етапі. Зараз увімкнено режим користувача.',
 guestHint:'Доступно розрахунків сьогодні: {left} з {max}',
 guestLimitReached:'Ліміт на сьогодні вичерпано',
@@ -694,9 +697,11 @@ conn2:'Соединение 2',
 connectionType:'Тип {connection}',
 shin20:'Шинорейка 20',
 shin30:'Шинорейка 30',
+shin20Self:'Шинорейка 20 Сам',
+shin30Self:'Шинорейка 30 Сам',
 rail:'Рейка',
 gk:'ГК',
-screwSelf:'Саморез сам',
+screwSelf:'Шинорейка 20 Сам',
 registrationSoon:'Регистрация будет подключена на следующем этапе. Сейчас включён режим пользователя.',
 guestHint:'Доступно расчётов сегодня: {left} из {max}',
 guestLimitReached:'Лимит на сегодня исчерпан',
@@ -769,9 +774,11 @@ conn2:'Connection 2',
 connectionType:'Type {connection}',
 shin20:'Slide rail 20',
 shin30:'Slide rail 30',
+shin20Self:'Slide rail 20 self',
+shin30Self:'Slide rail 30 self',
 rail:'Rail',
 gk:'GK',
-screwSelf:'Self-tapping screw',
+screwSelf:'Slide rail 20 self',
 registrationSoon:'Registration will be connected at the next stage. User mode is enabled now.',
 guestHint:'Calculations available today: {left} of {max}',
 guestLimitReached:"Today's limit has been reached",
@@ -868,7 +875,7 @@ return value.toLocaleString(moduleLang()==="ru" ? "ru-RU" : moduleLang()==="en" 
 }
 
 const materialCodes=["galv","ss430","ss304"];
-const connectionTypeCodes=["shin20","shin30","rail","gk","screwSelf"];
+const connectionTypeCodes=["shin20","shin30","shin20Self","shin30Self","rail","gk"];
 
 document.querySelector(".back").addEventListener(
 "click",
