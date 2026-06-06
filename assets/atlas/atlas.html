@@ -789,19 +789,7 @@ function atlasRole(){
         return fromUrl;
     }
 
-    let fromParentUrl=null;
-
-    try{
-        fromParentUrl=
-        new URLSearchParams(window.parent.location.search).get('role');
-    }
-    catch(e){}
-
-    return allowedRoles.includes(fromParentUrl)
-    ?
-    fromParentUrl
-    :
-    'guest';
+    return 'guest';
 }
 
 function applyAtlasLanguage(){

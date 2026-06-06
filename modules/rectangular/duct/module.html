@@ -1385,10 +1385,19 @@ signupSubmit.addEventListener(
 "click",
 ()=>{
 
-appStorage().setItem(
-"calcSquareRole",
-"user"
+if(
+window.parent
+&&
+window.parent !== window
+){
+window.parent.postMessage(
+{
+type:"calcSquare:setRole",
+role:"user"
+},
+"*"
 );
+}
 
 hideSignupModal();
 
@@ -1508,24 +1517,6 @@ fromUrl
 )
 ){
 return fromUrl;
-}
-
-let fromParentUrl=null;
-
-try{
-fromParentUrl=
-new URLSearchParams(
-window.parent.location.search
-).get("role");
-}
-catch(e){}
-
-if(
-allowedRoles.includes(
-fromParentUrl
-)
-){
-return fromParentUrl;
 }
 
 return "guest";

@@ -2782,6 +2782,16 @@ window.addEventListener(
     }
 
     if(
+    data.type === 'calcSquare:setRole'
+    &&
+    validRoles.includes(data.role)
+    ){
+        setRole(data.role);
+
+        return;
+    }
+
+    if(
     data.type === 'calcSquare:resizeModule'
     ){
         resizeOpenModuleFrames();

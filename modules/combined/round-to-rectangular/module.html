@@ -1008,10 +1008,19 @@ signupSubmit.addEventListener(
 "click",
 ()=>{
 
-appStorage().setItem(
-"calcSquareRole",
-"user"
+if(
+window.parent
+&&
+window.parent !== window
+){
+window.parent.postMessage(
+{
+type:"calcSquare:setRole",
+role:"user"
+},
+"*"
 );
+}
 
 hideSignupModal();
 
@@ -1052,7 +1061,25 @@ String(d.getDate()).padStart(2,"0")
 
 function currentRole(){
 
-return appStorage().getItem("calcSquareRole") || "client";
+const allowedRoles=[
+"guest",
+"user",
+"client",
+"admin"
+];
+
+const fromUrl=
+new URLSearchParams(
+window.location.search
+).get("role");
+
+return allowedRoles.includes(
+fromUrl
+)
+?
+fromUrl
+:
+"guest";
 
 }
 
