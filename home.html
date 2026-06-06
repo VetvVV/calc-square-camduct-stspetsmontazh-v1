@@ -408,7 +408,7 @@ margin:0;
 display:grid;
 
 grid-template-columns:
-var(--project-columns, 54px 260px 70px 70px 75px 260px 70px 190px 70px 110px 100px 44px);
+var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 70px);
 
 padding:0;
 
@@ -439,7 +439,7 @@ flex-direction:column;
 .project-row{
 display:grid;
 grid-template-columns:
-var(--project-columns, 54px 260px 70px 70px 75px 260px 70px 190px 70px 110px 100px 44px);
+var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 70px);
 align-items:center;
 gap:0;
 padding:0;
@@ -575,6 +575,22 @@ background:#fee2e2;
 color:#b91c1c;
 }
 
+.project-clear{
+width:30px;
+height:30px;
+border:none;
+border-radius:8px;
+background:rgba(255,255,255,.18);
+color:white;
+cursor:pointer;
+font-weight:700;
+line-height:1;
+}
+
+.project-clear:hover{
+background:rgba(255,255,255,.3);
+}
+
 .empty-project{
 padding:35px;
 text-align:center;
@@ -585,7 +601,7 @@ color:#777;
 .project-total{
 display:grid;
 grid-template-columns:
-var(--project-columns, 54px 260px 70px 70px 75px 260px 70px 190px 70px 110px 100px 44px);
+var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 70px);
 align-items:center;
 gap:0;
 padding:0;
@@ -620,7 +636,7 @@ font-weight:700;
 .material-summary-row{
 display:grid;
 grid-template-columns:
-var(--project-columns, 54px 260px 70px 70px 75px 260px 70px 190px 70px 110px 100px 44px);
+var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 70px);
 gap:0;
 padding:0;
 border-top:1px solid #ececec;
@@ -1024,16 +1040,14 @@ placeholder="Об'єкт">
 
 <div class="project-cell is-numeric" data-col="no"><span class="column-title">№</span><button class="column-hide" type="button" data-hide-col="no">×</button><span class="column-resize" data-resize-col="no"></span></div>
 <div class="project-cell" data-col="name"><span class="column-title" data-column-title="name">Найменування</span><button class="column-hide" type="button" data-hide-col="name">×</button><span class="column-resize" data-resize-col="name"></span></div>
-<div class="project-cell is-numeric" data-col="A"><span class="column-title">A</span><button class="column-hide" type="button" data-hide-col="A">×</button><span class="column-resize" data-resize-col="A"></span></div>
-<div class="project-cell is-numeric" data-col="B"><span class="column-title">B</span><button class="column-hide" type="button" data-hide-col="B">×</button><span class="column-resize" data-resize-col="B"></span></div>
-<div class="project-cell is-numeric" data-col="L"><span class="column-title">L</span><button class="column-hide" type="button" data-hide-col="L">×</button><span class="column-resize" data-resize-col="L"></span></div>
+<div class="project-cell" data-col="dimensions"><span class="column-title" data-column-title="dimensions">Розміри</span><button class="column-hide" type="button" data-hide-col="dimensions">×</button><span class="column-resize" data-resize-col="dimensions"></span></div>
 <div class="project-cell" data-col="description"><span class="column-title" data-column-title="description">Опис</span><button class="column-hide" type="button" data-hide-col="description">×</button><span class="column-resize" data-resize-col="description"></span></div>
 <div class="project-cell is-numeric" data-col="qty"><span class="column-title" data-column-title="qty">К-ть</span><button class="column-hide" type="button" data-hide-col="qty">×</button><span class="column-resize" data-resize-col="qty"></span></div>
 <div class="project-cell" data-col="material"><span class="column-title" data-column-title="material">Матеріал</span><button class="column-hide" type="button" data-hide-col="material">×</button><span class="column-resize" data-resize-col="material"></span></div>
 <div class="project-cell is-numeric" data-col="thickness"><span class="column-title" data-column-title="thicknessShort">t</span><button class="column-hide" type="button" data-hide-col="thickness">×</button><span class="column-resize" data-resize-col="thickness"></span></div>
 <div class="project-cell is-numeric" data-col="area"><span class="column-title" data-column-title="area">Площа</span><button class="column-hide" type="button" data-hide-col="area">×</button><span class="column-resize" data-resize-col="area"></span></div>
 <div class="project-cell is-numeric" data-col="mass"><span class="column-title" data-column-title="mass">Маса</span><button class="column-hide" type="button" data-hide-col="mass">×</button><span class="column-resize" data-resize-col="mass"></span></div>
-<div class="project-cell is-numeric" data-col="actions"><span class="column-title"></span></div>
+<div class="project-cell is-numeric" data-col="actions"><button class="project-clear" type="button" data-clear-project="true" title="Очистити специфікацію">×</button></div>
 
 </div>
 
@@ -1049,9 +1063,7 @@ placeholder="Об'єкт">
 
 <span class="project-cell" data-col="no"></span>
 <span class="project-cell" data-col="name">Підсумок</span>
-<span class="project-cell is-numeric" data-col="A"></span>
-<span class="project-cell is-numeric" data-col="B"></span>
-<span class="project-cell is-numeric" data-col="L"></span>
+<span class="project-cell" data-col="dimensions"></span>
 <span class="project-cell" data-col="description"></span>
 <span class="project-cell is-numeric" data-col="qty">0</span>
 <span class="project-cell" data-col="material"></span>
@@ -1678,6 +1690,7 @@ projectName:'Назва проєкту',
 customer:'Замовник',
 object:"Об'єкт",
 name:'Найменування',
+dimensions:'Розміри',
 qty:'К-ть',
 material:'Матеріал',
 description:'Опис',
@@ -1706,6 +1719,7 @@ client:'Клієнт',
 admin:'Адмін',
 product:'Виріб',
 noMaterial:'Матеріал не вказано'
+,clearProject:'Очистити специфікацію'
 ,language:'Мова інтерфейсу'
 ,rectangularDuct:'Повітропровід прямокутний'
 ,galv:'Оцинкована сталь'
@@ -1734,6 +1748,7 @@ projectName:'Название проекта',
 customer:'Заказчик',
 object:'Объект',
 name:'Наименование',
+dimensions:'Размеры',
 qty:'Кол-во',
 material:'Материал',
 description:'Описание',
@@ -1762,6 +1777,7 @@ client:'Клиент',
 admin:'Админ',
 product:'Изделие',
 noMaterial:'Материал не указан'
+,clearProject:'Очистить спецификацию'
 ,language:'Язык интерфейса'
 ,rectangularDuct:'Воздуховод прямоугольный'
 ,galv:'Оцинкованная сталь'
@@ -1790,6 +1806,7 @@ projectName:'Project name',
 customer:'Customer',
 object:'Object',
 name:'Item',
+dimensions:'Dimensions',
 qty:'Qty',
 material:'Material',
 description:'Description',
@@ -1818,6 +1835,7 @@ client:'Client',
 admin:'Admin',
 product:'Item',
 noMaterial:'Material not specified'
+,clearProject:'Clear specification'
 ,language:'Interface language'
 ,rectangularDuct:'Rectangular duct'
 ,galv:'Galvanized steel'
@@ -2031,6 +2049,17 @@ function localizedProjectSize(item){
     .join('; ');
 }
 
+function localizedProjectDimensions(item){
+    const dimensions=
+    detectDimensions(item);
+
+    if(!dimensions){
+        return item.size || '';
+    }
+
+    return `A ${dimensions.A} × B ${dimensions.B} × L ${dimensions.L} ${t('mm')}`;
+}
+
 function localizedProjectMaterial(item){
     const materialCode=
     item.materialCode || detectMaterialCode(item);
@@ -2119,16 +2148,14 @@ function escapeHtml(value){
 const projectColumnDefaults=[
 {key:'no',label:'№',width:54,min:42,locked:false},
 {key:'name',labelKey:'name',width:260,min:140,locked:false},
-{key:'A',label:'A',width:70,min:50,locked:false},
-{key:'B',label:'B',width:70,min:50,locked:false},
-{key:'L',label:'L',width:75,min:50,locked:false},
+{key:'dimensions',labelKey:'dimensions',width:170,min:110,locked:false},
 {key:'description',labelKey:'description',width:260,min:120,locked:false},
 {key:'qty',labelKey:'qty',width:70,min:50,locked:false},
 {key:'material',labelKey:'material',width:190,min:120,locked:false},
 {key:'thickness',labelKey:'thicknessShort',width:70,min:50,locked:false},
 {key:'area',labelKey:'area',width:110,min:80,locked:false},
 {key:'mass',labelKey:'mass',width:100,min:80,locked:false},
-{key:'actions',label:'',width:44,min:44,locked:true}
+{key:'actions',label:'',width:70,min:60,locked:true}
 ];
 
 function loadProjectColumnState(){
@@ -2400,6 +2427,15 @@ function applyLanguage(){
     btnPrint.textContent=t('print');
     btnExport.textContent=t('export');
 
+    const clearProjectButtons =
+    document.querySelectorAll('[data-clear-project]');
+
+    clearProjectButtons.forEach(
+    (button)=>{
+        button.setAttribute('title', t('clearProject'));
+    }
+    );
+
     projectTab.textContent=t('project');
     atlasTab.textContent=t('atlas');
 
@@ -2483,8 +2519,8 @@ function renderProject(){
         const localizedDescription=
         localizedProjectDescription(item);
 
-        const dimensions=
-        detectDimensions(item) || {};
+        const localizedDimensions=
+        localizedProjectDimensions(item);
 
         const thickness=
         detectThickness(item);
@@ -2530,9 +2566,7 @@ function renderProject(){
         <span class="project-cell" data-col="name">
         <strong>${escapeHtml(localizedProjectName(item))}</strong>
         </span>
-        <span class="project-cell is-numeric" data-col="A">${escapeHtml(dimensions.A || '')}</span>
-        <span class="project-cell is-numeric" data-col="B">${escapeHtml(dimensions.B || '')}</span>
-        <span class="project-cell is-numeric" data-col="L">${escapeHtml(dimensions.L || '')}</span>
+        <span class="project-cell" data-col="dimensions">${escapeHtml(localizedDimensions)}</span>
         <span class="project-cell" data-col="description">${escapeHtml(localizedDescription)}</span>
         <span class="project-cell is-numeric" data-col="qty">${escapeHtml(item.quantity)}</span>
         <span class="project-cell" data-col="material">${escapeHtml(localizedMaterialName)}</span>
@@ -2553,9 +2587,7 @@ function renderProject(){
     `
     <span class="project-cell" data-col="no"></span>
     <span class="project-cell" data-col="name">${t('totalRow')}</span>
-    <span class="project-cell is-numeric" data-col="A"></span>
-    <span class="project-cell is-numeric" data-col="B"></span>
-    <span class="project-cell is-numeric" data-col="L"></span>
+    <span class="project-cell" data-col="dimensions"></span>
     <span class="project-cell" data-col="description"></span>
     <span class="project-cell is-numeric" data-col="qty">${totalQuantity}</span>
     <span class="project-cell" data-col="material"></span>
@@ -2585,9 +2617,7 @@ function renderProject(){
     <div class="material-summary-row">
     <span class="project-cell is-numeric" data-col="no">${index + 1}</span>
     <span class="project-cell" data-col="name"></span>
-    <span class="project-cell is-numeric" data-col="A"></span>
-    <span class="project-cell is-numeric" data-col="B"></span>
-    <span class="project-cell is-numeric" data-col="L"></span>
+    <span class="project-cell" data-col="dimensions"></span>
     <span class="project-cell" data-col="description"></span>
     <span class="project-cell is-numeric" data-col="qty">${total.quantity}</span>
     <strong class="project-cell" data-col="material">${escapeHtml(total.material)}</strong>
@@ -2654,6 +2684,26 @@ projectRows.addEventListener(
     saveProjectItems();
     renderProject();
 
+}
+);
+
+document.querySelector('.table-head').addEventListener(
+'click',
+(event)=>{
+    const button =
+    event.target.closest('[data-clear-project]');
+
+    if(!button || !projectItems.length){
+        return;
+    }
+
+    if(!confirm(`${t('clearProject')}?`)){
+        return;
+    }
+
+    projectItems = [];
+    saveProjectItems();
+    renderProject();
 }
 );
 
@@ -3372,7 +3422,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-1440</div>
+<div class="build-marker">build 2026-06-06-1453</div>
 
 </body>
 
