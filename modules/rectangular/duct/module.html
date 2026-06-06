@@ -32,13 +32,11 @@ display:grid;
 
 grid-template-columns:
 
-240px
+1fr
 
-240px
+260px;
 
-1fr;
-
-gap:40px;
+gap:26px;
 
 align-items:start;
 
@@ -61,6 +59,65 @@ gap:20px;
 
 padding-top:0px;
 
+}
+
+.duct-tab-shell{
+border:1px solid #d7d7d7;
+border-radius:10px;
+background:#f7f4e8;
+overflow:hidden;
+}
+
+.duct-tabs{
+display:flex;
+align-items:center;
+gap:0;
+border-bottom:1px solid #c9c3ad;
+background:#ece8d7;
+}
+
+.duct-tab{
+appearance:none;
+border:none;
+border-right:1px solid #c9c3ad;
+background:transparent;
+padding:9px 11px;
+font:inherit;
+font-size:13px;
+cursor:pointer;
+white-space:nowrap;
+}
+
+.duct-tab.active{
+background:white;
+font-weight:700;
+}
+
+.duct-tab-panel{
+display:none;
+padding:16px;
+min-height:250px;
+background:#f7f4e8;
+}
+
+.duct-tab-panel.active{
+display:block;
+}
+
+.tab-note{
+font-size:13px;
+line-height:1.45;
+color:#555;
+}
+
+@media(max-width:760px){
+.layout{
+grid-template-columns:1fr;
+}
+
+.duct-tabs{
+overflow-x:auto;
+}
 }
 
 .field{
@@ -125,9 +182,7 @@ justify-content:center;
 
 align-items:center;
 
-margin-top:-20px;
-
-margin-left:-140px;
+margin-top:0;
 
 }
 
@@ -135,7 +190,7 @@ margin-left:-140px;
 
 width:650px;
 
-max-width:none;
+max-width:100%;
 
 height:auto;
 
@@ -473,7 +528,6 @@ value="300"
 
 <div class="preview">
 
-<img
 <img
 id="previewImage"
 src="./preview.svg"
@@ -1165,13 +1219,6 @@ connectionTypeLabel.innerHTML=
 const connectionLabel=
 connection.parentElement;
 
-const qtyLabel=
-qty.closest("label");
-
-if(qtyLabel){
-qtyLabel.before(connectionLabel);
-}
-
 connectionLabel.after(
 connectionTypeLabel
 );
@@ -1183,6 +1230,274 @@ const connectionTypeTitle=
 document.getElementById("connectionTypeTitle");
 
 renderSelectOptions();
+
+const ductTabLabels={
+uk:{
+sizes:"Розміри",
+options:"Опції",
+detail:"Деталь",
+connectors:"З'єднувачі",
+optionsNote:"Опції виробу будуть додані на наступному етапі."
+},
+ru:{
+sizes:"Размеры",
+options:"Опции",
+detail:"Деталь",
+connectors:"Соединители",
+optionsNote:"Опции изделия будут добавлены на следующем этапе."
+},
+en:{
+sizes:"Sizes",
+options:"Options",
+detail:"Detail",
+connectors:"Connectors",
+optionsNote:"Product options will be added at the next stage."
+}
+};
+
+function ductTabText(key){
+
+const set=
+ductTabLabels[moduleLang()] ||
+ductTabLabels.uk;
+
+return set[key] ||
+ductTabLabels.uk[key] ||
+key;
+
+}
+
+function setDuctTab(tab){
+
+document
+.querySelectorAll("[data-duct-tab]")
+.forEach(
+button=>{
+const active=
+button.dataset.ductTab===tab;
+
+button.classList.toggle(
+"active",
+active
+);
+
+button.setAttribute(
+"aria-selected",
+active ? "true" : "false"
+);
+}
+);
+
+document
+.querySelectorAll("[data-duct-tab-panel]")
+.forEach(
+panel=>{
+panel.classList.toggle(
+"active",
+panel.dataset.ductTabPanel===tab
+);
+}
+);
+
+resizeParent();
+
+}
+
+function refreshDuctTabLanguage(){
+
+document
+.querySelectorAll("[data-duct-tab]")
+.forEach(
+button=>{
+button.textContent=
+ductTabText(
+button.dataset.ductTab
+);
+}
+);
+
+const optionsNote=
+document.getElementById("ductOptionsNote");
+
+if(optionsNote){
+optionsNote.textContent=
+ductTabText("optionsNote");
+}
+
+}
+
+function setupDuctTabs(){
+
+const layout=
+document.querySelector(".layout");
+
+const sizesSource=
+document.querySelector(".left");
+
+const detailSource=
+document.querySelector(".right");
+
+const preview=
+document.querySelector(".preview");
+
+if(
+!layout ||
+!sizesSource ||
+!detailSource ||
+!preview ||
+document.querySelector(".duct-tab-shell")
+){
+return;
+}
+
+const shell=
+document.createElement("div");
+
+shell.className=
+"duct-tab-shell";
+
+const tabs=
+document.createElement("div");
+
+tabs.className=
+"duct-tabs";
+
+tabs.setAttribute(
+"role",
+"tablist"
+);
+
+tabs.setAttribute(
+"aria-label",
+"Duct settings"
+);
+
+const panels={};
+
+[
+"sizes",
+"options",
+"detail",
+"connectors"
+].forEach(
+(key,index)=>{
+const button=
+document.createElement("button");
+
+button.type=
+"button";
+
+button.className=
+`duct-tab${index===0 ? " active" : ""}`;
+
+button.dataset.ductTab=
+key;
+
+button.setAttribute(
+"role",
+"tab"
+);
+
+button.setAttribute(
+"aria-selected",
+index===0 ? "true" : "false"
+);
+
+button.addEventListener(
+"click",
+()=>setDuctTab(key)
+);
+
+tabs.appendChild(
+button
+);
+
+const panel=
+document.createElement("div");
+
+panel.className=
+`duct-tab-panel${index===0 ? " active" : ""}`;
+
+panel.dataset.ductTabPanel=
+key;
+
+panel.setAttribute(
+"role",
+"tabpanel"
+);
+
+panels[key]=
+panel;
+}
+);
+
+panels.sizes.appendChild(
+sizesSource
+);
+
+const optionsNote=
+document.createElement("div");
+
+optionsNote.id=
+"ductOptionsNote";
+
+optionsNote.className=
+"tab-note";
+
+panels.options.appendChild(
+optionsNote
+);
+
+const connectorsFields=
+document.createElement("div");
+
+connectorsFields.className=
+"right";
+
+connectorsFields.appendChild(
+connection.parentElement
+);
+
+connectorsFields.appendChild(
+connectionType.parentElement
+);
+
+panels.connectors.appendChild(
+connectorsFields
+);
+
+panels.detail.appendChild(
+detailSource
+);
+
+shell.appendChild(
+tabs
+);
+
+Object.values(
+panels
+).forEach(
+panel=>shell.appendChild(panel)
+);
+
+if(
+layout.firstElementChild!==preview
+){
+layout.insertBefore(
+preview,
+layout.firstElementChild
+);
+}
+
+layout.appendChild(
+shell
+);
+
+refreshDuctTabLanguage();
+
+}
+
+setupDuctTabs();
 
 function updateConnectionTypeTitle(){
 
@@ -1489,6 +1804,8 @@ if(signupInputs[2]) signupInputs[2].placeholder=tr("password");
 
 signupSubmit.textContent=tr("signup");
 signupLater.textContent=tr("later");
+
+refreshDuctTabLanguage();
 
 renderSelectOptions();
 updateConnectionTypeTitle();
