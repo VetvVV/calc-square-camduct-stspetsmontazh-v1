@@ -108,11 +108,13 @@ async function checkRole(page, baseUrl, role) {
     addVisible: role !== 'guest'
   };
 
+  const expectedBuild = argValue('build') || process.env.CHECK_EXPECTED_BUILD || null;
+
   await page.goto(roleUrl(baseUrl, role), { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForSelector('.build-marker', { timeout: 10000 });
 
   const buildText = (await page.locator('.build-marker').textContent()).trim();
-  const buildVisible = /^build\s+/.test(buildText);
+  const buildVisible = expectedBuild ? buildText === expectedBuild : /^build\s+/.test(buildText);
   const projectVisible = await isVisibleInPage(page, '.project-panel');
 
   const moduleFrame = await openRectangularModule(page);
@@ -147,7 +149,7 @@ async function checkRole(page, baseUrl, role) {
   });
 
   const checks = [
-    ['build marker', buildVisible, buildText],
+    ['build marker', buildVisible, expectedBuild ? `${buildText} (expected ${expectedBuild})` : buildText],
     ['project visibility', projectVisible === expected.projectVisible, projectVisible ? 'visible' : 'hidden'],
     ['technical blocks', techVisible === expected.techVisible, techVisible ? `${techCount} nodes` : 'none'],
     ['guest limit', limitVisible === expected.limitVisible, limitVisible ? 'visible' : 'hidden'],
@@ -171,6 +173,7 @@ async function main() {
   }
 
   const baseUrl = normalizeBaseUrl(argValue('base') || process.env.CHECK_BASE_URL);
+  const expectedBuild = argValue('build') || process.env.CHECK_EXPECTED_BUILD || null;
   const executablePath = argValue('browser') || findBrowserExecutable();
   const launchOptions = { headless: true };
   if (executablePath) launchOptions.executablePath = executablePath;
@@ -182,6 +185,7 @@ async function main() {
 
   try {
     console.log(`Base: ${baseUrl}`);
+    if (expectedBuild) console.log(`Expected build: ${expectedBuild}`);
     console.log('');
 
     for (const role of roles) {
