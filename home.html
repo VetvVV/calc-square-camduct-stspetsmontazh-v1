@@ -2289,6 +2289,32 @@ function connectorDesignation(mark){
     return langLabels[mark] || mark;
 }
 
+function connectorShortName(code){
+    const labels={
+        shin20:'Ш20',
+        shin30:'Ш30',
+        shin20Self:'Ш20 Сам',
+        shin30Self:'Ш30 Сам',
+        rail:'Рейка',
+        gk:'ГК',
+        screwSelf:'Ш20 Сам'
+    };
+
+    if(currentLang() === 'en'){
+        return {
+            shin20:'SR20',
+            shin30:'SR30',
+            shin20Self:'SR20 self',
+            shin30Self:'SR30 self',
+            rail:'Rail',
+            gk:'GK',
+            screwSelf:'SR20 self'
+        }[code] || t(code);
+    }
+
+    return labels[code] || t(code);
+}
+
 function getProjectConnectorCodes(item){
     const connectors=
     item.connectors || {};
@@ -2310,17 +2336,29 @@ function localizedProjectConnections(item, multiline=false){
     const parts=[
     connectorCodes.C1
     ?
+    multiline
+    ?
     `${connectorDesignation('C1')}: ${t(connectorCodes.C1)}`
+    :
+    `C1 - ${connectorShortName(connectorCodes.C1)}`
     :
     '',
     connectorCodes.C2
     ?
+    multiline
+    ?
     `${connectorDesignation('C2')}: ${t(connectorCodes.C2)}`
+    :
+    `C2 - ${connectorShortName(connectorCodes.C2)}`
     :
     '',
     connectorCodes.S1
     ?
+    multiline
+    ?
     `${connectorDesignation('S1')}: ${t(connectorCodes.S1)}`
+    :
+    `S1 - ${connectorShortName(connectorCodes.S1)}`
     :
     ''
     ].filter(Boolean);
@@ -3788,7 +3826,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-1553</div>
+<div class="build-marker">build 2026-06-06-1942</div>
 
 </body>
 
