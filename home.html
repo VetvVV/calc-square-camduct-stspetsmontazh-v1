@@ -743,21 +743,29 @@ overflow:visible;
 
 .atlas-panel.module-open{
 height:calc(100vh - 90px);
-overflow-y:auto;
-overflow-x:hidden;
 position:sticky;
 top:90px;
 align-self:flex-start;
+overflow:hidden;
 }
 
 .atlas-panel.module-open #moduleContainer{
 height:100%;
 min-height:0;
+overflow:hidden;
 }
 
 .atlas-panel.module-open .module-frame{
 height:100% !important;
 min-height:0;
+}
+
+.atlas-panel.calculator-compact .module-frame{
+overflow:hidden;
+}
+
+.atlas-panel.calculator-expanded .module-frame{
+overflow:auto;
 }
 
 body.role-guest .project-panel,
@@ -769,23 +777,6 @@ display:none !important;
 
 body.role-guest .atlas-panel{
 width:100% !important;
-}
-
-.atlas-panel.calculator-sticky #moduleContainer{
-position:fixed;
-top:90px;
-left:var(--calculator-sticky-left, auto);
-width:var(--calculator-sticky-width, auto);
-height:calc(100vh - 90px);
-min-height:0;
-overflow:hidden;
-z-index:20;
-}
-
-.atlas-panel.calculator-sticky .module-frame{
-height:100% !important;
-min-height:0;
-overflow:auto;
 }
 
 #atlasContent{
@@ -1180,7 +1171,7 @@ url.href +
 '" onload="resizeModuleFrame(this)"></iframe>';
 
 setTimeout(
-updateCalculatorStickiness,
+updateCalculatorScrollState,
 0
 );
 
@@ -1210,7 +1201,7 @@ rightPanel.classList.remove(
 
 atlasContent.style.display = 'flex';
 
-updateCalculatorStickiness();
+updateCalculatorScrollState();
 
 const url =
 new URL(
@@ -1280,24 +1271,17 @@ if(!frame){
 }
 
 try{
-    const stickyPanel =
-    document.querySelector('.atlas-panel.calculator-sticky');
-
     const openPanel =
     document.querySelector('.atlas-panel.module-open');
 
-    if(stickyPanel || openPanel){
-        const moduleContainer =
-        document.getElementById('moduleContainer');
+    const isMobile =
+    window.innerWidth <= 900;
 
+    if(openPanel && !isMobile){
         frame.style.height =
-        (
-        moduleContainer
-        ?
-        moduleContainer.clientHeight
-        :
-        window.innerHeight - 90
-        ) + 'px';
+        '100%';
+
+        updateCalculatorScrollState();
 
         return;
     }
@@ -1316,13 +1300,13 @@ try{
     frame.style.height =
     height + 'px';
 
-    updateCalculatorStickiness();
+    updateCalculatorScrollState();
 }
 catch(e){}
 
 }
 
-function updateCalculatorStickiness(){
+function updateCalculatorScrollState(){
 
 const panel =
 document.querySelector('.atlas-panel');
@@ -1337,6 +1321,11 @@ if(!panel){
     return;
 }
 
+panel.classList.remove(
+'calculator-compact',
+'calculator-expanded'
+);
+
 const moduleVisible =
 moduleContainer
 &&
@@ -1347,50 +1336,51 @@ moduleContainer.offsetParent !== null;
 const isMobile =
 window.innerWidth <= 900;
 
+if(
+!moduleVisible
+||
+isMobile
+){
+    return;
+}
+
 let moduleContentHeight =
 0;
 
-if(
-moduleVisible
-&&
-!isMobile
-){
-    try{
-        const doc =
-        frame.contentDocument ||
-        frame.contentWindow.document;
+try{
+    const doc =
+    frame.contentDocument ||
+    frame.contentWindow.document;
 
-        moduleContentHeight =
-        Math.max(
-        doc.documentElement.scrollHeight,
-        doc.body.scrollHeight
-        );
+    moduleContentHeight =
+    Math.max(
+    doc.documentElement.scrollHeight,
+    doc.body.scrollHeight
+    );
 
-    }
-    catch(e){}
+}
+catch(e){
+    moduleContentHeight = 0;
 }
 
-const shouldStick =
-false;
+const panelHeight =
+panel.clientHeight || window.innerHeight - 90;
+
+const isExpanded =
+moduleContentHeight > panelHeight + 4;
 
 panel.classList.toggle(
-'calculator-sticky',
-shouldStick
+'calculator-expanded',
+isExpanded
 );
 
-if(
-moduleVisible
-&&
-!shouldStick
-&&
-moduleContentHeight
-){
-    frame.style.height =
-    Math.max(
-    moduleContentHeight,
-    window.innerHeight - 90
-    ) + 'px';
-}
+panel.classList.toggle(
+'calculator-compact',
+!isExpanded
+);
+
+frame.style.height =
+'100%';
 
 }
 
@@ -1402,7 +1392,7 @@ document.querySelectorAll('.module-frame').forEach(
 }
 );
 
-updateCalculatorStickiness();
+updateCalculatorScrollState();
 
 }
 
@@ -2745,11 +2735,6 @@ window.addEventListener(
 syncFloatingProjectHeader
 );
 
-window.addEventListener(
-'scroll',
-updateCalculatorStickiness
-);
-
 btnAddItem.addEventListener(
 'click',
 ()=>{
@@ -3184,7 +3169,7 @@ localStorage.setItem(
 percent
 );
 
-updateCalculatorStickiness();
+updateCalculatorScrollState();
 
 }
 );
@@ -3229,7 +3214,7 @@ projectTab.style.display = 'none';
 atlasTab.style.display = 'none';
 
 resizeAtlasFrame();
-updateCalculatorStickiness();
+updateCalculatorScrollState();
 
 return;
 
@@ -3305,7 +3290,7 @@ if(isMobile){
 setActiveMenu(activeLayout);
 
 resizeAtlasFrame();
-updateCalculatorStickiness();
+updateCalculatorScrollState();
 
 }
 
@@ -3321,7 +3306,7 @@ syncFloatingProjectHeader
 
 window.addEventListener(
 'resize',
-updateCalculatorStickiness
+updateCalculatorScrollState
 );
 
 resizer.addEventListener(

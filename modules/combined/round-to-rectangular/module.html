@@ -1046,6 +1046,25 @@ return localStorage;
 
 }
 
+function requestParentResize(){
+
+if(
+window.parent
+&&
+window.parent !== window
+){
+
+window.parent.postMessage(
+{
+type:"calcSquare:resizeModule"
+},
+"*"
+);
+
+}
+
+}
+
 function todayKey(){
 
 const d=
@@ -2015,6 +2034,7 @@ rusArea
 id="holes"
 ontoggle="
 openHole=this.open
+requestParentResize()
 "
 >
 
@@ -2359,6 +2379,16 @@ detailsBlock.addEventListener(
 openDetails=
 detailsBlock.open;
 
+setTimeout(
+requestParentResize,
+0
+);
+
+setTimeout(
+requestParentResize,
+80
+);
+
 });
 
 }
@@ -2379,6 +2409,16 @@ d.addEventListener(
 
 openLocks=
 d.open;
+
+setTimeout(
+requestParentResize,
+0
+);
+
+setTimeout(
+requestParentResize,
+80
+);
 
 });
 
@@ -2518,6 +2558,16 @@ type.value==="rect"
 "none";
 
 }
+
+setTimeout(
+requestParentResize,
+0
+);
+
+setTimeout(
+requestParentResize,
+80
+);
 
 }
 
