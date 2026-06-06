@@ -364,7 +364,8 @@ font-family:'Exo 2',sans-serif;
 }
 
 .project-table{
-width:min(100%,calc(100vw - 48px));
+width:fit-content;
+max-width:100%;
 min-height:180px;
 
 margin:auto;
@@ -380,7 +381,8 @@ box-shadow:0 6px 20px rgba(0,0,0,.08);
 }
 
 .column-controls{
-width:min(100%,calc(100vw - 48px));
+width:fit-content;
+max-width:100%;
 margin:0 auto 10px;
 display:flex;
 flex-wrap:wrap;
@@ -444,6 +446,8 @@ z-index:5;
 .project-total{
 width:var(--project-table-width, max-content);
 min-width:var(--project-table-width, max-content);
+margin-left:auto;
+margin-right:auto;
 }
 
 .project-rows{
@@ -683,7 +687,8 @@ text-align:right;
 }
 
 .material-summary{
-width:min(100%,calc(100vw - 48px));
+width:fit-content;
+max-width:100%;
 margin:18px auto 0;
 background:white;
 border-radius:14px;
@@ -709,6 +714,8 @@ border-top:1px solid #ececec;
 font-style:normal;
 width:var(--project-table-width, max-content);
 min-width:var(--project-table-width, max-content);
+margin-left:auto;
+margin-right:auto;
 }
 
 .material-summary-row:nth-child(even){
@@ -4083,7 +4090,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-2034</div>
+<div class="build-marker">build 2026-06-06-2049</div>
 
 </body>
 
