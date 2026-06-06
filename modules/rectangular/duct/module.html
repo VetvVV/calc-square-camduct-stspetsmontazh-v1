@@ -2227,7 +2227,7 @@ canSeeTechnicalDetails();
 
 currentProjectItem={
 name:tr("productName"),
-size:`A ${A} × B ${B} × C ${L} ${tr("mm")}; ${tr("conn1")}: ${connection.options[connection.selectedIndex]?.text}; ${tr("conn2")}: ${connectionType.options[connectionType.selectedIndex]?.text}`,
+size:`A ${A} × B ${B} × C ${L} ${tr("mm")}`,
 quantity:Q,
 material:`${material.options[material.selectedIndex]?.text}, t=${T} ${tr("mm")}`,
 productType:"rectangularDuct",
@@ -2240,6 +2240,10 @@ materialCode:material.value,
 thickness:T,
 connection1TypeCode:connection.value,
 connection2TypeCode:connectionType.value,
+connectors:{
+C1:connection.value,
+C2:connectionType.value
+},
 connectionCode:"conn1",
 connectionTypeCode:connection.value,
 area:full,

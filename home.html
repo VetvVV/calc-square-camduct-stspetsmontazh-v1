@@ -893,6 +893,11 @@ font-weight:700;
 background:#f6f7f8;
 }
 
+.position-card-description{
+white-space:pre-line;
+line-height:1.35;
+}
+
 @media(max-width:760px){
 .position-card-body{
 grid-template-columns:1fr;
@@ -1232,7 +1237,7 @@ placeholder="Об'єкт">
 <div class="position-card-visual" id="positionCardVisual"></div>
 <div class="position-card-info">
 <div class="position-card-table" id="positionCardTable"></div>
-<div id="positionCardDescription"></div>
+<div class="position-card-description" id="positionCardDescription"></div>
 </div>
 </div>
 </div>
@@ -2206,31 +2211,13 @@ function localizedProjectSize(item){
     const dimensions=
     detectDimensions(item);
 
-    const connection1TypeCode=
-    item.connection1TypeCode || item.connectionTypeCode || detectConnectionTypeCode(item);
-
-    const connection2TypeCode=
-    item.connection2TypeCode || null;
-
-    const connectionCode=
-    item.connectionCode || detectConnectionCode(item);
-
     if(!dimensions){
         return item.size || '';
     }
 
     return [
     `A ${dimensions.A} × B ${dimensions.B} × C ${dimensions.C} ${t('mm')}`,
-    connection2TypeCode
-    ?
-    `${t('conn1')}: ${t(connection1TypeCode || 'shin20')}`
-    :
-    (connectionCode ? t(connectionCode) : ''),
-    connection2TypeCode
-    ?
-    `${t('conn2')}: ${t(connection2TypeCode)}`
-    :
-    (connection1TypeCode ? t(connection1TypeCode) : '')
+    localizedProjectConnections(item)
     ]
     .filter(Boolean)
     .join('; ');
@@ -2277,35 +2264,79 @@ function localizedProjectMaterialName(item){
     .replace(/,\s*t\s*=\s*[0-9.,]+\s*(мм|mm|кг|kg)?/i,'');
 }
 
+function connectorDesignation(mark){
+    const labels={
+        uk:{
+            C1:"C1 \u2014 \u0437'\u0454\u0434\u043d\u0430\u043d\u043d\u044f \u043d\u0430 \u0441\u0456\u0447\u0435\u043d\u043d\u0456 1",
+            C2:"C2 \u2014 \u0437'\u0454\u0434\u043d\u0430\u043d\u043d\u044f \u043d\u0430 \u0441\u0456\u0447\u0435\u043d\u043d\u0456 2",
+            S1:"S1 \u2014 \u043f\u043e\u0437\u0434\u043e\u0432\u0436\u043d\u0454 \u0437'\u0454\u0434\u043d\u0430\u043d\u043d\u044f"
+        },
+        ru:{
+            C1:"C1 \u2014 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435 \u043d\u0430 \u0441\u0435\u0447\u0435\u043d\u0438\u0438 1",
+            C2:"C2 \u2014 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435 \u043d\u0430 \u0441\u0435\u0447\u0435\u043d\u0438\u0438 2",
+            S1:"S1 \u2014 \u043f\u0440\u043e\u0434\u043e\u043b\u044c\u043d\u043e\u0435 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u0435"
+        },
+        en:{
+            C1:"C1 \u2014 connection on section 1",
+            C2:"C2 \u2014 connection on section 2",
+            S1:"S1 \u2014 longitudinal connection"
+        }
+    };
+
+    const langLabels=
+    labels[currentLang()] || labels.uk;
+
+    return langLabels[mark] || mark;
+}
+
+function getProjectConnectorCodes(item){
+    const connectors=
+    item.connectors || {};
+
+    return {
+        C1:
+        connectors.C1 || item.connection1TypeCode || item.connectionTypeCode || detectConnectionTypeCode(item),
+        C2:
+        connectors.C2 || item.connection2TypeCode || null,
+        S1:
+        connectors.S1 || item.longitudinalConnectionTypeCode || null
+    };
+}
+
+function localizedProjectConnections(item, multiline=false){
+    const connectorCodes=
+    getProjectConnectorCodes(item);
+
+    const parts=[
+    connectorCodes.C1
+    ?
+    `${connectorDesignation('C1')}: ${t(connectorCodes.C1)}`
+    :
+    '',
+    connectorCodes.C2
+    ?
+    `${connectorDesignation('C2')}: ${t(connectorCodes.C2)}`
+    :
+    '',
+    connectorCodes.S1
+    ?
+    `${connectorDesignation('S1')}: ${t(connectorCodes.S1)}`
+    :
+    ''
+    ].filter(Boolean);
+
+    return parts.join(multiline ? '\n' : '; ');
+}
+
 function localizedProjectDescription(item){
     const dimensions=
     detectDimensions(item);
 
-    const connection1TypeCode=
-    item.connection1TypeCode || item.connectionTypeCode || detectConnectionTypeCode(item);
+    const description=
+    localizedProjectConnections(item);
 
-    const connection2TypeCode=
-    item.connection2TypeCode || null;
-
-    const connectionCode=
-    item.connectionCode || detectConnectionCode(item);
-
-    const descriptionParts=[
-    connection2TypeCode
-    ?
-    `${t('conn1')}: ${t(connection1TypeCode || 'shin20')}`
-    :
-    (connectionCode ? t(connectionCode) : ''),
-    connection2TypeCode
-    ?
-    `${t('conn2')}: ${t(connection2TypeCode)}`
-    :
-    (connection1TypeCode ? t(connection1TypeCode) : '')
-    ]
-    .filter(Boolean);
-
-    if(descriptionParts.length){
-        return descriptionParts.join('; ');
+    if(description){
+        return description;
     }
 
     return dimensions
@@ -2917,7 +2948,7 @@ function openPositionCard(index){
     detectDimensions(item) || {};
 
     const description =
-    localizedProjectDescription(item);
+    localizedProjectConnections(item, true) || localizedProjectDimensions(item);
 
     positionCardTitle.textContent =
     `${t('position')} ${index + 1}: ${localizedProjectName(item)}`;
@@ -2933,7 +2964,7 @@ function openPositionCard(index){
     `;
 
     positionCardDescription.textContent =
-    description || localizedProjectDimensions(item);
+    description;
 
     positionModal.classList.add('is-open');
     positionModal.setAttribute('aria-hidden','false');
@@ -3757,7 +3788,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-1534</div>
+<div class="build-marker">build 2026-06-06-1553</div>
 
 </body>
 
