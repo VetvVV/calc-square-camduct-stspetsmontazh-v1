@@ -440,7 +440,7 @@ flex-direction:column;
 display:grid;
 grid-template-columns:
 var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 70px);
-align-items:center;
+align-items:stretch;
 gap:0;
 padding:0;
 border-top:1px solid #ececec;
@@ -453,9 +453,18 @@ height:100%;
 padding:14px 10px;
 border-left:1px solid #e5e7eb;
 overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
+white-space:normal;
+overflow-wrap:anywhere;
+line-height:1.35;
 box-sizing:border-box;
+}
+
+.project-cell.is-numeric,
+.project-cell[data-col="actions"]{
+white-space:nowrap;
+overflow-wrap:normal;
+text-overflow:clip;
+line-height:normal;
 }
 
 .project-cell:first-child{
@@ -508,14 +517,15 @@ line-height:1;
 .column-resize{
 position:absolute;
 top:0;
-right:-3px;
-width:7px;
+right:-5px;
+width:11px;
 height:100%;
 cursor:col-resize;
 z-index:2;
 }
 
-.column-resize:hover{
+.column-resize:hover,
+.column-resize:focus{
 background:rgba(255,255,255,.22);
 }
 
@@ -2660,6 +2670,101 @@ function resizeProjectColumn(key,width){
     syncFloatingProjectHeader();
 }
 
+let projectColumnMeasureNode=null;
+
+function measureProjectTextWidth(text,font){
+    if(!projectColumnMeasureNode){
+        projectColumnMeasureNode=
+        document.createElement('span');
+
+        projectColumnMeasureNode.style.position='fixed';
+        projectColumnMeasureNode.style.left='-10000px';
+        projectColumnMeasureNode.style.top='-10000px';
+        projectColumnMeasureNode.style.visibility='hidden';
+        projectColumnMeasureNode.style.whiteSpace='nowrap';
+        projectColumnMeasureNode.style.pointerEvents='none';
+
+        document.body.appendChild(projectColumnMeasureNode);
+    }
+
+    projectColumnMeasureNode.style.font=font || '14px Arial';
+    projectColumnMeasureNode.textContent=String(text || '').trim();
+
+    return projectColumnMeasureNode.getBoundingClientRect().width;
+}
+
+function autoFitProjectColumn(key){
+    const column=
+    projectColumnState.find(
+    (item)=>item.key===key
+    );
+
+    if(!column || column.hidden){
+        return;
+    }
+
+    const samples=[
+    projectColumnLabel(column)
+    ];
+
+    document.querySelectorAll(
+    `.project-row [data-col="${key}"], .project-total [data-col="${key}"], .material-summary [data-col="${key}"]`
+    ).forEach(
+    (cell)=>{
+        if(cell.classList.contains('is-hidden')){
+            return;
+        }
+
+        const text=
+        cell.innerText.replace(/\s+/g,' ').trim();
+
+        if(text){
+            samples.push(text);
+        }
+    }
+    );
+
+    const sampleCell=
+    document.querySelector(`.project-row [data-col="${key}"], .table-head [data-col="${key}"]`);
+
+    const computed=
+    sampleCell ? window.getComputedStyle(sampleCell) : null;
+
+    const font=
+    computed
+    ?
+    `${computed.fontStyle} ${computed.fontWeight} ${computed.fontSize} ${computed.fontFamily}`
+    :
+    '';
+
+    const padding=
+    sampleCell
+    ?
+    parseFloat(computed.paddingLeft) + parseFloat(computed.paddingRight)
+    :
+    20;
+
+    const headerExtra=
+    column.locked ? 12 : 34;
+
+    const contentWidth=
+    samples.reduce(
+    (max,text)=>Math.max(max,measureProjectTextWidth(text,font)),
+    0
+    );
+
+    const maxWidth =
+    key === 'description' ? 640 : 520;
+
+    resizeProjectColumn(
+    key,
+    Math.min(
+    maxWidth,
+    Math.max(column.min,contentWidth + padding + headerExtra)
+    )
+    );
+}
+
 function applyLanguage(){
     document.documentElement.lang=currentLang();
 
@@ -3118,12 +3223,34 @@ document.querySelector('.table-head').addEventListener(
 );
 
 document.querySelector('.table-head').addEventListener(
+'dblclick',
+(event)=>{
+    const handle =
+    event.target.closest('[data-resize-col]');
+
+    if(!handle){
+        return;
+    }
+
+    event.preventDefault();
+
+    autoFitProjectColumn(
+    handle.dataset.resizeCol
+    );
+}
+);
+
+document.querySelector('.table-head').addEventListener(
 'mousedown',
 (event)=>{
     const handle =
     event.target.closest('[data-resize-col]');
 
     if(!handle){
+        return;
+    }
+
+    if(event.detail > 1){
         return;
     }
 
@@ -3826,7 +3953,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-1942</div>
+<div class="build-marker">build 2026-06-06-1950</div>
 
 </body>
 
