@@ -425,7 +425,7 @@ color:#d97a1c;
 display:grid;
 
 grid-template-columns:
-var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 70px);
+var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 220px 70px);
 
 padding:0;
 
@@ -458,7 +458,7 @@ flex-direction:column;
 .project-row{
 display:grid;
 grid-template-columns:
-var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 70px);
+var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 220px 70px);
 align-items:stretch;
 gap:0;
 padding:0;
@@ -636,6 +636,26 @@ color:#d97a1c;
 font-weight:700;
 }
 
+.project-comment{
+width:100%;
+min-height:38px;
+height:38px;
+padding:6px 8px;
+border:1px solid #d6d6d6;
+border-radius:8px;
+background:white;
+font:inherit;
+line-height:1.35;
+resize:vertical;
+overflow:hidden;
+box-sizing:border-box;
+}
+
+.project-comment:focus{
+outline:2px solid rgba(217,122,28,.28);
+border-color:#d97a1c;
+}
+
 .project-remove{
 width:30px;
 height:30px;
@@ -678,7 +698,7 @@ color:#777;
 .project-total{
 display:grid;
 grid-template-columns:
-var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 70px);
+var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 220px 70px);
 align-items:center;
 gap:0;
 padding:0;
@@ -714,7 +734,7 @@ font-weight:700;
 .material-summary-row{
 display:grid;
 grid-template-columns:
-var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 70px);
+var(--project-columns, 54px 260px 170px 260px 70px 190px 70px 110px 100px 220px 70px);
 gap:0;
 padding:0;
 border-top:1px solid #ececec;
@@ -1235,6 +1255,7 @@ placeholder="Об'єкт">
 <div class="project-cell is-numeric" data-col="thickness"><span class="column-title" data-column-title="thicknessShort">t</span><button class="column-hide" type="button" data-hide-col="thickness">×</button><span class="column-resize" data-resize-col="thickness"></span></div>
 <div class="project-cell is-numeric" data-col="area"><span class="column-title" data-column-title="area">Площа</span><button class="column-hide" type="button" data-hide-col="area">×</button><span class="column-resize" data-resize-col="area"></span></div>
 <div class="project-cell is-numeric" data-col="mass"><span class="column-title" data-column-title="mass">Маса</span><button class="column-hide" type="button" data-hide-col="mass">×</button><span class="column-resize" data-resize-col="mass"></span></div>
+<div class="project-cell" data-col="comments"><span class="column-title" data-column-title="comments">Коментарі</span><button class="column-hide" type="button" data-hide-col="comments">×</button><span class="column-resize" data-resize-col="comments"></span></div>
 <div class="project-cell is-numeric" data-col="actions"><button class="project-clear" type="button" data-clear-project="true" title="Очистити специфікацію">×</button></div>
 
 </div>
@@ -1258,6 +1279,7 @@ placeholder="Об'єкт">
 <span class="project-cell is-numeric" data-col="thickness"></span>
 <span class="project-cell is-numeric" data-col="area">0.000 м²</span>
 <span class="project-cell is-numeric" data-col="mass">0.00 кг</span>
+<span class="project-cell" data-col="comments"></span>
 <span class="project-cell" data-col="actions"></span>
 
 </div>
@@ -1918,6 +1940,7 @@ position:'Позиція',
 qty:'К-ть',
 material:'Матеріал',
 description:'Опис',
+comments:'Коментарі',
 thicknessShort:'t',
 area:'Площа',
 mass:'Маса',
@@ -1980,6 +2003,7 @@ position:'Позиция',
 qty:'Кол-во',
 material:'Материал',
 description:'Описание',
+comments:'Комментарии',
 thicknessShort:'t',
 area:'Площадь',
 mass:'Масса',
@@ -2042,6 +2066,7 @@ position:'Position',
 qty:'Qty',
 material:'Material',
 description:'Description',
+comments:'Comments',
 thicknessShort:'t',
 area:'Area',
 mass:'Mass',
@@ -2474,10 +2499,11 @@ const projectColumnDefaults=[
 {key:'thickness',labelKey:'thicknessShort',width:70,min:50,locked:false},
 {key:'area',labelKey:'area',width:110,min:80,locked:false},
 {key:'mass',labelKey:'mass',width:100,min:80,locked:false},
+{key:'comments',labelKey:'comments',width:220,min:140,locked:false},
 {key:'actions',label:'',width:70,min:60,locked:true}
 ];
 
-const PROJECT_COLUMN_SCHEMA_VERSION='4';
+const PROJECT_COLUMN_SCHEMA_VERSION='5';
 let shouldAutoFitProjectColumnsOnLoad=
 localStorage.getItem('calcSquareProjectColumnsVersion') !== PROJECT_COLUMN_SCHEMA_VERSION;
 
@@ -2790,7 +2816,15 @@ function autoFitProjectColumn(key){
         }
 
         const text=
-        cell.innerText.replace(/\s+/g,' ').trim();
+        (
+        cell.querySelector('textarea')
+        ?
+        cell.querySelector('textarea').value
+        :
+        cell.innerText
+        )
+        .replace(/\s+/g,' ')
+        .trim();
 
         if(text){
             samples.push(text);
@@ -2836,6 +2870,7 @@ function autoFitProjectColumn(key){
         actions:64,
         dimensions:260,
         description:360,
+        comments:360,
         material:260,
         name:320
     };
@@ -2976,6 +3011,21 @@ function saveProjectItems(){
 
 }
 
+function resizeProjectComment(textarea){
+    if(!textarea){
+        return;
+    }
+
+    textarea.style.height='auto';
+    textarea.style.height=`${Math.max(38,textarea.scrollHeight)}px`;
+}
+
+function resizeProjectComments(){
+    document
+    .querySelectorAll('.project-comment')
+    .forEach(resizeProjectComment);
+}
+
 function renderProject(){
 
     projectRows.innerHTML = '';
@@ -3068,6 +3118,9 @@ function renderProject(){
         <span class="project-cell is-numeric" data-col="thickness">${escapeHtml(thickness)}</span>
         <span class="project-cell is-numeric" data-col="area">${Number(item.area || 0).toFixed(3)} м²</span>
         <span class="project-cell is-numeric" data-col="mass">${Number(item.mass || 0).toFixed(2)} ${t('kg')}</span>
+        <span class="project-cell" data-col="comments">
+        <textarea class="project-comment" data-comment-index="${index}" rows="1">${escapeHtml(item.comment || '')}</textarea>
+        </span>
         <span class="project-cell is-numeric" data-col="actions">
         <button class="project-remove" type="button" data-index="${index}">×</button>
         </span>
@@ -3089,6 +3142,7 @@ function renderProject(){
     <span class="project-cell is-numeric" data-col="thickness"></span>
     <span class="project-cell is-numeric" data-col="area">${totalArea.toFixed(3)} м²</span>
     <span class="project-cell is-numeric" data-col="mass">${totalMass.toFixed(2)} ${t('kg')}</span>
+    <span class="project-cell" data-col="comments"></span>
     <span class="project-cell" data-col="actions"></span>
     `;
 
@@ -3119,6 +3173,7 @@ function renderProject(){
     <span class="project-cell is-numeric" data-col="thickness">${escapeHtml(total.thickness)}</span>
     <span class="project-cell is-numeric" data-col="area">${total.area.toFixed(3)} м²</span>
     <span class="project-cell is-numeric" data-col="mass">${total.mass.toFixed(2)} кг</span>
+    <span class="project-cell" data-col="comments"></span>
     <span class="project-cell" data-col="actions"></span>
     </div>
     `
@@ -3126,6 +3181,7 @@ function renderProject(){
     .join('');
 
     applyProjectColumns();
+    resizeProjectComments();
     syncFloatingProjectHeader();
 
     if(shouldAutoFitProjectColumnsOnLoad){
@@ -3154,6 +3210,7 @@ function addProjectItem(item){
         connection2TypeCode:item.connection2TypeCode || null,
         connectionCode:item.connectionCode || null,
         connectionTypeCode:item.connectionTypeCode || null,
+        comment:item.comment || '',
         area:Number(item.area) || 0,
         mass:Number(item.mass) || 0
     });
@@ -3346,6 +3403,32 @@ projectColumnControls.addEventListener(
     checkbox.dataset.toggleCol,
     !checkbox.checked
     );
+}
+);
+
+projectRows.addEventListener(
+'input',
+(event)=>{
+    const textarea =
+    event.target.closest('.project-comment');
+
+    if(!textarea){
+        return;
+    }
+
+    const index =
+    Number(textarea.dataset.commentIndex);
+
+    if(!Number.isInteger(index) || !projectItems[index]){
+        return;
+    }
+
+    projectItems[index].comment =
+    textarea.value;
+
+    resizeProjectComment(textarea);
+    saveProjectItems();
+    syncFloatingProjectHeader();
 }
 );
 
@@ -4097,7 +4180,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-2126</div>
+<div class="build-marker">build 2026-06-06-2147</div>
 
 </body>
 
