@@ -559,6 +559,33 @@ margin-top:3px;
 color:#777;
 }
 
+.project-dimensions-line{
+font-size:12px;
+color:#777;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+}
+
+body.hide-project-size-lines .project-dimensions-line{
+display:none;
+}
+
+.project-position-button{
+width:100%;
+height:100%;
+border:none;
+background:transparent;
+font:inherit;
+cursor:pointer;
+color:inherit;
+}
+
+.project-position-button:hover{
+color:#d97a1c;
+font-weight:700;
+}
+
 .project-remove{
 width:30px;
 height:30px;
@@ -767,6 +794,109 @@ flex-direction:column;
 
 overflow:visible;
 
+}
+
+.position-modal{
+position:fixed;
+inset:0;
+z-index:120;
+display:none;
+align-items:center;
+justify-content:center;
+padding:24px;
+background:rgba(20,24,31,.55);
+}
+
+.position-modal.is-open{
+display:flex;
+}
+
+.position-card{
+width:min(720px,calc(100vw - 48px));
+background:white;
+border-radius:12px;
+box-shadow:0 18px 50px rgba(0,0,0,.28);
+overflow:hidden;
+}
+
+.position-card-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:16px;
+padding:16px 20px;
+background:#5a616b;
+color:white;
+}
+
+.position-card-head strong{
+display:block;
+font-size:18px;
+}
+
+.position-card-close{
+width:32px;
+height:32px;
+border:none;
+border-radius:8px;
+background:rgba(255,255,255,.16);
+color:white;
+font-size:20px;
+font-weight:700;
+cursor:pointer;
+}
+
+.position-card-body{
+display:grid;
+grid-template-columns:1.2fr .8fr;
+gap:18px;
+padding:20px;
+}
+
+.position-card-visual{
+min-height:260px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#f7f7f7;
+border:1px solid #e5e7eb;
+border-radius:10px;
+}
+
+.position-card-visual svg{
+width:100%;
+max-width:390px;
+height:auto;
+}
+
+.position-card-info{
+display:flex;
+flex-direction:column;
+gap:12px;
+font-size:14px;
+}
+
+.position-card-table{
+display:grid;
+grid-template-columns:48px 1fr;
+border:1px solid #e5e7eb;
+border-bottom:none;
+}
+
+.position-card-table span{
+padding:9px 10px;
+border-bottom:1px solid #e5e7eb;
+}
+
+.position-card-table span:nth-child(odd){
+font-weight:700;
+background:#f6f7f8;
+}
+
+@media(max-width:760px){
+.position-card-body{
+grid-template-columns:1fr;
+}
 }
 
 .atlas-panel.module-open{
@@ -1090,6 +1220,22 @@ placeholder="Об'єкт">
 <button id="btnPrint">Друк</button>
 <button id="btnExport">Експорт</button>
 
+</div>
+
+<div class="position-modal" id="positionModal" aria-hidden="true">
+<div class="position-card" role="dialog" aria-modal="true">
+<div class="position-card-head">
+<strong id="positionCardTitle">Позиція</strong>
+<button class="position-card-close" id="positionCardClose" type="button">×</button>
+</div>
+<div class="position-card-body">
+<div class="position-card-visual" id="positionCardVisual"></div>
+<div class="position-card-info">
+<div class="position-card-table" id="positionCardTable"></div>
+<div id="positionCardDescription"></div>
+</div>
+</div>
+</div>
 </div>
 
 </div>
@@ -1646,6 +1792,24 @@ document.getElementById('projectTotal');
 const projectColumnControls =
 document.getElementById('projectColumnControls');
 
+const positionModal =
+document.getElementById('positionModal');
+
+const positionCardTitle =
+document.getElementById('positionCardTitle');
+
+const positionCardClose =
+document.getElementById('positionCardClose');
+
+const positionCardVisual =
+document.getElementById('positionCardVisual');
+
+const positionCardTable =
+document.getElementById('positionCardTable');
+
+const positionCardDescription =
+document.getElementById('positionCardDescription');
+
 const materialSummary =
 document.getElementById('materialSummary');
 
@@ -1691,6 +1855,8 @@ customer:'Замовник',
 object:"Об'єкт",
 name:'Найменування',
 dimensions:'Розміри',
+sizeLine:'Розміри під назвою',
+position:'Позиція',
 qty:'К-ть',
 material:'Матеріал',
 description:'Опис',
@@ -1751,6 +1917,8 @@ customer:'Заказчик',
 object:'Объект',
 name:'Наименование',
 dimensions:'Размеры',
+sizeLine:'Размеры под названием',
+position:'Позиция',
 qty:'Кол-во',
 material:'Материал',
 description:'Описание',
@@ -1811,6 +1979,8 @@ customer:'Customer',
 object:'Object',
 name:'Item',
 dimensions:'Dimensions',
+sizeLine:'Dimensions under item',
+position:'Position',
 qty:'Qty',
 material:'Material',
 description:'Description',
@@ -2001,18 +2171,21 @@ function detectThickness(item){
 
 function detectDimensions(item){
     if(item.dimensions){
-        return item.dimensions;
+        return {
+            ...item.dimensions,
+            C:item.dimensions.C || item.dimensions.L || ''
+        };
     }
 
     const match=
-    String(item.size || '').match(/A\s*([0-9.]+)\s*[×xх]\s*B\s*([0-9.]+)\s*[×xх]\s*L\s*([0-9.]+)/i);
+    String(item.size || '').match(/A\s*([0-9.]+)\s*[×xх]\s*B\s*([0-9.]+)\s*[×xх]\s*[CL]\s*([0-9.]+)/i);
 
     return match
     ?
     {
         A:match[1],
         B:match[2],
-        L:match[3]
+        C:match[3]
     }
     :
     null;
@@ -2047,7 +2220,7 @@ function localizedProjectSize(item){
     }
 
     return [
-    `A ${dimensions.A} × B ${dimensions.B} × L ${dimensions.L} ${t('mm')}`,
+    `A ${dimensions.A} × B ${dimensions.B} × C ${dimensions.C} ${t('mm')}`,
     connection2TypeCode
     ?
     `${t('conn1')}: ${t(connection1TypeCode || 'shin20')}`
@@ -2071,7 +2244,7 @@ function localizedProjectDimensions(item){
         return item.size || '';
     }
 
-    return `A ${dimensions.A} × B ${dimensions.B} × L ${dimensions.L} ${t('mm')}`;
+    return `A ${dimensions.A} × B ${dimensions.B} × C ${dimensions.C} ${t('mm')}`;
 }
 
 function localizedProjectMaterial(item){
@@ -2146,6 +2319,16 @@ let projectItems =
 JSON.parse(
 localStorage.getItem('calcSquareProjectItems') || '[]'
 );
+
+let showProjectSizeLine =
+localStorage.getItem('calcSquareProjectSizeLine') !== 'hidden';
+
+function applyProjectSizeLineVisibility(){
+    document.body.classList.toggle(
+    'hide-project-size-lines',
+    !showProjectSizeLine
+    );
+}
 
 
 function escapeHtml(value){
@@ -2350,6 +2533,12 @@ function renderProjectColumnControls(){
     }
 
     projectColumnControls.innerHTML =
+    `
+    <label>
+    <input type="checkbox" data-toggle-size-line="true" ${showProjectSizeLine ? 'checked' : ''}>
+    ${escapeHtml(t('sizeLine'))}
+    </label>
+    ` +
     projectColumnState
     .filter(
     (column)=>!column.locked
@@ -2576,9 +2765,12 @@ function renderProject(){
 
         row.innerHTML =
         `
-        <span class="project-cell is-numeric" data-col="no">${index + 1}</span>
+        <span class="project-cell is-numeric" data-col="no">
+        <button class="project-position-button" type="button" data-position-index="${index}">${index + 1}</button>
+        </span>
         <span class="project-cell" data-col="name">
         <strong>${escapeHtml(localizedProjectName(item))}</strong>
+        <small class="project-dimensions-line">${escapeHtml(localizedDimensions)}</small>
         </span>
         <span class="project-cell" data-col="dimensions">${escapeHtml(localizedDimensions)}</span>
         <span class="project-cell" data-col="description">${escapeHtml(localizedDescription)}</span>
@@ -2681,9 +2873,94 @@ function addProjectItem(item){
 
 }
 
+function renderPositionVisual(dimensions){
+    const A =
+    escapeHtml(dimensions.A || '');
+
+    const B =
+    escapeHtml(dimensions.B || '');
+
+    const C =
+    escapeHtml(dimensions.C || dimensions.L || '');
+
+    return `
+    <svg viewBox="0 0 420 280" aria-hidden="true">
+    <defs>
+    <marker id="arrowHead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#1d4ed8"></path>
+    </marker>
+    </defs>
+    <polygon points="115,92 250,70 338,112 199,136" fill="#8f8f8f"></polygon>
+    <polygon points="115,92 199,136 199,210 115,168" fill="#bcbcbc"></polygon>
+    <polygon points="199,136 338,112 338,184 199,210" fill="#c8c8c8"></polygon>
+    <polygon points="115,168 199,210 338,184 248,222" fill="#8a8a8a"></polygon>
+    <polyline points="115,92 250,70 338,112 338,184 248,222 115,168 115,92" fill="none" stroke="#666" stroke-width="1"></polyline>
+    <line x1="105" y1="184" x2="242" y2="238" stroke="#1d4ed8" stroke-width="1.5" marker-start="url(#arrowHead)" marker-end="url(#arrowHead)"></line>
+    <text x="165" y="244" fill="#1d4ed8" font-size="14">C ${C}</text>
+    <line x1="348" y1="112" x2="348" y2="184" stroke="#1d4ed8" stroke-width="1.5" marker-start="url(#arrowHead)" marker-end="url(#arrowHead)"></line>
+    <text x="356" y="152" fill="#1d4ed8" font-size="14">A ${A}</text>
+    <line x1="199" y1="222" x2="338" y2="196" stroke="#1d4ed8" stroke-width="1.5" marker-start="url(#arrowHead)" marker-end="url(#arrowHead)"></line>
+    <text x="258" y="218" fill="#1d4ed8" font-size="14">B ${B}</text>
+    </svg>
+    `;
+}
+
+function openPositionCard(index){
+    const item =
+    projectItems[index];
+
+    if(!item || !positionModal){
+        return;
+    }
+
+    const dimensions =
+    detectDimensions(item) || {};
+
+    const description =
+    localizedProjectDescription(item);
+
+    positionCardTitle.textContent =
+    `${t('position')} ${index + 1}: ${localizedProjectName(item)}`;
+
+    positionCardVisual.innerHTML =
+    renderPositionVisual(dimensions);
+
+    positionCardTable.innerHTML =
+    `
+    <span>A</span><span>${escapeHtml(dimensions.A || '')} ${t('mm')}</span>
+    <span>B</span><span>${escapeHtml(dimensions.B || '')} ${t('mm')}</span>
+    <span>C</span><span>${escapeHtml(dimensions.C || dimensions.L || '')} ${t('mm')}</span>
+    `;
+
+    positionCardDescription.textContent =
+    description || localizedProjectDimensions(item);
+
+    positionModal.classList.add('is-open');
+    positionModal.setAttribute('aria-hidden','false');
+}
+
+function closePositionCard(){
+    if(!positionModal){
+        return;
+    }
+
+    positionModal.classList.remove('is-open');
+    positionModal.setAttribute('aria-hidden','true');
+}
+
 projectRows.addEventListener(
 'click',
 (e)=>{
+
+    const positionButton =
+    e.target.closest('[data-position-index]');
+
+    if(positionButton){
+        openPositionCard(
+        Number(positionButton.dataset.positionIndex)
+        );
+        return;
+    }
 
     const button =
     e.target.closest('.project-remove');
@@ -2724,6 +3001,22 @@ document.querySelector('.table-head').addEventListener(
 projectColumnControls.addEventListener(
 'change',
 (event)=>{
+    const sizeLineToggle =
+    event.target.closest('[data-toggle-size-line]');
+
+    if(sizeLineToggle){
+        showProjectSizeLine =
+        sizeLineToggle.checked;
+
+        localStorage.setItem(
+        'calcSquareProjectSizeLine',
+        showProjectSizeLine ? 'visible' : 'hidden'
+        );
+
+        applyProjectSizeLineVisibility();
+        return;
+    }
+
     const checkbox =
     event.target.closest('[data-toggle-col]');
 
@@ -2815,6 +3108,33 @@ document.querySelector('.table-head').addEventListener(
     'mouseup',
     onUp
     );
+}
+);
+
+if(positionCardClose){
+    positionCardClose.addEventListener(
+    'click',
+    closePositionCard
+    );
+}
+
+if(positionModal){
+    positionModal.addEventListener(
+    'click',
+    (event)=>{
+        if(event.target === positionModal){
+            closePositionCard();
+        }
+    }
+    );
+}
+
+document.addEventListener(
+'keydown',
+(event)=>{
+    if(event.key === 'Escape'){
+        closePositionCard();
+    }
 }
 );
 
@@ -2926,6 +3246,7 @@ window.addEventListener(
 }
 );
 
+applyProjectSizeLineVisibility();
 renderProject();
 
 
@@ -3436,7 +3757,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-1515</div>
+<div class="build-marker">build 2026-06-06-1534</div>
 
 </body>
 

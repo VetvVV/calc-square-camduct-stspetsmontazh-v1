@@ -458,7 +458,7 @@ value="150"
 
 <div class="field">
 
-<label>L - Довжина</label>
+<label>C - Довжина</label>
 
 <input
 id="L"
@@ -599,7 +599,7 @@ catalog:'← Каталог',
 title:'Повітропроводи > Прямокутний',
 width:'A - Ширина',
 height:'B - Висота',
-length:'L - Довжина',
+length:'C - Довжина',
 material:'Матеріал',
 thickness:'Товщина',
 quantity:'Кількість',
@@ -643,7 +643,7 @@ where:'де:',
 cleanAreaVar:'Sч - чиста площа',
 widthVar:'A - ширина',
 heightVar:'B - висота',
-lengthVar:'L - довжина',
+lengthVar:'C - довжина',
 quantityVar:'Q - кількість виробів',
 substitution:'Підстановка:',
 locksLayout:'Замки і розкладка',
@@ -676,7 +676,7 @@ catalog:'← Каталог',
 title:'Воздуховоды > Прямоугольный',
 width:'A - Ширина',
 height:'B - Высота',
-length:'L - Длина',
+length:'C - Длина',
 material:'Материал',
 thickness:'Толщина',
 quantity:'Количество',
@@ -720,7 +720,7 @@ where:'где:',
 cleanAreaVar:'Sч - чистая площадь',
 widthVar:'A - ширина',
 heightVar:'B - высота',
-lengthVar:'L - длина',
+lengthVar:'C - длина',
 quantityVar:'Q - количество изделий',
 substitution:'Подстановка:',
 locksLayout:'Замки и раскладка',
@@ -753,7 +753,7 @@ catalog:'← Catalog',
 title:'Ducts > Rectangular',
 width:'A - Width',
 height:'B - Height',
-length:'L - Length',
+length:'C - Length',
 material:'Material',
 thickness:'Thickness',
 quantity:'Quantity',
@@ -797,7 +797,7 @@ where:'where:',
 cleanAreaVar:'Sc - clean area',
 widthVar:'A - width',
 heightVar:'B - height',
-lengthVar:'L - length',
+lengthVar:'C - length',
 quantityVar:'Q - item quantity',
 substitution:'Substitution:',
 locksLayout:'Locks and layout',
@@ -2227,14 +2227,14 @@ canSeeTechnicalDetails();
 
 currentProjectItem={
 name:tr("productName"),
-size:`A ${A} × B ${B} × L ${L} ${tr("mm")}; ${tr("conn1")}: ${connection.options[connection.selectedIndex]?.text}; ${tr("conn2")}: ${connectionType.options[connectionType.selectedIndex]?.text}`,
+size:`A ${A} × B ${B} × C ${L} ${tr("mm")}; ${tr("conn1")}: ${connection.options[connection.selectedIndex]?.text}; ${tr("conn2")}: ${connectionType.options[connectionType.selectedIndex]?.text}`,
 quantity:Q,
 material:`${material.options[material.selectedIndex]?.text}, t=${T} ${tr("mm")}`,
 productType:"rectangularDuct",
 dimensions:{
 A,
 B,
-L
+C:L
 },
 materialCode:material.value,
 thickness:T,
@@ -2314,7 +2314,7 @@ class="details-panel ${openDetails ? "open" : ""}"
 id="detailsPanel"
 >
 <strong>${tr("formula")}</strong>
-Sч = 2 × (A + B) × L × Q
+Sч = 2 × (A + B) × C × Q
 
 <br><br>
 
@@ -2390,7 +2390,7 @@ ${tr("mm")}
 
 <div>
 <label style="display:inline-block;width:90px">
-${tr("length").replace("L - ","")}:
+${tr("length").replace("L - ","").replace("C - ","")}:
 </label>
 
 <input
