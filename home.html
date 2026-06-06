@@ -364,7 +364,7 @@ font-family:'Exo 2',sans-serif;
 }
 
 .project-table{
-max-width:1200px;
+width:min(100%,calc(100vw - 48px));
 min-height:180px;
 
 margin:auto;
@@ -380,7 +380,7 @@ box-shadow:0 6px 20px rgba(0,0,0,.08);
 }
 
 .column-controls{
-max-width:1200px;
+width:min(100%,calc(100vw - 48px));
 margin:0 auto 10px;
 display:flex;
 flex-wrap:wrap;
@@ -401,6 +401,21 @@ cursor:pointer;
 
 .column-controls input{
 margin:0;
+}
+
+.column-control-action{
+padding:6px 10px;
+border:1px solid #d5d5d5;
+border-radius:8px;
+background:white;
+font-family:'Exo 2',sans-serif;
+font-size:12px;
+cursor:pointer;
+}
+
+.column-control-action:hover{
+border-color:#d97a1c;
+color:#d97a1c;
 }
 
 .table-head{
@@ -654,7 +669,7 @@ text-align:right;
 }
 
 .material-summary{
-max-width:1200px;
+width:min(100%,calc(100vw - 48px));
 margin:18px auto 0;
 background:white;
 border-radius:14px;
@@ -2434,6 +2449,14 @@ const projectColumnDefaults=[
 {key:'actions',label:'',width:70,min:60,locked:true}
 ];
 
+const PROJECT_COLUMN_SCHEMA_VERSION='2';
+let shouldAutoFitProjectColumnsOnLoad=
+localStorage.getItem('calcSquareProjectColumnsVersion') !== PROJECT_COLUMN_SCHEMA_VERSION;
+
+if(shouldAutoFitProjectColumnsOnLoad){
+    localStorage.removeItem('calcSquareProjectColumns');
+}
+
 function loadProjectColumnState(){
     let saved={};
 
@@ -2462,6 +2485,8 @@ function loadProjectColumnState(){
 let projectColumnState=
 loadProjectColumnState();
 
+let isAutoFittingProjectColumns=false;
+
 function saveProjectColumnState(){
     const state={};
 
@@ -2477,6 +2502,11 @@ function saveProjectColumnState(){
     localStorage.setItem(
     'calcSquareProjectColumns',
     JSON.stringify(state)
+    );
+
+    localStorage.setItem(
+    'calcSquareProjectColumnsVersion',
+    PROJECT_COLUMN_SCHEMA_VERSION
     );
 }
 
@@ -2613,6 +2643,8 @@ function renderProjectColumnControls(){
 
     projectColumnControls.innerHTML =
     `
+    <button class="column-control-action" type="button" data-auto-fit-columns="true">Автоширина</button>
+    <button class="column-control-action" type="button" data-reset-columns="true">Скинути вигляд</button>
     <label>
     <input type="checkbox" data-toggle-size-line="true" ${showProjectSizeLine ? 'checked' : ''}>
     ${escapeHtml(t('sizeLine'))}
@@ -2665,7 +2697,10 @@ function resizeProjectColumn(key,width){
     Math.round(width)
     );
 
-    saveProjectColumnState();
+    if(!isAutoFittingProjectColumns){
+        saveProjectColumnState();
+    }
+
     applyProjectColumns();
     syncFloatingProjectHeader();
 }
@@ -2763,6 +2798,34 @@ function autoFitProjectColumn(key){
     Math.max(column.min,contentWidth + padding + headerExtra)
     )
     );
+}
+
+function autoFitProjectColumns(){
+    isAutoFittingProjectColumns=true;
+
+    projectColumnState.forEach(
+    (column)=>{
+        if(!column.hidden){
+            autoFitProjectColumn(column.key);
+        }
+    }
+    );
+
+    isAutoFittingProjectColumns=false;
+    saveProjectColumnState();
+    applyProjectColumns();
+    syncFloatingProjectHeader();
+}
+
+function resetProjectColumnView(){
+    localStorage.removeItem('calcSquareProjectColumns');
+    localStorage.removeItem('calcSquareProjectColumnsVersion');
+
+    projectColumnState=
+    loadProjectColumnState();
+
+    autoFitProjectColumns();
+    renderProjectColumnControls();
 }
 
 function applyLanguage(){
@@ -3013,6 +3076,14 @@ function renderProject(){
     applyProjectColumns();
     syncFloatingProjectHeader();
 
+    if(shouldAutoFitProjectColumnsOnLoad){
+        shouldAutoFitProjectColumnsOnLoad=false;
+        setTimeout(
+        autoFitProjectColumns,
+        0
+        );
+    }
+
 }
 
 function addProjectItem(item){
@@ -3026,6 +3097,7 @@ function addProjectItem(item){
         dimensions:item.dimensions || null,
         materialCode:item.materialCode || null,
         thickness:item.thickness || null,
+        connectors:item.connectors || null,
         connection1TypeCode:item.connection1TypeCode || null,
         connection2TypeCode:item.connection2TypeCode || null,
         connectionCode:item.connectionCode || null,
@@ -3169,6 +3241,26 @@ document.querySelector('.table-head').addEventListener(
     projectItems = [];
     saveProjectItems();
     renderProject();
+}
+);
+
+projectColumnControls.addEventListener(
+'click',
+(event)=>{
+    const autoFitButton=
+    event.target.closest('[data-auto-fit-columns]');
+
+    if(autoFitButton){
+        autoFitProjectColumns();
+        return;
+    }
+
+    const resetButton=
+    event.target.closest('[data-reset-columns]');
+
+    if(resetButton){
+        resetProjectColumnView();
+    }
 }
 );
 
@@ -3953,7 +4045,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-1952</div>
+<div class="build-marker">build 2026-06-06-2015</div>
 
 </body>
 
