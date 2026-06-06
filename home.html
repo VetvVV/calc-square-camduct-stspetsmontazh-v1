@@ -442,8 +442,8 @@ z-index:5;
 .table-head,
 .project-row,
 .project-total{
-width:max-content;
-min-width:100%;
+width:var(--project-table-width, max-content);
+min-width:var(--project-table-width, max-content);
 }
 
 .project-rows{
@@ -480,6 +480,20 @@ white-space:nowrap;
 overflow-wrap:normal;
 text-overflow:clip;
 line-height:normal;
+}
+
+.project-cell[data-col="actions"]{
+position:sticky;
+right:0;
+z-index:3;
+background:inherit;
+box-shadow:-1px 0 0 #e5e7eb;
+}
+
+.table-head .project-cell[data-col="actions"]{
+z-index:8;
+background:#d97a1c;
+box-shadow:-1px 0 0 rgba(255,255,255,.28);
 }
 
 .project-cell:first-child{
@@ -693,8 +707,8 @@ gap:0;
 padding:0;
 border-top:1px solid #ececec;
 font-style:normal;
-width:max-content;
-min-width:100%;
+width:var(--project-table-width, max-content);
+min-width:var(--project-table-width, max-content);
 }
 
 .material-summary-row:nth-child(even){
@@ -2449,7 +2463,7 @@ const projectColumnDefaults=[
 {key:'actions',label:'',width:70,min:60,locked:true}
 ];
 
-const PROJECT_COLUMN_SCHEMA_VERSION='2';
+const PROJECT_COLUMN_SCHEMA_VERSION='3';
 let shouldAutoFitProjectColumnsOnLoad=
 localStorage.getItem('calcSquareProjectColumnsVersion') !== PROJECT_COLUMN_SCHEMA_VERSION;
 
@@ -2519,6 +2533,12 @@ function projectColumnLabel(column){
 }
 
 function applyProjectColumns(){
+    const visibleWidth=
+    projectColumnState.reduce(
+    (sum,column)=>sum + (column.hidden ? 0 : column.width),
+    0
+    );
+
     const template=
     projectColumnState
     .map(
@@ -2538,6 +2558,11 @@ function applyProjectColumns(){
         table.style.setProperty(
         '--project-columns',
         template
+        );
+
+        table.style.setProperty(
+        '--project-table-width',
+        `${visibleWidth}px`
         );
     }
     );
@@ -2780,7 +2805,7 @@ function autoFitProjectColumn(key){
     20;
 
     const headerExtra=
-    column.locked ? 12 : 34;
+    column.locked ? 8 : 24;
 
     const contentWidth=
     samples.reduce(
@@ -2788,8 +2813,21 @@ function autoFitProjectColumn(key){
     0
     );
 
+    const maxWidthByKey={
+        no:70,
+        qty:86,
+        thickness:82,
+        area:130,
+        mass:130,
+        actions:64,
+        dimensions:260,
+        description:360,
+        material:260,
+        name:320
+    };
+
     const maxWidth =
-    key === 'description' ? 640 : 520;
+    maxWidthByKey[key] || 420;
 
     resizeProjectColumn(
     key,
@@ -4045,7 +4083,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-06-2015</div>
+<div class="build-marker">build 2026-06-06-2025</div>
 
 </body>
 
