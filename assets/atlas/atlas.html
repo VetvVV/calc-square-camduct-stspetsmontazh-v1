@@ -808,6 +808,38 @@ function applyAtlasLanguage(){
     );
 }
 
+function openModule(path, role=atlasRole(), lang=atlasLang()){
+    const moduleUrl=
+    new URL(
+    path,
+    window.location.href
+    );
+
+    moduleUrl.searchParams.set('lang', lang);
+    moduleUrl.searchParams.set('role', role);
+    moduleUrl.searchParams.set('v', Date.now());
+
+    if(
+    window.parent
+    &&
+    window.parent !== window
+    ){
+        window.parent.postMessage(
+        {
+            type:'calcSquare:openModule',
+            path:moduleUrl.href,
+            role,
+            lang
+        },
+        '*'
+        );
+
+        return;
+    }
+
+    window.location.href=moduleUrl.href;
+}
+
 document.addEventListener(
 'click',
 (event)=>{
@@ -818,17 +850,13 @@ document.addEventListener(
         return;
     }
 
-    const url=
-    new URL(
+    event.preventDefault();
+
+    openModule(
     link.getAttribute('href'),
-    window.location.href
+    atlasRole(),
+    atlasLang()
     );
-
-    url.searchParams.set('lang', atlasLang());
-    url.searchParams.set('role', atlasRole());
-    url.searchParams.set('v', Date.now());
-
-    link.href=url.href;
 }
 );
 

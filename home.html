@@ -1120,10 +1120,24 @@ src="assets/atlas/atlas.html">
 
 <script>
 
-function openModule(modulePath){
+function openModule(modulePath, role=userRole, lang=currentLang()){
 
 currentModulePath =
 modulePath;
+
+const moduleRole =
+validRoles.includes(role)
+?
+role
+:
+userRole;
+
+const moduleLang =
+i18n[lang]
+?
+lang
+:
+currentLang();
 
 const moduleContainer =
 document.getElementById('moduleContainer');
@@ -1206,12 +1220,12 @@ window.location.href
 
 url.searchParams.set(
 'lang',
-currentLang()
+moduleLang
 );
 
 url.searchParams.set(
 'role',
-userRole
+moduleRole
 );
 
 url.searchParams.set(
@@ -2787,6 +2801,28 @@ window.addEventListener(
     validRoles.includes(data.role)
     ){
         setRole(data.role);
+
+        return;
+    }
+
+    if(
+    data.type === 'calcSquare:openModule'
+    &&
+    data.path
+    ){
+        openModule(
+        data.path,
+        data.role,
+        data.lang
+        );
+
+        if(
+        window.innerWidth <= 900
+        ){
+            layoutMode = 1;
+        }
+
+        updateLayout();
 
         return;
     }
