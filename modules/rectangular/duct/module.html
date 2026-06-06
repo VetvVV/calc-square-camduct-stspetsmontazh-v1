@@ -1528,40 +1528,54 @@ fromParentUrl
 return fromParentUrl;
 }
 
-const fromStorage=
-appStorage().getItem("calcSquareRole");
-
-return allowedRoles.includes(
-fromStorage
-)
-?
-fromStorage
-:
-"guest";
+return "guest";
 
 }
 
-function isGuestRole(){
+const ROLE_RULES={
+guest:{
+canAddToProject:false,
+canSeeTechnical:false,
+hasCalculationLimit:true
+},
+user:{
+canAddToProject:true,
+canSeeTechnical:false,
+hasCalculationLimit:false
+},
+client:{
+canAddToProject:true,
+canSeeTechnical:false,
+hasCalculationLimit:false
+},
+admin:{
+canAddToProject:true,
+canSeeTechnical:true,
+hasCalculationLimit:false
+}
+};
 
-return currentRole()==="guest";
+function roleRules(){
+
+return ROLE_RULES[currentRole()] || ROLE_RULES.guest;
 
 }
 
-function isAdminRole(){
+function canAddToProject(){
 
-return currentRole()==="admin";
+return roleRules().canAddToProject;
 
 }
 
 function canSeeTechnicalDetails(){
 
-return isAdminRole();
+return roleRules().canSeeTechnical;
 
 }
 
 function hasDailyCalculationLimit(){
 
-return isGuestRole();
+return roleRules().hasCalculationLimit;
 
 }
 
@@ -2769,7 +2783,7 @@ ${tr("kg")}
 
 </small>
 
-${hasDailyCalculationLimit() ? "" : `
+${canAddToProject() ? `
 <br><br>
 <button
 class="add-project-button"
@@ -2778,7 +2792,7 @@ onclick="addCurrentToProject()"
 >
 ${tr("addToProject")}
 </button>
-`}
+` : ""}
 
 `;
 

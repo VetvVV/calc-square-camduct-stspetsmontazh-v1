@@ -774,6 +774,36 @@ function atlasT(key){
     return atlasI18n[atlasLang()][key] || atlasI18n.uk[key] || key;
 }
 
+function atlasRole(){
+    const allowedRoles=[
+    'guest',
+    'user',
+    'client',
+    'admin'
+    ];
+
+    const fromUrl=
+    new URLSearchParams(window.location.search).get('role');
+
+    if(allowedRoles.includes(fromUrl)){
+        return fromUrl;
+    }
+
+    let fromParentUrl=null;
+
+    try{
+        fromParentUrl=
+        new URLSearchParams(window.parent.location.search).get('role');
+    }
+    catch(e){}
+
+    return allowedRoles.includes(fromParentUrl)
+    ?
+    fromParentUrl
+    :
+    'guest';
+}
+
 function applyAtlasLanguage(){
     document.documentElement.lang=atlasLang();
 
@@ -807,6 +837,7 @@ document.addEventListener(
     );
 
     url.searchParams.set('lang', atlasLang());
+    url.searchParams.set('role', atlasRole());
     url.searchParams.set('v', Date.now());
 
     link.href=url.href;

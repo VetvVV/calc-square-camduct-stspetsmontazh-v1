@@ -1210,6 +1210,11 @@ currentLang()
 );
 
 url.searchParams.set(
+'role',
+userRole
+);
+
+url.searchParams.set(
 'v',
 Date.now()
 );
@@ -1502,6 +1507,49 @@ document.getElementById('atlasTab');
 
 const validRoles =
 ['guest','user','client','admin'];
+
+const ROLE_RULES = {
+    guest:{
+        project:false,
+        projectActions:false,
+        save:false,
+        print:false,
+        export:false,
+        technical:false,
+        calculationLimit:true
+    },
+    user:{
+        project:true,
+        projectActions:true,
+        save:false,
+        print:false,
+        export:false,
+        technical:false,
+        calculationLimit:false
+    },
+    client:{
+        project:true,
+        projectActions:true,
+        save:true,
+        print:true,
+        export:true,
+        technical:false,
+        calculationLimit:false
+    },
+    admin:{
+        project:true,
+        projectActions:true,
+        save:true,
+        print:true,
+        export:true,
+        technical:true,
+        calculationLimit:false
+    }
+};
+
+function roleRules(role=userRole){
+    return ROLE_RULES[role] || ROLE_RULES.guest;
+}
 
 const requestedRole =
 new URLSearchParams(window.location.search).get('role');
@@ -2757,63 +2805,61 @@ renderProject();
 
 function applyRole(){
 
-    const isGuest =
-    userRole === 'guest';
+    const rules =
+    roleRules();
 
     document.body.classList.toggle(
     'role-guest',
-    isGuest
+    !rules.project
     );
 
-    const hasClientTools =
-    userRole === 'client'
-    ||
-    userRole === 'admin';
-
     heroSection.style.display =
-    isGuest
+    !rules.project
     ?
     ''
     :
     'none';
 
     menuProject.style.display =
-    isGuest
+    rules.project
     ?
-    'none'
+    ''
     :
-    '';
+    'none';
 
     menuAtlas.style.display =
-    isGuest
-    ?
-    'none'
-    :
     '';
 
     loginButton.textContent =
-    isGuest
+    !rules.project
     ?
     t('login')
     :
     t('cabinet');
 
     btnSave.style.display =
-    hasClientTools
+    rules.save
     ?
     ''
     :
     'none';
 
     btnPrint.style.display =
-    hasClientTools
+    rules.print
     ?
     ''
     :
     'none';
 
     btnExport.style.display =
-    hasClientTools
+    rules.export
+    ?
+    ''
+    :
+    'none';
+
+    btnAddItem.style.display =
+    rules.projectActions
     ?
     ''
     :
@@ -3119,10 +3165,10 @@ isMobile && layoutMode === 0
 :
 layoutMode;
 
-if(userRole === 'guest'){
+if(!roleRules().project){
 
 menuProject.style.display = 'none';
-menuAtlas.style.display = 'none';
+menuAtlas.style.display = '';
 
 leftPanel.style.display = 'none';
 
