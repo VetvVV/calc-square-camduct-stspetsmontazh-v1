@@ -1433,7 +1433,11 @@ window.parent !== window
 
 window.parent.postMessage(
 {
-type:"calcSquare:resizeModule"
+type:"calcSquare:resizeModule",
+height:Math.max(
+document.documentElement.scrollHeight,
+document.body.scrollHeight
+)
 },
 "*"
 );

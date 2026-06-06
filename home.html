@@ -1276,7 +1276,7 @@ catch(e){}
 
 }
 
-function resizeModuleFrame(frame){
+function resizeModuleFrame(frame, contentHeight=null){
 
 if(!frame){
     return;
@@ -1293,7 +1293,7 @@ try{
         frame.style.height =
         '100%';
 
-        updateCalculatorScrollState();
+        updateCalculatorScrollState(contentHeight);
 
         return;
     }
@@ -1312,13 +1312,13 @@ try{
     frame.style.height =
     height + 'px';
 
-    updateCalculatorScrollState();
+    updateCalculatorScrollState(contentHeight);
 }
 catch(e){}
 
 }
 
-function updateCalculatorScrollState(){
+function updateCalculatorScrollState(contentHeight=null){
 
 const panel =
 document.querySelector('.atlas-panel');
@@ -1357,7 +1357,11 @@ isMobile
 }
 
 let moduleContentHeight =
-0;
+Number(contentHeight) || 0;
+
+if(
+moduleContentHeight <= 0
+){
 
 try{
     const doc =
@@ -1372,7 +1376,17 @@ try{
 
 }
 catch(e){
-    moduleContentHeight = 0;
+    moduleContentHeight =
+    lastModuleContentHeight;
+}
+
+}
+
+if(
+moduleContentHeight > 0
+){
+    lastModuleContentHeight =
+    moduleContentHeight;
 }
 
 const panelHeight =
@@ -1396,15 +1410,15 @@ frame.style.height =
 
 }
 
-function resizeOpenModuleFrames(){
+function resizeOpenModuleFrames(contentHeight=null){
 
 document.querySelectorAll('.module-frame').forEach(
 (frame)=>{
-    resizeModuleFrame(frame);
+    resizeModuleFrame(frame, contentHeight);
 }
 );
 
-updateCalculatorScrollState();
+updateCalculatorScrollState(contentHeight);
 
 }
 
@@ -1588,6 +1602,9 @@ validRoles.includes(requestedRole)
 
 let currentModulePath =
 null;
+
+let lastModuleContentHeight =
+0;
 
 const heroSection =
 document.querySelector('.hero');
@@ -2827,7 +2844,9 @@ window.addEventListener(
     if(
     data.type === 'calcSquare:resizeModule'
     ){
-        resizeOpenModuleFrames();
+        resizeOpenModuleFrames(
+        data.height
+        );
 
         return;
     }

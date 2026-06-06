@@ -5,6 +5,11 @@
 - Внизу справа виден build-маркер.
 - После публикации открыть ссылки с новым `v=...` или нажать `Ctrl+F5`.
 
+Автопроверка ролей:
+
+- Локально: `check-roles.bat`
+- GitHub Pages: `check-roles.bat --base=https://vetvvv.github.io/calc-square-camduct-stspetsmontazh-v1/home.html`
+
 Базовая ссылка:
 
 `https://vetvvv.github.io/calc-square-camduct-stspetsmontazh-v1/home.html`
