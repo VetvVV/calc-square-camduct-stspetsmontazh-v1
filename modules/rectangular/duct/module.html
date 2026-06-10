@@ -175,17 +175,12 @@ background:#efefef;
 }
 
 .preview{
-
+position:relative;
 display:flex;
-
 justify-content:center;
-
 align-items:center;
-
 margin-top:0;
-
 }
-
 .preview img{
 
 width:650px;
@@ -196,6 +191,37 @@ height:auto;
 
 object-fit:contain;
 
+}
+#previewA{
+position:absolute;
+color:red;
+left:235px;
+top:178px;
+font-weight:bold;
+font-size:15px;
+z-index:10;
+transform:rotate(-6deg);
+}
+#previewB{
+position:absolute;
+color:blue;
+left:300px;
+top:110px;
+transform:rotate(-90deg);
+font-weight:bold;
+font-size:15px;
+z-index:10;
+}
+
+#previewC{
+position:absolute;
+color:green;
+left:128px;
+top:166px;
+font-weight:bold;
+font-size:15px;
+z-index:10;
+transform:rotate(18deg);
 }
 
 .result{
@@ -532,8 +558,79 @@ value="300"
 id="previewImage"
 src="./preview.svg"
 alt="Попередній перегляд">
-</div>
 
+<div id="previewA">A = 150</div>
+<div id="previewB">B = 150</div>
+<div id="previewC">C = 300</div>
+
+<svg
+id="previewSvg"
+style="display:none;"
+viewBox="0 0 400 250"
+width="100%"
+height="250">
+
+    <!-- корпус -->
+<rect
+    id="ductBody"
+    x="100"
+    y="70"
+    width="200"
+    height="100"
+	fill="#d9d9d9"
+        stroke="#333"
+        stroke-width="2" />
+
+    <!-- размер A -->
+<line
+    id="dimALine"
+    x1="100"
+	y1="190"
+        x2="300"
+        y2="190"
+        stroke="red"
+        stroke-width="2" />
+
+    <text
+        id="previewSvgA"
+        x="300"
+        y="210"
+        text-anchor="middle"
+        fill="red">
+        A = 150
+    </text>
+
+    <!-- размер B -->
+    <line
+	id="dimBLine"
+        x1="80"
+        y1="70"
+        x2="80"
+        y2="170"
+        stroke="blue"
+        stroke-width="2" />
+
+    <text
+        id="previewSvgB"
+        x="55"
+        y="125"
+        fill="blue">
+        B = 150
+    </text>
+
+    <!-- длина C -->
+    <text
+        id="previewSvgC"
+        x="200"
+        y="55"
+        text-anchor="middle"
+        fill="green">
+        C = 300
+    </text>
+
+</svg>
+
+</div>
 <div class="right">
 
 <label>
@@ -585,7 +682,6 @@ max="999"
 
 
 
-</select>
 
 </label>
 
@@ -646,6 +742,101 @@ id="out">
 </div>
 
 <script>
+
+function updatePreviewSvg(){
+
+    const aInput = document.getElementById("A");
+    const bInput = document.getElementById("B");
+    const lInput = document.getElementById("L");
+
+    const textA = document.getElementById("previewA");
+    const textB = document.getElementById("previewB");
+    const textC = document.getElementById("previewC");
+    const svgTextA = document.getElementById("previewSvgA");
+    const svgTextB = document.getElementById("previewSvgB");
+    const svgTextC = document.getElementById("previewSvgC");
+
+    if(!aInput || !bInput || !lInput || !textA || !textB || !textC){
+        return;
+    }
+
+    const aText = "A = " + (aInput.value || 0);
+    const bText = "B = " + (bInput.value || 0);
+    const cText = "C = " + (lInput.value || 0);
+
+    textA.textContent = aText;
+    textB.textContent = bText;
+    textC.textContent = cText;
+
+    if(svgTextA) svgTextA.textContent = aText;
+    if(svgTextB) svgTextB.textContent = bText;
+    if(svgTextC) svgTextC.textContent = cText;
+	
+const body = document.getElementById("ductBody");
+const dimALine = document.getElementById("dimALine");
+const dimBLine = document.getElementById("dimBLine");
+
+if(body && dimALine && dimBLine){
+
+    const A = parseFloat(aInput.value) || 150;
+    const B = parseFloat(bInput.value) || 150;
+
+    const maxW = 360;
+    const maxH = 180;
+
+    const scale = Math.min(maxW / A, maxH / B);
+
+    const w = A * scale;
+    const h = B * scale;
+
+    const x = 200 - w / 2;
+    const y = 125 - h / 2;
+
+    body.setAttribute("x", x);
+    body.setAttribute("y", y);
+    body.setAttribute("width", w);
+    body.setAttribute("height", h);
+
+    dimALine.setAttribute("x1", x);
+    dimALine.setAttribute("x2", x + w);
+    dimALine.setAttribute("y1", y + h + 20);
+    dimALine.setAttribute("y2", y + h + 20);
+
+    dimBLine.setAttribute("x1", x - 20);
+    dimBLine.setAttribute("x2", x - 20);
+    dimBLine.setAttribute("y1", y);
+    dimBLine.setAttribute("y2", y + h);
+
+    if(svgTextA){
+    svgTextA.setAttribute("x", x + w / 2);
+    svgTextA.setAttribute("y", y + h + 42);
+    }
+
+    if(svgTextB){
+    svgTextB.setAttribute("x", x - 58);
+    svgTextB.setAttribute("y", y + h / 2 + 5);
+    }
+
+    if(svgTextC){
+    svgTextC.setAttribute("x", x + w / 2);
+    svgTextC.setAttribute("y", y - 15);
+    }
+}
+	
+}
+
+["A","B","L"].forEach(function(id){
+
+    const input = document.getElementById(id);
+
+    if(input){
+        input.addEventListener("input", updatePreviewSvg);
+        input.addEventListener("change", updatePreviewSvg);
+    }
+
+});
+
+updatePreviewSvg();
 
 const i18n={
 uk:{
@@ -973,21 +1164,18 @@ rect:[
 800,
 900,
 1000,
-1120,
+1100,
 1250,
-1400,
-1500,
-1600,
-1800,
 2000
 
 ],
 
 round:[
 
-80,
+
 100,
 125,
+150,
 160,
 180,
 200,
@@ -1068,6 +1256,9 @@ input.value=v;
 
 menu.style.display=
 "none";
+
+updatePreviewSvg();
+
 
 if(
 id==="holeA"
@@ -2128,11 +2319,12 @@ function calc(
 forceGuestCalculation=false
 ){
 
+updatePreviewSvg();
+
 const holeOpened=
 document.querySelector(
 '#holes'
 )?.open;
-
 const A=n("A");
 
 const B=n("B");
@@ -3278,8 +3470,6 @@ requestParentResize,
 }
 );
 
-}
-
 setTimeout(
 ()=>{
 
@@ -3310,6 +3500,8 @@ requestParentResize();
 },
 0
 );
+
+}
 
 function toggleHole(){
 
