@@ -110,6 +110,55 @@ line-height:1.45;
 color:#555;
 }
 
+.duct-options{
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.duct-option-card{
+background:white;
+border:1px solid #ded8c4;
+border-radius:8px;
+padding:12px;
+}
+
+.duct-option-title{
+font-weight:700;
+margin-bottom:12px;
+}
+
+.duct-option-row{
+display:grid;
+grid-template-columns:1fr;
+align-items:start;
+gap:6px;
+margin-bottom:10px;
+}
+
+.duct-option-row label{
+margin:0;
+}
+
+.duct-option-row input,
+.duct-option-row select{
+width:100%;
+max-width:180px;
+}
+
+.duct-option-inline{
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.duct-option-result{
+display:none;
+margin-top:12px;
+padding-top:12px;
+border-top:1px solid #ddd;
+}
+
 @media(max-width:760px){
 .layout{
 grid-template-columns:1fr;
@@ -117,6 +166,11 @@ grid-template-columns:1fr;
 
 .duct-tabs{
 overflow-x:auto;
+}
+
+.duct-option-row{
+grid-template-columns:1fr;
+align-items:start;
 }
 }
 
@@ -163,6 +217,15 @@ max-height:320px;
 overflow-y:auto;
 
 z-index:50;
+}
+
+.duct-tab-panel .left .dropdown,
+.duct-option-row .dropdown,
+.duct-option-inline .dropdown{
+position:static;
+width:100%;
+max-width:180px;
+margin-top:4px;
 }
 
 .item{
@@ -1146,33 +1209,27 @@ type:"calcSquare:showAtlasCatalog"
 }
 );
 
+function rangeStep(start,end,step){
+
+const values=[];
+
+for(
+let value=start;
+value<=end;
+value+=step
+){
+values.push(value);
+}
+
+return values;
+
+}
+
 const std={
 
-rect:[
-
-100,
-150,
-200,
-250,
-300,
-350,
-400,
-450,
-500,
-600,
-700,
-800,
-900,
-1000,
-1100,
-1250,
-2000
-
-],
+rect:rangeStep(100,2000,50),
 
 round:[
-
-
 100,
 125,
 150,
@@ -1192,9 +1249,16 @@ round:[
 710,
 800,
 900,
-1000
+1000,
+1120,
+1250
+],
 
-]
+holeRectA:rangeStep(100,1000,50),
+
+holeRectB:rangeStep(100,800,50),
+
+quantity:rangeStep(1,10,1)
 
 };
 
@@ -1213,29 +1277,20 @@ id
 const menu=
 input.nextElementSibling;
 
+if(
+!menu
+){
+return;
+}
+
 function draw(v=""){
 
 menu.innerHTML="";
 
-(
+const values=
+suggestionsForInput(id);
 
-id==="holeA"
-
-&&
-
-document.getElementById(
-"holeType"
-)?.value==="round"
-
-?
-
-std.round
-
-:
-
-std.rect
-
-)
+values
 
 .forEach(
 v=>{
@@ -1258,17 +1313,6 @@ menu.style.display=
 "none";
 
 updatePreviewSvg();
-
-
-if(
-id==="holeA"
-||
-id==="holeB"
-){
-
-return;
-
-}
 
 calc();
 
@@ -1330,6 +1374,38 @@ menu.style.display=
 
 }
 );
+
+}
+
+function suggestionsForInput(id){
+
+if(
+id==="holeQ"
+){
+return std.quantity;
+}
+
+if(
+id==="holeA"
+&&
+document.getElementById("holeType")?.value==="round"
+){
+return std.round;
+}
+
+if(
+id==="holeA"
+){
+return std.holeRectA;
+}
+
+if(
+id==="holeB"
+){
+return std.holeRectB;
+}
+
+return std.rect;
 
 }
 
@@ -1517,6 +1593,166 @@ ductTabText("optionsNote");
 
 }
 
+function canUseDuctOptions(){
+
+return currentRole()!=="guest";
+
+}
+
+function renderOptionsPanel(){
+
+const optionsPanel=
+document.getElementById(
+"ductOptionsContent"
+);
+
+if(
+!optionsPanel
+){
+return;
+}
+
+const previousType=
+document.getElementById("holeType")?.value ||
+"none";
+
+const previousA=
+document.getElementById("holeA")?.value ||
+"";
+
+const previousB=
+document.getElementById("holeB")?.value ||
+"";
+
+const previousQ=
+document.getElementById("holeQ")?.value ||
+"1";
+
+if(
+!canUseDuctOptions()
+){
+optionsPanel.innerHTML=
+`<div id="ductOptionsNote" class="tab-note">${ductTabText("optionsNote")}</div>`;
+
+return;
+}
+
+optionsPanel.innerHTML=
+`
+<div class="duct-options">
+<div class="duct-option-card">
+<div class="duct-option-title">${tr("holes")}</div>
+
+<div class="duct-option-row">
+<label for="holeType">${tr("type")}</label>
+<select id="holeType">
+<option value="none">${tr("select")}</option>
+<option value="round">${tr("roundHole")}</option>
+<option value="rect">${tr("rectHole")}</option>
+</select>
+</div>
+
+<div id="holeBox" style="display:none">
+<div class="duct-option-row">
+<label id="holeALabel" for="holeA">${tr("sizeA")}</label>
+<div class="duct-option-inline">
+<span style="position:relative;display:inline-block">
+<input id="holeA" autocomplete="off" value="${previousA}" onclick="this.select()">
+<div class="dropdown" style="top:100%;left:0;"></div>
+</span>
+<span>${tr("mm")}</span>
+</div>
+</div>
+
+<div id="holeBbox" class="duct-option-row">
+<label for="holeB">${tr("sizeB")}</label>
+<div class="duct-option-inline">
+<span style="position:relative;display:inline-block">
+<input id="holeB" autocomplete="off" value="${previousB}" onclick="this.select()">
+<div class="dropdown" style="top:100%;left:0;"></div>
+</span>
+<span>${tr("mm")}</span>
+</div>
+</div>
+
+<div class="duct-option-row">
+<label for="holeQ">${tr("quantity")}</label>
+<span style="position:relative;display:inline-block">
+<input id="holeQ" autocomplete="off" value="${previousQ}" onclick="this.select()">
+<div class="dropdown" style="top:100%;left:0;"></div>
+</span>
+</div>
+</div>
+
+<div id="holeAreaBox" class="duct-option-result">
+${tr("holesArea")}<br>
+<b id="holeAreaValue">0.000 м²</b>
+</div>
+</div>
+</div>
+`;
+
+const holeType=
+document.getElementById("holeType");
+
+if(holeType){
+holeType.value=previousType;
+holeType.addEventListener(
+"change",
+()=>{
+toggleHole();
+calc();
+}
+);
+}
+
+[
+"holeA",
+"holeB",
+"holeQ"
+].forEach(
+id=>{
+const input=
+document.getElementById(id);
+
+if(!input){
+return;
+}
+
+input.addEventListener(
+"input",
+calc
+);
+
+input.addEventListener(
+"change",
+calc
+);
+}
+);
+
+if(
+document.getElementById("holeA")
+){
+bind("holeA");
+}
+
+if(
+document.getElementById("holeB")
+){
+bind("holeB");
+}
+
+if(
+document.getElementById("holeQ")
+){
+bind("holeQ");
+}
+
+toggleHole();
+
+}
+
 function setupDuctTabs(){
 
 const layout=
@@ -1626,17 +1862,17 @@ panels.sizes.appendChild(
 sizesSource
 );
 
-const optionsNote=
+const optionsContent=
 document.createElement("div");
 
-optionsNote.id=
-"ductOptionsNote";
+optionsContent.id=
+"ductOptionsContent";
 
-optionsNote.className=
-"tab-note";
+optionsContent.className=
+"duct-options";
 
 panels.options.appendChild(
-optionsNote
+optionsContent
 );
 
 const connectorsFields=
@@ -1685,6 +1921,8 @@ shell
 );
 
 refreshDuctTabLanguage();
+
+renderOptionsPanel();
 
 }
 
@@ -1997,6 +2235,7 @@ signupSubmit.textContent=tr("signup");
 signupLater.textContent=tr("later");
 
 refreshDuctTabLanguage();
+renderOptionsPanel();
 
 renderSelectOptions();
 updateConnectionTypeTitle();
@@ -2321,10 +2560,6 @@ forceGuestCalculation=false
 
 updatePreviewSvg();
 
-const holeOpened=
-document.querySelector(
-'#holes'
-)?.open;
 const A=n("A");
 
 const B=n("B");
@@ -2753,6 +2988,19 @@ connectors:{
 C1:connection.value,
 C2:connectionType.value
 },
+holes:
+holeType==="none"
+?
+null
+:
+{
+type:holeType,
+A:holeA,
+B:holeType==="rect" ? holeB : null,
+D:holeType==="round" ? holeA : null,
+quantity:holeQ,
+area:holeArea
+},
 connectionCode:"conn1",
 connectionTypeCode:connection.value,
 area:full,
@@ -2807,7 +3055,7 @@ ${tr("cleanArea")}
 
 <b>
 
-${clean.toFixed(3)} м²
+${cleanFinal.toFixed(3)} м²
 
 </b>
 
@@ -2827,7 +3075,7 @@ class="details-panel ${openDetails ? "open" : ""}"
 id="detailsPanel"
 >
 <strong>${tr("formula")}</strong>
-Sч = 2 × (A + B) × C × Q
+Sч = 2 × (A + B) × C × Q${holeType!=="none" ? ` - ${tr("holesArea")}` : ""}
 
 <br><br>
 
@@ -2852,6 +3100,12 @@ ${tr("quantityVar")}
 ÷ 1 000 000
 <br>
 = ${clean.toFixed(3)} м²
+${holeType!=="none" ? `
+<br>
+- ${holeArea.toFixed(3)} м²
+<br>
+= ${cleanFinal.toFixed(3)} м²
+` : ""}
 </div>
 ` : ""}
 
@@ -2995,237 +3249,6 @@ rusArea
 
 <br><br>
 
-${isAdmin ? `
-<details
-id="holes"
-ontoggle="
-openHole=this.open;
-requestParentResize()
-"
->
-
-<summary>
-
-${tr("holes")}
-
-${
-holeType!=="none"
-
-?
-
-` • `
-
-+
-
-(
-holeType==="round"
-
-?
-
-`${tr("roundHole")} D${holeA}`
-
-:
-
-`${tr("rectHole")} ${holeA}×${holeB}`
-
-)
-
-+
-
-` ×${holeQ}`
-
-+
-
-` • ${holeArea.toFixed(3)} м²`
-
-:
-
-""
-
-}
-
-</summary>
-
-<br>
-
-${tr("type")}
-
-<select
-id="holeType"
-onchange="
-toggleHole();
-"
-style="width:140px"
->
-
-<option value="none">
-
-${tr("select")}
-
-</option>
-
-<option value="round">
-
-${tr("roundHole")}
-
-</option>
-
-<option value="rect">
-
-${tr("rectHole")}
-
-</option>
-
-</select>
-
-<br><br>
-
-<div
-id="holeBox"
-style="display:none"
->
-
-<label id="holeALabel">
-
-${tr("sizeA")}
-
-</label>
-
-<br>
-
-<div
-style="
-position:relative;
-display:inline-block;
-"
->
-
-<input
-id="holeA"
-autocomplete="off"
-value="${holeA}"
-style="width:80px"
-onclick="this.select()"
-onchange="calc()"
->
-
-<div
-class="dropdown"
-style="
-top:100%;
-left:0;
-"
-></div>
-
-</div>
-
-<span>${tr("mm")}</span>
-
-<br><br>
-
-<div id="holeBbox">
-
-<label>
-
-${tr("sizeB")}
-
-</label>
-
-<br>
-
-<div
-style="
-position:relative;
-display:inline-block;
-"
->
-
-<input
-id="holeB"
-autocomplete="off"
-value="${holeB}"
-style="width:80px"
-onclick="this.select()"
-onchange="calc()"
->
-
-<div
-class="dropdown"
-style="
-top:100%;
-left:0;
-"
-></div>
-
-</div>
-
-<span>${tr("mm")}</span>
-</div>
-
-<br><br>
-
-${tr("quantity")}
-
-<br>
-
-<input
-id="holeQ"
-autocomplete="off"
-value="${holeQ}"
-style="width:80px"
-onclick="this.select()"
-onchange="calc()"
-
->
-
-</div>
-
-<button
-onclick="
-event.preventDefault();
-calc();
-"
-style="
-margin-top:8px;
-padding:8px 14px;
-cursor:pointer;
-"
->
-
-${tr("recalcHoles")}
-
-</button>
-
-<br><br>
-
-<div
-id="holeAreaBox"
-style="display:none"
->
-
-<hr
-style="
-border:none;
-border-top:1px solid #ddd;
-margin:18px 0;
-">
-
-${tr("holesArea")}
-
-<br>
-
-<b>
-
-${holeArea.toFixed(3)} м²
-
-</b>
-
-<br><br>
-
-</div>
-</details>
-` : ""}
-
 ${tr("totalArea")}
 
 <br>
@@ -3245,7 +3268,7 @@ Sч + Sзам = Sп
 
 <br>
 
-${clean.toFixed(3)}
+${cleanFinal.toFixed(3)}
 +
 ${(
 mainArea+
@@ -3317,6 +3340,10 @@ ${tr("addToProject")}
 
 `;
 
+updateHoleAreaDisplay(
+holeArea
+);
+
 if(
 !isAdmin
 ){
@@ -3327,22 +3354,6 @@ out.querySelectorAll(
 element.remove();
 }
 );
-}
-
-if(
-document.getElementById(
-"holeA"
-)
-){
-bind("holeA");
-}
-
-if(
-document.getElementById(
-"holeB"
-)
-){
-bind("holeB");
 }
 
 const detailsToggle=
@@ -3473,33 +3484,31 @@ requestParentResize,
 setTimeout(
 ()=>{
 
-if(
-holeOpened
-){
-
-const hole=
-document.getElementById(
-"holes"
-);
-
-if(
-hole
-){
-
-hole.open=
-true;
-
 toggleHole();
-
-}
-
-}
 
 requestParentResize();
 
 },
 0
 );
+
+}
+
+function updateHoleAreaDisplay(
+holeArea
+){
+
+const value=
+document.getElementById(
+"holeAreaValue"
+);
+
+if(
+value
+){
+value.textContent=
+`${holeArea.toFixed(3)} м²`;
+}
 
 }
 
@@ -3561,33 +3570,6 @@ type.value==="round"
 tr("diameter")
 :
 tr("sizeA");
-}
-const a=
-document.getElementById(
-"holeA"
-);
-
-const bb=
-document.getElementById(
-"holeB"
-);
-
-if(
-a
-){
-
-a.value="";
-
-}
-
-if(
-bb
-&&
-type.value==="round"
-){
-
-bb.value="";
-
 }
 if(
 b

@@ -759,6 +759,11 @@ background:#fafafa;
 font-weight:700;
 }
 
+.material-summary-total{
+background:#f2f4f7;
+font-weight:700;
+}
+
 .material-summary .project-cell{
 padding:12px 10px;
 }
@@ -797,6 +802,36 @@ font-weight:700;
 
 cursor:pointer;
 
+}
+
+.project-actions .icon-button{
+width:48px;
+height:48px;
+padding:0;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+position:relative;
+}
+
+.project-actions .save-icon::before{
+content:"";
+width:22px;
+height:22px;
+box-sizing:border-box;
+border:3px solid currentColor;
+border-radius:3px;
+background:
+linear-gradient(currentColor,currentColor) 5px 14px/12px 3px no-repeat,
+linear-gradient(currentColor,currentColor) 13px 3px/4px 7px no-repeat;
+}
+
+.save-status{
+min-width:120px;
+align-self:center;
+color:#5a616b;
+font-size:13px;
+font-weight:700;
 }
 
 .project-actions button:hover{
@@ -1162,6 +1197,97 @@ display:none !important;
 
 }
 
+@media print{
+@page{
+margin:12mm;
+}
+
+body{
+background:white;
+color:#111;
+}
+
+.topbar,
+.hero,
+.atlas-panel,
+.resizer,
+.project-tab,
+.atlas-tab,
+.column-controls,
+.project-actions,
+.build-marker,
+.login-modal,
+.position-modal,
+.floating-table-head-wrap,
+.project-cell[data-col="actions"],
+.table-head .column-hide,
+.table-head .column-resize{
+display:none !important;
+}
+
+.workspace-layout,
+.project-panel,
+.panel-content{
+display:block !important;
+width:100% !important;
+max-width:none !important;
+min-height:auto !important;
+padding:0 !important;
+margin:0 !important;
+background:white !important;
+box-shadow:none !important;
+overflow:visible !important;
+}
+
+.panel-content h2{
+margin:0 0 14px !important;
+font-size:24px !important;
+color:#222 !important;
+}
+
+.project-info{
+margin-bottom:14px !important;
+gap:8px !important;
+}
+
+.project-info input{
+border:none !important;
+border-bottom:1px solid #999 !important;
+border-radius:0 !important;
+background:white !important;
+padding:4px 0 !important;
+}
+
+.project-table,
+.material-summary{
+width:100% !important;
+max-width:none !important;
+overflow:visible !important;
+box-shadow:none !important;
+}
+
+.table-head,
+.project-row,
+.project-total,
+.material-summary-row{
+width:100% !important;
+min-width:100% !important;
+break-inside:avoid;
+}
+
+.project-cell{
+padding:6px 6px !important;
+font-size:11px !important;
+}
+
+.project-comment{
+border:none !important;
+background:transparent !important;
+resize:none !important;
+overflow:visible !important;
+}
+}
+
 </style>
 
 </head>
@@ -1301,10 +1427,10 @@ placeholder="Об'єкт">
 
 <div class="project-actions" id="projectActions">
 
-<button id="btnAddItem">Додати виріб</button>
-<button id="btnSave">Зберегти</button>
 <button id="btnPrint">Друк</button>
 <button id="btnExport">Експорт</button>
+<button id="btnSave" class="icon-button save-icon" type="button" aria-label="Зберегти" title="Зберегти"></button>
+<span class="save-status" id="saveStatus" aria-live="polite"></span>
 
 </div>
 
@@ -1905,9 +2031,6 @@ document.getElementById('materialSummary');
 const materialSummaryRows =
 document.getElementById('materialSummaryRows');
 
-const btnAddItem =
-document.getElementById('btnAddItem');
-
 const btnSave =
 document.getElementById('btnSave');
 
@@ -1916,6 +2039,9 @@ document.getElementById('btnPrint');
 
 const btnExport =
 document.getElementById('btnExport');
+
+const saveStatus =
+document.getElementById('saveStatus');
 
 const loginAction =
 document.querySelector('.login-action');
@@ -1959,8 +2085,10 @@ totalQuantity:'Загальна кількість',
 totalMass:'Загальна маса',
 totalRow:'Підсумок',
 materialSummary:'Підсумок за матеріалами',
-addItem:'Додати виріб',
+materialKinds:'Матеріалів',
 save:'Зберегти',
+saved:'Збережено',
+exported:'Експортовано',
 print:'Друк',
 export:'Експорт',
 loginTitle:'КАБІНЕТ',
@@ -2022,8 +2150,10 @@ totalQuantity:'Общее количество',
 totalMass:'Общая масса',
 totalRow:'Итог',
 materialSummary:'Итог по материалам',
-addItem:'Добавить изделие',
+materialKinds:'Материалов',
 save:'Сохранить',
+saved:'Сохранено',
+exported:'Экспортировано',
 print:'Печать',
 export:'Экспорт',
 loginTitle:'КАБИНЕТ',
@@ -2085,8 +2215,10 @@ totalQuantity:'Total quantity',
 totalMass:'Total mass',
 totalRow:'Total',
 materialSummary:'Material summary',
-addItem:'Add item',
+materialKinds:'Materials',
 save:'Save',
+saved:'Saved',
+exported:'Exported',
 print:'Print',
 export:'Export',
 loginTitle:'ACCOUNT',
@@ -2123,13 +2255,13 @@ noMaterial:'Material not specified'
 
 function currentLang(){
     const saved=
-    localStorage.getItem('calcSquareLang') || 'uk';
+    localStorage.getItem('calcSquareLang') || 'ru';
 
     return i18n[saved]
     ?
     saved
     :
-    'uk';
+    'ru';
 }
 
 function t(key){
@@ -2475,6 +2607,9 @@ let projectItems =
 JSON.parse(
 localStorage.getItem('calcSquareProjectItems') || '[]'
 );
+
+let projectMeta =
+loadProjectMeta();
 
 let showProjectSizeLine =
 localStorage.getItem('calcSquareProjectSizeLine') !== 'hidden';
@@ -2958,8 +3093,8 @@ function applyLanguage(){
     emptyProject.textContent=t('emptyProject');
     document.querySelector('.material-summary-title').textContent=t('materialSummary');
 
-    btnAddItem.textContent=t('addItem');
-    btnSave.textContent=t('save');
+    btnSave.setAttribute('aria-label', t('save'));
+    btnSave.setAttribute('title', t('save'));
     btnPrint.textContent=t('print');
     btnExport.textContent=t('export');
 
@@ -3008,7 +3143,293 @@ function applyLanguage(){
     applyRole();
 
     refreshOpenModuleLanguage();
-    refreshOpenModuleLanguage();
+}
+
+function projectInfoInputs(){
+    return Array.from(
+    document.querySelectorAll('.project-info input')
+    );
+}
+
+function loadProjectMeta(){
+    try{
+        const saved =
+        JSON.parse(
+        localStorage.getItem('calcSquareProjectMeta') || '{}'
+        );
+
+        return {
+            projectName:saved.projectName || '',
+            customer:saved.customer || '',
+            object:saved.object || '',
+            savedAt:saved.savedAt || ''
+        };
+    }
+    catch(e){
+        return {
+            projectName:'',
+            customer:'',
+            object:'',
+            savedAt:''
+        };
+    }
+}
+
+function readProjectMetaFromInputs(){
+    const inputs =
+    projectInfoInputs();
+
+    return {
+        projectName:inputs[0]?.value || '',
+        customer:inputs[1]?.value || '',
+        object:inputs[2]?.value || '',
+        savedAt:new Date().toISOString()
+    };
+}
+
+function applyProjectMeta(){
+    const inputs =
+    projectInfoInputs();
+
+    if(inputs[0]) inputs[0].value = projectMeta.projectName || '';
+    if(inputs[1]) inputs[1].value = projectMeta.customer || '';
+    if(inputs[2]) inputs[2].value = projectMeta.object || '';
+}
+
+function saveProjectMeta(){
+    projectMeta =
+    readProjectMetaFromInputs();
+
+    localStorage.setItem(
+    'calcSquareProjectMeta',
+    JSON.stringify(projectMeta)
+    );
+}
+
+function saveProject(){
+    saveProjectMeta();
+    saveProjectItems();
+    saveProjectColumnState();
+
+    if(saveStatus){
+        saveStatus.textContent = t('saved');
+
+        setTimeout(
+        ()=>{
+            if(saveStatus){
+                saveStatus.textContent = '';
+            }
+        },
+        2200
+        );
+    }
+}
+
+function setActionStatus(message){
+    if(!saveStatus){
+        return;
+    }
+
+    saveStatus.textContent = message;
+
+    setTimeout(
+    ()=>{
+        if(saveStatus){
+            saveStatus.textContent = '';
+        }
+    },
+    2200
+    );
+}
+
+function csvCell(value){
+    return `"${String(value ?? '').replaceAll('"','""')}"`;
+}
+
+function csvRow(values){
+    return values.map(csvCell).join(';');
+}
+
+function projectFileBaseName(){
+    const name =
+    (projectMeta.projectName || 'calc-square-project')
+    .trim()
+    .replace(/[\\/:*?"<>|]+/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+
+    return name || 'calc-square-project';
+}
+
+function buildMaterialTotals(){
+    const totals = {};
+
+    projectItems.forEach(
+    (item)=>{
+        const quantity =
+        Number(item.quantity) || 0;
+
+        const material =
+        localizedProjectMaterialName(item) || t('noMaterial');
+
+        const thickness =
+        detectThickness(item) || '';
+
+        const key =
+        `${material}|${thickness}`;
+
+        if(!totals[key]){
+            totals[key]={
+                material,
+                thickness,
+                quantity:0,
+                area:0,
+                mass:0
+            };
+        }
+
+        totals[key].quantity += quantity;
+        totals[key].area += Number(item.area) || 0;
+        totals[key].mass += Number(item.mass) || 0;
+    }
+    );
+
+    return Object.values(totals);
+}
+
+function exportProjectCsv(){
+    saveProject();
+
+    const rows = [];
+
+    rows.push([t('projectTitle')]);
+    rows.push([t('projectName'), projectMeta.projectName || '']);
+    rows.push([t('customer'), projectMeta.customer || '']);
+    rows.push([t('object'), projectMeta.object || '']);
+    rows.push([]);
+    rows.push([
+        '№',
+        t('name'),
+        t('dimensions'),
+        t('description'),
+        t('qty'),
+        t('material'),
+        t('thicknessShort'),
+        t('area'),
+        t('mass'),
+        t('comments')
+    ]);
+
+    let totalQuantity = 0;
+    let totalArea = 0;
+    let totalMass = 0;
+
+    projectItems.forEach(
+    (item,index)=>{
+        const quantity =
+        Number(item.quantity) || 0;
+
+        const area =
+        Number(item.area) || 0;
+
+        const mass =
+        Number(item.mass) || 0;
+
+        totalQuantity += quantity;
+        totalArea += area;
+        totalMass += mass;
+
+        rows.push([
+            index + 1,
+            localizedProjectName(item),
+            localizedProjectDimensions(item),
+            localizedProjectDescription(item),
+            quantity,
+            localizedProjectMaterialName(item),
+            detectThickness(item),
+            area.toFixed(3),
+            mass.toFixed(2),
+            item.comment || ''
+        ]);
+    }
+    );
+
+    rows.push([
+        '',
+        t('totalRow'),
+        '',
+        '',
+        totalQuantity,
+        '',
+        '',
+        totalArea.toFixed(3),
+        totalMass.toFixed(2),
+        ''
+    ]);
+
+    const materialTotals =
+    buildMaterialTotals();
+
+    if(materialTotals.length){
+        rows.push([]);
+        rows.push([t('materialSummary')]);
+        rows.push([
+            '№',
+            t('qty'),
+            t('material'),
+            t('thicknessShort'),
+            t('area'),
+            t('mass')
+        ]);
+
+        materialTotals.forEach(
+        (total,index)=>{
+            rows.push([
+                index + 1,
+                total.quantity,
+                total.material,
+                total.thickness,
+                total.area.toFixed(3),
+                total.mass.toFixed(2)
+            ]);
+        }
+        );
+
+        rows.push([
+            '',
+            totalQuantity,
+            `${t('materialKinds')}: ${materialTotals.length}`,
+            '',
+            totalArea.toFixed(3),
+            totalMass.toFixed(2)
+        ]);
+    }
+
+    const csv =
+    '\uFEFF' +
+    rows.map(csvRow).join('\r\n');
+
+    const blob =
+    new Blob(
+    [csv],
+    {type:'text/csv;charset=utf-8'}
+    );
+
+    const link =
+    document.createElement('a');
+
+    link.href =
+    URL.createObjectURL(blob);
+
+    link.download =
+    `${projectFileBaseName()}.csv`;
+
+    document.body.appendChild(link);
+    link.click();
+    URL.revokeObjectURL(link.href);
+    link.remove();
+
+    setActionStatus(t('exported'));
 }
 
 function saveProjectItems(){
@@ -3167,7 +3588,7 @@ function renderProject(){
     :
     'none';
 
-    materialSummaryRows.innerHTML =
+    const materialRows =
     materialEntries
     .map(
     (total,index)=>
@@ -3188,6 +3609,27 @@ function renderProject(){
     `
     )
     .join('');
+
+    const materialSummaryTotalRow =
+    `
+    <div class="material-summary-row material-summary-total">
+    <span class="project-cell is-numeric" data-col="no"></span>
+    <span class="project-cell" data-col="name">${t('totalRow')}</span>
+    <span class="project-cell" data-col="dimensions"></span>
+    <span class="project-cell" data-col="description"></span>
+    <span class="project-cell is-numeric" data-col="qty">${totalQuantity}</span>
+    <strong class="project-cell" data-col="material">${t('materialKinds')}: ${materialEntries.length}</strong>
+    <span class="project-cell is-numeric" data-col="thickness"></span>
+    <span class="project-cell is-numeric" data-col="area">${totalArea.toFixed(3)} м²</span>
+    <span class="project-cell is-numeric" data-col="mass">${totalMass.toFixed(2)} ${t('kg')}</span>
+    <span class="project-cell" data-col="comments"></span>
+    <span class="project-cell" data-col="actions"></span>
+    </div>
+    `;
+
+    materialSummaryRows.innerHTML =
+    materialRows +
+    materialSummaryTotalRow;
 
     applyProjectColumns();
     resizeProjectComments();
@@ -3441,6 +3883,37 @@ projectRows.addEventListener(
 }
 );
 
+projectInfoInputs().forEach(
+(input)=>{
+    input.addEventListener(
+    'input',
+    ()=>{
+        if(saveStatus){
+            saveStatus.textContent = '';
+        }
+    }
+    );
+}
+);
+
+btnSave.addEventListener(
+'click',
+saveProject
+);
+
+btnPrint.addEventListener(
+'click',
+()=>{
+    saveProject();
+    window.print();
+}
+);
+
+btnExport.addEventListener(
+'click',
+exportProjectCsv
+);
+
 document.querySelector('.table-head').addEventListener(
 'click',
 (event)=>{
@@ -3580,21 +4053,6 @@ window.addEventListener(
 syncFloatingProjectHeader
 );
 
-btnAddItem.addEventListener(
-'click',
-()=>{
-
-    layoutMode =
-    window.innerWidth <= 900
-    ?
-    1
-    :
-    0;
-    updateLayout();
-
-}
-);
-
 window.addEventListener(
 'message',
 (event)=>{
@@ -3679,6 +4137,7 @@ window.addEventListener(
 );
 
 applyProjectSizeLineVisibility();
+applyProjectMeta();
 renderProject();
 
 
@@ -3736,14 +4195,6 @@ function applyRole(){
     ''
     :
     'none';
-
-    btnAddItem.style.display =
-    rules.projectActions
-    ?
-    ''
-    :
-    'none';
-
     roleChoices.forEach(
     (button)=>{
 
@@ -3889,8 +4340,6 @@ let isResizing = false;
 let layoutMode = 0;
 
 applyLanguage();
-
-console.log('START', layoutMode);
 
 function setActiveMenu(activeLayout){
 
@@ -4190,7 +4639,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-10-1835</div>
+<div class="build-marker">build 2026-06-12-0210</div>
 
 </body>
 
