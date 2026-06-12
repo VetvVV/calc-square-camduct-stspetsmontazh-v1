@@ -1698,34 +1698,65 @@ catch(e){}
 
 }
 
+function modulePathForProductType(productType){
+
+    const paths = {
+        rectangularDuct:'modules/rectangular/duct/module.html',
+        rectangularElbow:'modules/rectangular/elbow/module.html',
+        rectangularTransition:'modules/rectangular/transition/module.html',
+        roundDuct:'modules/round/duct/module.html',
+        roundElbow:'modules/round/elbow/module.html',
+        roundTransition:'modules/round/transition/module.html',
+        roundOffsetTransition:'modules/round/offset-transition/module.html',
+        roundTee:'modules/round/tee/module.html',
+        roundCap:'modules/round/cap/module.html',
+        roundUmbrella:'modules/round/umbrella/module.html',
+        roundDuck:'modules/round/duck/module.html',
+        roundSaddle:'modules/round/saddle/module.html',
+        roundCross:'modules/round/cross/module.html',
+        roundDamper:'modules/round/damper/module.html',
+        roundDeflector:'modules/round/deflector/module.html',
+        roundCheckValve:'modules/round/check-valve/module.html',
+        roundCoupling:'modules/round/coupling/module.html',
+        roundFlange:'modules/round/flange/module.html',
+        roundNipple:'modules/round/nipple/module.html',
+        roundSilencer:'modules/round/silencer/module.html'
+    };
+
+    return paths[productType] || null;
+
+}
+
+function appendEditDimensionParams(params,item){
+
+    const dimensions =
+    detectDimensions(item) || {};
+
+    Object.entries(dimensions).forEach(([key,value])=>{
+        if(/^[A-Z][0-9]?$|^Angle$|^Offset$/.test(key) && value !== ''){
+            params.set(key,String(value));
+        }
+    });
+
+}
+
 function openModuleForProjectEdit(index){
 
     const item =
     projectItems[index];
 
-    if(!item || item.productType !== 'rectangularDuct'){
+    const modulePath =
+    modulePathForProductType(item?.productType);
+
+    if(!item || !modulePath){
         return;
     }
-
-    const dimensions =
-    detectDimensions(item) || {};
 
     const params =
     new URLSearchParams();
 
     params.set('editIndex', String(index));
-
-    if(dimensions.A){
-        params.set('A', dimensions.A);
-    }
-
-    if(dimensions.B){
-        params.set('B', dimensions.B);
-    }
-
-    if(dimensions.C || dimensions.L){
-        params.set('C', dimensions.C || dimensions.L);
-    }
+    appendEditDimensionParams(params,item);
 
     if(item.quantity){
         params.set('Q', item.quantity);
@@ -1733,29 +1764,32 @@ function openModuleForProjectEdit(index){
 
     if(item.materialCode){
         params.set('material', item.materialCode);
+        params.set('materialCode', item.materialCode);
     }
 
     if(item.thickness){
         params.set('thickness', item.thickness);
     }
 
-    if(item.connection1TypeCode || item.connectors?.C1){
-        params.set('C1', item.connection1TypeCode || item.connectors.C1);
-    }
+    if(item.productType === 'rectangularDuct'){
+        if(item.connection1TypeCode || item.connectors?.C1){
+            params.set('C1', item.connection1TypeCode || item.connectors.C1);
+        }
 
-    if(item.connection2TypeCode || item.connectors?.C2){
-        params.set('C2', item.connection2TypeCode || item.connectors.C2);
-    }
+        if(item.connection2TypeCode || item.connectors?.C2){
+            params.set('C2', item.connection2TypeCode || item.connectors.C2);
+        }
 
-    if(item.holes?.type){
-        params.set('holeType', item.holes.type);
-        params.set('holeA', item.holes.A || item.holes.D || 0);
-        params.set('holeB', item.holes.B || 0);
-        params.set('holeQ', item.holes.quantity || 1);
+        if(item.holes?.type){
+            params.set('holeType', item.holes.type);
+            params.set('holeA', item.holes.A || item.holes.D || 0);
+            params.set('holeB', item.holes.B || 0);
+            params.set('holeQ', item.holes.quantity || 1);
+        }
     }
 
     openModule(
-    `modules/rectangular/duct/module.html?${params.toString()}`,
+    `${modulePath}?${params.toString()}`,
     userRole,
     currentLang()
     );
@@ -2477,11 +2511,27 @@ function detectThickness(item){
 }
 
 function detectDimensions(item){
-    if(item.dimensions){
+    if(item.dimensions && typeof item.dimensions === 'object'){
         return {
             ...item.dimensions,
             C:item.dimensions.C || item.dimensions.L || ''
         };
+    }
+
+    if(typeof item.dimensions === 'string'){
+        const parsed = {};
+        String(item.dimensions).replace(
+        /([A-Z][0-9]?|Angle|Offset)\s*([0-9]+(?:[.,][0-9]+)?)/g,
+        (full,key,value)=>{
+            parsed[key] =
+            value.replace(',','.');
+            return full;
+        }
+        );
+
+        if(Object.keys(parsed).length){
+            return parsed;
+        }
     }
 
     const match=
@@ -4989,7 +5039,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-12-1457</div>
+<div class="build-marker">build 2026-06-12-1626</div>
 
 </body>
 

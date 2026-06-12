@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
@@ -556,83 +556,47 @@ font-size:42px;
 
 <div class="wrap">
 
-<div class="subtitle" data-i18n="atlasTitle">
-АТЛАС ВИРОБІВ
-</div>
-
-
-<a
-class="card"
-href="../../modules/round/index.html">
-
-<h2 data-i18n="round">Круглі</h2>
-
-
-
-<div class="items">
-
-<div class="item">
-
-<img
-src="../products/round_duct.svg"
-class="round-duct"
->
-
-<span data-i18n="duct">Повітропровід</span>
-
-</div>
-
-<div class="item">
-
-<img
-src="../products/round_elbow.svg"
-class="round-elbow"
->
-
-<span data-i18n="elbow">Відвід</span>
-
-</div>
-
-<div class="item">
-
-<img
-src="../products/round_transition.svg"
-class="round-transition"
->
-
-<span data-i18n="transition">Перехід</span>
-
-</div>
-<div class="item">
-
-<img
-src="../products/round_offset.svg"
-class="round-offset"
->
-
-<span class="offset-text" data-i18n-html="offset">
-Перехід<br>зі зміщенням
-</span>
-</div>
-
-</div>
-
-<div class="item">
-
-<img
-src="../products/round_tee.svg"
-class="round-tee"
->
-
-<span data-i18n="tee">Трійник</span>
-
-</div>
-</a>
+<div class="subtitle" data-i18n="atlasTitle">АТЛАС ИЗДЕЛИЙ</div>
 
 
 <div class="card">
 
-<h2 data-i18n="rectangular">Прямокутні</h2>
+<h2 data-i18n="round">Круглые</h2>
+
+<div class="items">
+
+<a class="item" href="../../modules/round/duct/module.html">
+<img src="../products/round_duct.svg" class="round-duct">
+<span data-i18n="duct">Воздуховод</span>
+</a>
+
+<a class="item" href="../../modules/round/elbow/module.html">
+<img src="../products/round_elbow.svg" class="round-elbow">
+<span data-i18n="elbow">Отвод</span>
+</a>
+
+<a class="item" href="../../modules/round/transition/module.html">
+<img src="../products/round_transition.svg" class="round-transition">
+<span data-i18n="transition">Переход</span>
+</a>
+
+<a class="item" href="../../modules/round/offset-transition/module.html">
+<img src="../products/round_offset.svg" class="round-offset">
+<span class="offset-text" data-i18n-html="offset">Переход<br>со смещением</span>
+</a>
+
+</div>
+
+<a class="item" href="../../modules/round/tee/module.html">
+<img src="../products/round_tee.svg" class="round-tee">
+<span data-i18n="tee">Тройник</span>
+</a>
+</div>
+
+
+<div class="card">
+
+<h2 data-i18n="rectangular">Прямоугольные</h2>
 
 <div class="items">
 
@@ -643,7 +607,7 @@ href="../../modules/rectangular/duct/module.html">
     src="../products/rectangular_duct.svg"
     class="rectangular-duct">
 
-    <span data-i18n="duct">Повітропровід</span>
+    <span data-i18n="duct">Воздуховод</span>
 
 </a>
 
@@ -654,7 +618,7 @@ href="../../modules/rectangular/elbow/module.html">
     src="../products/rectangular_elbow.svg"
     class="rectangular-elbow">
 
-    <span data-i18n="elbow">Відвід</span>
+    <span data-i18n="elbow">Отвод</span>
 
 </a>
 
@@ -665,7 +629,7 @@ href="../../modules/rectangular/transition/module.html">
     src="../products/rectangular_transition.svg"
     class="rectangular-transition">
 
-    <span data-i18n="transition">Перехід</span>
+    <span data-i18n="transition">Переход</span>
 
 </a>
 
@@ -678,7 +642,7 @@ href="../../modules/rectangular/transition/module.html">
 <div class="card">
 
 
-<h2 data-i18n="combined">Комбіновані</h2>
+<h2 data-i18n="combined">Комбинированные</h2>
 
 <div class="items">
 
@@ -694,10 +658,11 @@ href="../../modules/combined/round-to-rectangular/module.html">
 </a>
 
 
-<div class="item">
-<div class="icon">≈</div>
-<span data-i18n="offsetShort">Зміщення</span>
-</div>
+<a class="item"
+href="../../modules/round/offset-transition/module.html">
+<div class="icon">в‰€</div>
+<span data-i18n="offsetShort">Смещение</span>
+</a>
 
 </div>
 
@@ -708,45 +673,45 @@ href="../../modules/combined/round-to-rectangular/module.html">
 
 <script>
 const atlasI18n={
-uk:{
-atlasTitle:'АТЛАС ВИРОБІВ',
-round:'Круглі',
-rectangular:'Прямокутні',
-combined:'Комбіновані',
-duct:'Повітропровід',
-elbow:'Відвід',
-transition:'Перехід',
-offset:'Перехід<br>зі зміщенням',
-tee:'Трійник',
-roundToRect:'Круг→Прям',
-offsetShort:'Зміщення'
-},
-ru:{
-atlasTitle:'АТЛАС ИЗДЕЛИЙ',
-round:'Круглые',
-rectangular:'Прямоугольные',
-combined:'Комбинированные',
-duct:'Воздуховод',
-elbow:'Отвод',
-transition:'Переход',
-offset:'Переход<br>со смещением',
-tee:'Тройник',
-roundToRect:'Круг→Прям',
-offsetShort:'Смещение'
-},
-en:{
-atlasTitle:'PRODUCT ATLAS',
-round:'Round',
-rectangular:'Rectangular',
-combined:'Combined',
-duct:'Duct',
-elbow:'Elbow',
-transition:'Transition',
-offset:'Offset<br>transition',
-tee:'Tee',
-roundToRect:'Round→Rect',
-offsetShort:'Offset'
-}
+  "uk": {
+    "atlasTitle": "АТЛАС ВИРОБІВ",
+    "round": "Круглі",
+    "rectangular": "Прямокутні",
+    "combined": "Комбіновані",
+    "duct": "Повітропровід",
+    "elbow": "Відвід",
+    "transition": "Перехід",
+    "offset": "Перехід<br>зі зміщенням",
+    "tee": "Трійник",
+    "roundToRect": "Круг→Прям",
+    "offsetShort": "Зміщення"
+  },
+  "ru": {
+    "atlasTitle": "АТЛАС ИЗДЕЛИЙ",
+    "round": "Круглые",
+    "rectangular": "Прямоугольные",
+    "combined": "Комбинированные",
+    "duct": "Воздуховод",
+    "elbow": "Отвод",
+    "transition": "Переход",
+    "offset": "Переход<br>со смещением",
+    "tee": "Тройник",
+    "roundToRect": "Круг→Прям",
+    "offsetShort": "Смещение"
+  },
+  "en": {
+    "atlasTitle": "PRODUCT ATLAS",
+    "round": "Round",
+    "rectangular": "Rectangular",
+    "combined": "Combined",
+    "duct": "Duct",
+    "elbow": "Elbow",
+    "transition": "Transition",
+    "offset": "Offset<br>transition",
+    "tee": "Tee",
+    "roundToRect": "Round?Rect",
+    "offsetShort": "Offset"
+  }
 };
 
 function atlasLang(){
