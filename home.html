@@ -3754,12 +3754,15 @@ function addProjectItem(item){
     const editIndex =
     Number(item.editIndex);
 
-    if(
+    const isEdit =
     Number.isInteger(editIndex)
     &&
     editIndex >= 0
     &&
-    editIndex < projectItems.length
+    editIndex < projectItems.length;
+
+    if(
+    isEdit
     ){
         normalizedItem.comment =
         projectItems[editIndex].comment || normalizedItem.comment;
@@ -3773,6 +3776,20 @@ function addProjectItem(item){
 
     saveProjectItems();
     renderProject();
+
+    if(isEdit){
+        showAtlasCatalog();
+
+        layoutMode =
+        window.innerWidth <= 900
+        ?
+        1
+        :
+        0;
+
+        updateLayout();
+        return;
+    }
 
     layoutMode =
     window.innerWidth <= 900
@@ -4754,7 +4771,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-12-1419</div>
+<div class="build-marker">build 2026-06-12-1433</div>
 
 </body>
 
