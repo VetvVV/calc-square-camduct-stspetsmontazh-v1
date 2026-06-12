@@ -498,6 +498,10 @@ right:0;
 z-index:3;
 background:inherit;
 box-shadow:-1px 0 0 #e5e7eb;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:6px;
 }
 
 .table-head .project-cell[data-col="actions"]{
@@ -662,6 +666,7 @@ outline:2px solid rgba(217,122,28,.28);
 border-color:#d97a1c;
 }
 
+.project-edit-action,
 .project-remove{
 width:30px;
 height:30px;
@@ -671,6 +676,11 @@ background:#f3f4f6;
 color:#666;
 cursor:pointer;
 font-weight:700;
+}
+
+.project-edit-action:hover{
+background:#fff3e4;
+color:#d97a1c;
 }
 
 .project-remove:hover{
@@ -1688,6 +1698,79 @@ catch(e){}
 
 }
 
+function openModuleForProjectEdit(index){
+
+    const item =
+    projectItems[index];
+
+    if(!item || item.productType !== 'rectangularDuct'){
+        return;
+    }
+
+    const dimensions =
+    detectDimensions(item) || {};
+
+    const params =
+    new URLSearchParams();
+
+    params.set('editIndex', String(index));
+
+    if(dimensions.A){
+        params.set('A', dimensions.A);
+    }
+
+    if(dimensions.B){
+        params.set('B', dimensions.B);
+    }
+
+    if(dimensions.C || dimensions.L){
+        params.set('C', dimensions.C || dimensions.L);
+    }
+
+    if(item.quantity){
+        params.set('Q', item.quantity);
+    }
+
+    if(item.materialCode){
+        params.set('material', item.materialCode);
+    }
+
+    if(item.thickness){
+        params.set('thickness', item.thickness);
+    }
+
+    if(item.connection1TypeCode || item.connectors?.C1){
+        params.set('C1', item.connection1TypeCode || item.connectors.C1);
+    }
+
+    if(item.connection2TypeCode || item.connectors?.C2){
+        params.set('C2', item.connection2TypeCode || item.connectors.C2);
+    }
+
+    if(item.holes?.type){
+        params.set('holeType', item.holes.type);
+        params.set('holeA', item.holes.A || item.holes.D || 0);
+        params.set('holeB', item.holes.B || 0);
+        params.set('holeQ', item.holes.quantity || 1);
+    }
+
+    openModule(
+    `modules/rectangular/duct/module.html?${params.toString()}`,
+    userRole,
+    currentLang()
+    );
+
+    if(window.innerWidth <= 900){
+        layoutMode = 1;
+    }
+    else{
+        layoutMode = 0;
+    }
+
+    updateLayout();
+
+}
+
 function updateCalculatorScrollState(contentHeight=null){
 
 const panel =
@@ -2644,10 +2727,10 @@ const projectColumnDefaults=[
 {key:'area',labelKey:'area',width:110,min:80,locked:false},
 {key:'mass',labelKey:'mass',width:100,min:80,locked:false},
 {key:'comments',labelKey:'comments',width:220,min:140,locked:false},
-{key:'actions',label:'',width:70,min:60,locked:true}
+{key:'actions',label:'',width:92,min:86,locked:true}
 ];
 
-const PROJECT_COLUMN_SCHEMA_VERSION='5';
+const PROJECT_COLUMN_SCHEMA_VERSION='6';
 let shouldAutoFitProjectColumnsOnLoad=
 localStorage.getItem('calcSquareProjectColumnsVersion') !== PROJECT_COLUMN_SCHEMA_VERSION;
 
@@ -3552,6 +3635,7 @@ function renderProject(){
         <textarea class="project-comment" data-comment-index="${index}" rows="1">${escapeHtml(item.comment || '')}</textarea>
         </span>
         <span class="project-cell is-numeric" data-col="actions">
+        <button class="project-edit-action" type="button" data-edit-index="${index}" title="Редактировать" aria-label="Редактировать">&#9998;</button>
         <button class="project-remove" type="button" data-index="${index}">×</button>
         </span>
         `;
@@ -3647,7 +3731,7 @@ function renderProject(){
 
 function addProjectItem(item){
 
-    projectItems.push({
+    const normalizedItem = {
         name:item.name || t('product'),
         size:item.size || '',
         quantity:item.quantity || 1,
@@ -3661,10 +3745,31 @@ function addProjectItem(item){
         connection2TypeCode:item.connection2TypeCode || null,
         connectionCode:item.connectionCode || null,
         connectionTypeCode:item.connectionTypeCode || null,
+        holes:item.holes || null,
         comment:item.comment || '',
         area:Number(item.area) || 0,
         mass:Number(item.mass) || 0
-    });
+    };
+
+    const editIndex =
+    Number(item.editIndex);
+
+    if(
+    Number.isInteger(editIndex)
+    &&
+    editIndex >= 0
+    &&
+    editIndex < projectItems.length
+    ){
+        normalizedItem.comment =
+        projectItems[editIndex].comment || normalizedItem.comment;
+
+        projectItems[editIndex] =
+        normalizedItem;
+    }
+    else{
+        projectItems.push(normalizedItem);
+    }
 
     saveProjectItems();
     renderProject();
@@ -3764,6 +3869,16 @@ projectRows.addEventListener(
     if(positionButton){
         openPositionCard(
         Number(positionButton.dataset.positionIndex)
+        );
+        return;
+    }
+
+    const editButton =
+    e.target.closest('[data-edit-index]');
+
+    if(editButton){
+        openModuleForProjectEdit(
+        Number(editButton.dataset.editIndex)
         );
         return;
     }
@@ -4639,7 +4754,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-12-0210</div>
+<div class="build-marker">build 2026-06-12-1419</div>
 
 </body>
 

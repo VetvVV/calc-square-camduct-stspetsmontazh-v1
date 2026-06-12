@@ -1184,6 +1184,8 @@ return value.toLocaleString(moduleLang()==="ru" ? "ru-RU" : moduleLang()==="en" 
 
 const materialCodes=["galv","ss430","ss304"];
 const connectionTypeCodes=["shin20","shin30","shin20Self","shin30Self","rail","gk"];
+const editParams=new URLSearchParams(window.location.search);
+const projectEditIndex=editParams.get("editIndex");
 
 document.querySelector(".back").addEventListener(
 "click",
@@ -2554,6 +2556,27 @@ tr("openFromHome")
 
 }
 
+function projectActionLabel(){
+
+if(projectEditIndex===null){
+return tr("addToProject");
+}
+
+const lang=
+moduleLang();
+
+if(lang==="uk"){
+return "Зберегти зміни";
+}
+
+if(lang==="en"){
+return "Save changes";
+}
+
+return "Сохранить изменения";
+
+}
+
 function calc(
 forceGuestCalculation=false
 ){
@@ -3007,6 +3030,10 @@ area:full,
 mass:mass
 };
 
+if(projectEditIndex!==null){
+currentProjectItem.editIndex=projectEditIndex;
+}
+
 let layoutView=layout;
 
 if(layout==="ABAB"){
@@ -3334,7 +3361,7 @@ class="add-project-button"
 type="button"
 onclick="addCurrentToProject()"
 >
-${tr("addToProject")}
+${projectActionLabel()}
 </button>
 ` : ""}
 
@@ -3596,6 +3623,75 @@ requestParentResize,
 
 }
 
+function setEditValue(id,value){
+
+if(value===null || value===undefined || value===""){
+return;
+}
+
+const input=
+document.getElementById(id);
+
+if(!input){
+return;
+}
+
+input.value=value;
+
+}
+
+function applyProjectEditParams(){
+
+if(projectEditIndex===null){
+return;
+}
+
+setEditValue("A",editParams.get("A"));
+setEditValue("B",editParams.get("B"));
+setEditValue("L",editParams.get("C"));
+setEditValue("qty",editParams.get("Q"));
+
+const materialParam=
+editParams.get("material");
+
+if(materialParam && materialCodes.includes(materialParam)){
+material.value=materialParam;
+updateThicknessOptions(false);
+}
+
+const thicknessParam=
+editParams.get("thickness");
+
+if(thicknessParam){
+t.value=thicknessParam;
+manualT=true;
+}
+
+const c1Param=
+editParams.get("C1");
+
+if(c1Param && connectionTypeCodes.includes(c1Param)){
+connection.value=c1Param;
+}
+
+const c2Param=
+editParams.get("C2");
+
+if(c2Param && connectionTypeCodes.includes(c2Param)){
+connectionType.value=c2Param;
+}
+
+setEditValue("holeType",editParams.get("holeType"));
+setEditValue("holeA",editParams.get("holeA"));
+setEditValue("holeB",editParams.get("holeB"));
+setEditValue("holeQ",editParams.get("holeQ"));
+
+toggleHole();
+updateConnectionTypeTitle();
+updatePreviewSvg();
+
+}
+
 btnCalculate.addEventListener(
 "click",
 ()=>{
@@ -3604,6 +3700,7 @@ calc(true);
 );
 
 applyStaticLanguage();
+applyProjectEditParams();
 calc();
 
 </script>
