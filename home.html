@@ -2691,6 +2691,11 @@ JSON.parse(
 localStorage.getItem('calcSquareProjectItems') || '[]'
 );
 
+let projectSortState={
+    key:null,
+    direction:'asc'
+};
+
 let projectMeta =
 loadProjectMeta();
 
@@ -2937,6 +2942,7 @@ function renderProjectColumnControls(){
     `
     <button class="column-control-action" type="button" data-auto-fit-columns="true">Автоширина</button>
     <button class="column-control-action" type="button" data-reset-columns="true">Скинути вигляд</button>
+    <button class="column-control-action" type="button" data-reset-sort="true">Скинути сортування</button>
     <label>
     <input type="checkbox" data-toggle-size-line="true" ${showProjectSizeLine ? 'checked' : ''}>
     ${escapeHtml(t('sizeLine'))}
@@ -3524,6 +3530,164 @@ function saveProjectItems(){
 
 }
 
+function ensureProjectItemOrder(){
+    let changed=false;
+
+    projectItems.forEach(
+    (item,index)=>{
+        if(!Number.isFinite(Number(item._projectOrder))){
+            item._projectOrder=index;
+            changed=true;
+        }
+    }
+    );
+
+    return changed;
+}
+
+function nextProjectItemOrder(){
+    ensureProjectItemOrder();
+
+    return projectItems.reduce(
+    (max,item)=>Math.max(max,Number(item._projectOrder) || 0),
+    -1
+    ) + 1;
+}
+
+function projectItemNumber(item,index){
+    const order =
+    Number(item && item._projectOrder);
+
+    return Number.isFinite(order)
+    ?
+    order + 1
+    :
+    index + 1;
+}
+
+function projectSortValue(item,key,index){
+    if(key === 'no'){
+        return Number(item._projectOrder ?? index);
+    }
+
+    if(key === 'name'){
+        return localizedProjectName(item);
+    }
+
+    if(key === 'qty'){
+        return Number(item.quantity) || 0;
+    }
+
+    if(key === 'material'){
+        return localizedProjectMaterialName(item) || '';
+    }
+
+    if(key === 'thickness'){
+        return Number(detectThickness(item)) || 0;
+    }
+
+    if(key === 'area'){
+        return Number(item.area) || 0;
+    }
+
+    if(key === 'mass'){
+        return Number(item.mass) || 0;
+    }
+
+    return '';
+}
+
+function compareProjectSortValues(a,b){
+    if(typeof a === 'number' && typeof b === 'number'){
+        return a - b;
+    }
+
+    return String(a).localeCompare(
+    String(b),
+    currentLang() === 'en' ? 'en' : currentLang() === 'uk' ? 'uk' : 'ru',
+    {
+        numeric:true,
+        sensitivity:'base'
+    }
+    );
+}
+
+function sortProjectByColumn(key){
+    const sortableColumns=[
+    'no',
+    'name',
+    'qty',
+    'material',
+    'thickness',
+    'area',
+    'mass'
+    ];
+
+    if(!sortableColumns.includes(key)){
+        return;
+    }
+
+    if(ensureProjectItemOrder()){
+        saveProjectItems();
+    }
+
+    const direction =
+    projectSortState.key === key && projectSortState.direction === 'asc'
+    ?
+    'desc'
+    :
+    'asc';
+
+    projectSortState={
+        key,
+        direction
+    };
+
+    projectItems.sort(
+    (left,right)=>{
+        const leftIndex=Number(left._projectOrder) || 0;
+        const rightIndex=Number(right._projectOrder) || 0;
+
+        const diff =
+        compareProjectSortValues(
+        projectSortValue(left,key,leftIndex),
+        projectSortValue(right,key,rightIndex)
+        );
+
+        const stableDiff =
+        diff || leftIndex - rightIndex;
+
+        return direction === 'asc'
+        ?
+        stableDiff
+        :
+        -stableDiff;
+    }
+    );
+
+    saveProjectItems();
+    renderProject();
+}
+
+function resetProjectSort(){
+    projectSortState={
+        key:null,
+        direction:'asc'
+    };
+
+    if(ensureProjectItemOrder()){
+        saveProjectItems();
+    }
+
+    projectItems.sort(
+    (left,right)=>
+    (Number(left._projectOrder) || 0) - (Number(right._projectOrder) || 0)
+    );
+
+    saveProjectItems();
+    renderProject();
+}
+
 function resizeProjectComment(textarea){
     if(!textarea){
         return;
@@ -3555,8 +3719,12 @@ function renderProject(){
     let totalMass = 0;
     const materialTotals = {};
 
+    ensureProjectItemOrder();
+
     projectItems.forEach(
     (item,index)=>{
+        const itemNumber =
+        projectItemNumber(item,index);
 
         const itemQuantity =
         Number(item.quantity) || 0;
@@ -3618,7 +3786,7 @@ function renderProject(){
         row.innerHTML =
         `
         <span class="project-cell is-numeric" data-col="no">
-        <button class="project-position-button" type="button" data-position-index="${index}">${index + 1}</button>
+        <button class="project-position-button" type="button" data-position-index="${index}">${itemNumber}</button>
         </span>
         <span class="project-cell" data-col="name">
         <strong>${escapeHtml(localizedProjectName(item))}</strong>
@@ -3748,7 +3916,12 @@ function addProjectItem(item){
         holes:item.holes || null,
         comment:item.comment || '',
         area:Number(item.area) || 0,
-        mass:Number(item.mass) || 0
+        mass:Number(item.mass) || 0,
+        _projectOrder:Number.isFinite(Number(item._projectOrder))
+        ?
+        Number(item._projectOrder)
+        :
+        nextProjectItemOrder()
     };
 
     const editIndex =
@@ -3766,6 +3939,13 @@ function addProjectItem(item){
     ){
         normalizedItem.comment =
         projectItems[editIndex].comment || normalizedItem.comment;
+
+        normalizedItem._projectOrder =
+        Number.isFinite(Number(projectItems[editIndex]._projectOrder))
+        ?
+        Number(projectItems[editIndex]._projectOrder)
+        :
+        editIndex;
 
         projectItems[editIndex] =
         normalizedItem;
@@ -3848,7 +4028,7 @@ function openPositionCard(index){
     localizedProjectConnections(item, true) || localizedProjectDimensions(item);
 
     positionCardTitle.textContent =
-    `${t('position')} ${index + 1}: ${localizedProjectName(item)}`;
+    `${t('position')} ${projectItemNumber(item,index)}: ${localizedProjectName(item)}`;
 
     positionCardVisual.innerHTML =
     renderPositionVisual(dimensions);
@@ -3952,6 +4132,14 @@ projectColumnControls.addEventListener(
 
     if(resetButton){
         resetProjectColumnView();
+        return;
+    }
+
+    const resetSortButton=
+    event.target.closest('[data-reset-sort]');
+
+    if(resetSortButton){
+        resetProjectSort();
     }
 }
 );
@@ -4078,6 +4266,36 @@ document.querySelector('.table-head').addEventListener(
     autoFitProjectColumn(
     handle.dataset.resizeCol
     );
+}
+);
+
+document.addEventListener(
+'dblclick',
+(event)=>{
+    if(
+    event.target.closest(
+    '.column-resize, .column-hide, button, input, textarea, select'
+    )
+    ){
+        return;
+    }
+
+    const cell =
+    event.target.closest('.table-head .project-cell');
+
+    if(!cell){
+        return;
+    }
+
+    const key =
+    cell.dataset.col;
+
+    if(!key){
+        return;
+    }
+
+    event.preventDefault();
+    sortProjectByColumn(key);
 }
 );
 
@@ -4771,7 +4989,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-12-1433</div>
+<div class="build-marker">build 2026-06-12-1457</div>
 
 </body>
 
