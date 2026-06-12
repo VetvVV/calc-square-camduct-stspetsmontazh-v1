@@ -882,6 +882,7 @@ function renderCatalogMap(){
     notifyAtlasResize();
     setTimeout(notifyAtlasResize,50);
     setTimeout(notifyAtlasResize,250);
+    setTimeout(notifyAtlasResize,800);
 }
 
 function notifyAtlasResize(){
@@ -1007,8 +1008,19 @@ window.addEventListener('load',()=>{
     notifyAtlasResize();
     setTimeout(notifyAtlasResize,300);
     setTimeout(notifyAtlasResize,1000);
+    setTimeout(notifyAtlasResize,2000);
 });
 window.addEventListener('resize',notifyAtlasResize);
+
+if('ResizeObserver' in window){
+    const observer =
+    new ResizeObserver(()=>{
+        notifyAtlasResize();
+    });
+
+    observer.observe(document.body);
+    observer.observe(document.documentElement);
+}
 </script>
 
 </body>

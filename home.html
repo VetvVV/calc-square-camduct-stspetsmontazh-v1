@@ -1089,6 +1089,15 @@ display:none !important;
 
 body.role-guest .atlas-panel{
 width:100% !important;
+display:block;
+min-height:auto;
+padding-left:0;
+border-left:none;
+}
+
+body.role-guest .workspace-layout{
+display:block;
+min-height:auto;
 }
 
 body.role-guest #atlasContent,
@@ -1099,7 +1108,7 @@ overflow:visible;
 }
 
 body.role-guest #atlasFrame{
-height:auto;
+height:calc(100vh - 90px);
 min-height:calc(100vh - 90px);
 overflow:hidden;
 }
@@ -5484,7 +5493,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-12-2138</div>
+<div class="build-marker">build 2026-06-12-2242</div>
 
 </body>
 
