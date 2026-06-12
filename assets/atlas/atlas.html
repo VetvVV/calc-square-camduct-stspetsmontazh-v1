@@ -460,6 +460,90 @@ margin:0 auto 10px;
 
 }
 
+.catalog-map{
+width:min(1180px,94vw);
+margin:28px auto 0;
+padding:22px 26px;
+border-radius:20px;
+background:rgba(255,255,255,.18);
+border:1px solid rgba(255,255,255,.35);
+box-sizing:border-box;
+}
+
+.catalog-map h2{
+margin:0 0 14px;
+font-size:22px;
+color:#5a616b;
+text-align:left;
+}
+
+.catalog-map-group{
+margin-top:18px;
+}
+
+.catalog-map-group h3{
+margin:0 0 8px;
+font-size:18px;
+color:#d9821f;
+}
+
+.catalog-map-list{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:8px;
+}
+
+.catalog-map-item{
+display:grid;
+grid-template-columns:1fr auto;
+gap:10px;
+align-items:center;
+padding:9px 10px;
+border-radius:8px;
+background:rgba(255,255,255,.42);
+border:1px solid rgba(0,0,0,.05);
+color:#111;
+text-decoration:none;
+font-style:normal;
+}
+
+.catalog-map-item:hover{
+background:#fff;
+}
+
+.catalog-map-title{
+font-weight:700;
+font-size:14px;
+}
+
+.catalog-map-meta{
+display:block;
+margin-top:2px;
+font-size:12px;
+color:#68707a;
+}
+
+.catalog-map-status{
+min-width:74px;
+padding:4px 7px;
+border-radius:999px;
+text-align:center;
+font-size:11px;
+font-weight:700;
+background:#edf7ed;
+color:#237a31;
+}
+
+.catalog-map-status.draft{
+background:#fff4d8;
+color:#9a6500;
+}
+
+.catalog-map-status.question{
+background:#ffe7e7;
+color:#a33737;
+}
+
 
 
 
@@ -671,6 +755,11 @@ href="../../modules/round/offset-transition/module.html">
 
 </div>
 
+<section class="catalog-map" id="catalogMap" aria-label="Полная карта каталога"></section>
+
+</div>
+
+<script src="./catalog-map.js"></script>
 <script>
 const atlasI18n={
   "uk": {
@@ -737,6 +826,93 @@ function atlasLang(){
 
 function atlasT(key){
     return atlasI18n[atlasLang()][key] || atlasI18n.uk[key] || key;
+}
+
+function catalogStatusLabel(status){
+    const labels = {
+        ready:'есть',
+        draft:'заготовка',
+        question:'решить'
+    };
+
+    return labels[status] || labels.draft;
+}
+
+function renderCatalogMap(){
+    const container =
+    document.getElementById('catalogMap');
+
+    const catalog =
+    window.CALC_SQUARE_CATALOG || [];
+
+    if(!container || !catalog.length){
+        return;
+    }
+
+    const groups = [
+        ['round', atlasT('round')],
+        ['rectangular', atlasT('rectangular')],
+        ['combined', atlasT('combined')]
+    ];
+
+    container.innerHTML =
+    '<h2>Полная карта каталога</h2>' +
+    groups.map(([category,title])=>{
+        const items =
+        catalog.filter((item)=>item.category === category);
+
+        return `
+        <section class="catalog-map-group">
+          <h3>${title}</h3>
+          <div class="catalog-map-list">
+            ${items.map((item)=>`
+              <a class="catalog-map-item" href="../../${item.path}">
+                <span>
+                  <span class="catalog-map-title">${item.title}</span>
+                  <span class="catalog-map-meta">${item.method ? `п. ${item.method}` : 'без номера методички'}</span>
+                </span>
+                <span class="catalog-map-status ${item.status}">${catalogStatusLabel(item.status)}</span>
+              </a>
+            `).join('')}
+          </div>
+        </section>
+        `;
+    }).join('');
+
+    notifyAtlasResize();
+    setTimeout(notifyAtlasResize,50);
+    setTimeout(notifyAtlasResize,250);
+}
+
+function notifyAtlasResize(){
+    if(!window.parent || window.parent === window){
+        return;
+    }
+
+    const catalogMap =
+    document.getElementById('catalogMap');
+
+    const mapBottom =
+    catalogMap
+    ?
+    catalogMap.getBoundingClientRect().bottom + window.scrollY + 48
+    :
+    0;
+
+    const height =
+    Math.max(
+    document.documentElement.scrollHeight,
+    document.body.scrollHeight,
+    mapBottom
+    );
+
+    window.parent.postMessage(
+    {
+        type:'calcSquare:resizeAtlas',
+        height
+    },
+    '*'
+    );
 }
 
 function atlasRole(){
@@ -826,6 +1002,13 @@ document.addEventListener(
 );
 
 applyAtlasLanguage();
+renderCatalogMap();
+window.addEventListener('load',()=>{
+    notifyAtlasResize();
+    setTimeout(notifyAtlasResize,300);
+    setTimeout(notifyAtlasResize,1000);
+});
+window.addEventListener('resize',notifyAtlasResize);
 </script>
 
 </body>

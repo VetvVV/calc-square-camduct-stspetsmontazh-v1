@@ -783,13 +783,29 @@ padding:12px 10px;
 display:flex;
 
 justify-content:center;
+align-items:center;
 
-gap:20px;
+gap:32px;
 
 flex-wrap:wrap;
 
 margin-top:35px;
 
+}
+
+.project-action-group{
+display:flex;
+align-items:center;
+gap:16px;
+flex-wrap:wrap;
+}
+
+.project-action-group.output{
+justify-content:center;
+}
+
+.project-action-group.files{
+justify-content:center;
 }
 
 .project-actions button{
@@ -842,12 +858,21 @@ align-self:center;
 color:#5a616b;
 font-size:13px;
 font-weight:700;
+flex-basis:100%;
+text-align:center;
 }
 
 .project-actions button:hover{
 
 background:#b86510;
 
+}
+
+@media(max-width:760px){
+.project-actions,
+.project-action-group{
+justify-content:center;
+}
 }
 
 .login-btn{
@@ -1064,6 +1089,19 @@ display:none !important;
 
 body.role-guest .atlas-panel{
 width:100% !important;
+}
+
+body.role-guest #atlasContent,
+body.role-guest #atlasCatalog{
+height:auto !important;
+min-height:calc(100vh - 90px);
+overflow:visible;
+}
+
+body.role-guest #atlasFrame{
+height:auto;
+min-height:calc(100vh - 90px);
+overflow:hidden;
 }
 
 #atlasContent{
@@ -1437,9 +1475,17 @@ placeholder="Об'єкт">
 
 <div class="project-actions" id="projectActions">
 
+<div class="project-action-group output">
 <button id="btnPrint">Друк</button>
 <button id="btnExport">Експорт</button>
+</div>
+
+<div class="project-action-group files">
+<button id="btnOpenProject" type="button">Відкрити</button>
 <button id="btnSave" class="icon-button save-icon" type="button" aria-label="Зберегти" title="Зберегти"></button>
+</div>
+
+<input id="projectFileInput" type="file" accept=".json,application/json" hidden>
 <span class="save-status" id="saveStatus" aria-live="polite"></span>
 
 </div>
@@ -1621,7 +1667,7 @@ url.href;
 
 }
 
-function resizeAtlasFrame(){
+function resizeAtlasFrame(contentHeight=null){
 
 const atlasFrame =
 document.getElementById('atlasFrame');
@@ -1641,6 +1687,7 @@ try{
 
     const height =
     Math.max(
+    Number(contentHeight) || 0,
     doc.documentElement.scrollHeight,
     doc.body.scrollHeight,
     window.innerHeight - 130
@@ -1650,6 +1697,10 @@ try{
     height + 'px';
 
     atlasFrame.style.minHeight =
+    document.body.classList.contains('role-guest')
+    ?
+    height + 'px'
+    :
     '0';
 }
 catch(e){}
@@ -1923,6 +1974,8 @@ if(atlasFrame){
         resizeAtlasFrame();
         setTimeout(resizeAtlasFrame,100);
         setTimeout(resizeAtlasFrame,500);
+        setTimeout(resizeAtlasFrame,1200);
+        setTimeout(resizeAtlasFrame,2500);
     }
     );
 }
@@ -2157,6 +2210,12 @@ document.getElementById('btnPrint');
 const btnExport =
 document.getElementById('btnExport');
 
+const btnOpenProject =
+document.getElementById('btnOpenProject');
+
+const projectFileInput =
+document.getElementById('projectFileInput');
+
 const saveStatus =
 document.getElementById('saveStatus');
 
@@ -2205,6 +2264,10 @@ materialSummary:'Підсумок за матеріалами',
 materialKinds:'Матеріалів',
 save:'Зберегти',
 saved:'Збережено',
+saveFile:'Зберегти файл',
+openProject:'Відкрити',
+projectOpened:'Проєкт відкрито',
+projectOpenError:'Не вдалося відкрити файл проєкту',
 exported:'Експортовано',
 print:'Друк',
 export:'Експорт',
@@ -2270,6 +2333,10 @@ materialSummary:'Итог по материалам',
 materialKinds:'Материалов',
 save:'Сохранить',
 saved:'Сохранено',
+saveFile:'Сохранить файл',
+openProject:'Открыть',
+projectOpened:'Проект открыт',
+projectOpenError:'Не удалось открыть файл проекта',
 exported:'Экспортировано',
 print:'Печать',
 export:'Экспорт',
@@ -2335,6 +2402,10 @@ materialSummary:'Material summary',
 materialKinds:'Materials',
 save:'Save',
 saved:'Saved',
+saveFile:'Save file',
+openProject:'Open',
+projectOpened:'Project opened',
+projectOpenError:'Could not open project file',
 exported:'Exported',
 print:'Print',
 export:'Export',
@@ -3233,9 +3304,10 @@ function applyLanguage(){
     document.querySelector('.material-summary-title').textContent=t('materialSummary');
 
     btnSave.setAttribute('aria-label', t('save'));
-    btnSave.setAttribute('title', t('save'));
+    btnSave.setAttribute('title', t('saveFile'));
     btnPrint.textContent=t('print');
     btnExport.textContent=t('export');
+    btnOpenProject.textContent=t('openProject');
 
     const clearProjectButtons =
     document.querySelectorAll('[data-clear-project]');
@@ -3364,6 +3436,174 @@ function saveProject(){
     }
 }
 
+function buildProjectPayload(){
+    saveProjectMeta();
+    ensureProjectItemOrder();
+
+    return {
+        app:'Calc Square',
+        type:'calc-square-project',
+        version:1,
+        savedAt:new Date().toISOString(),
+        lang:currentLang(),
+        meta:{...projectMeta},
+        items:projectItems,
+        columns:projectColumnState,
+        showProjectSizeLine
+    };
+}
+
+function downloadBlob(blob,fileName){
+    const link =
+    document.createElement('a');
+
+    link.href =
+    URL.createObjectURL(blob);
+
+    link.download =
+    fileName;
+
+    document.body.appendChild(link);
+    link.click();
+    URL.revokeObjectURL(link.href);
+    link.remove();
+}
+
+async function saveBlobAs(blob,fileName,description='Calc Square project'){
+    if(window.showSaveFilePicker){
+        try{
+            const handle =
+            await window.showSaveFilePicker({
+                suggestedName:fileName,
+                types:[
+                    {
+                        description,
+                        accept:{
+                            [blob.type || 'application/octet-stream']:[
+                                fileName.slice(fileName.lastIndexOf('.'))
+                            ]
+                        }
+                    }
+                ]
+            });
+
+            const writable =
+            await handle.createWritable();
+
+            await writable.write(blob);
+            await writable.close();
+            return true;
+        }
+        catch(e){
+            if(e && e.name === 'AbortError'){
+                return false;
+            }
+        }
+    }
+
+    downloadBlob(blob,fileName);
+    return true;
+}
+
+async function saveProjectFile(){
+    saveProject();
+
+    const payload =
+    buildProjectPayload();
+
+    const blob =
+    new Blob(
+    [JSON.stringify(payload,null,2)],
+    {type:'application/json;charset=utf-8'}
+    );
+
+    const saved =
+    await saveBlobAs(
+    blob,
+    projectFileName('json'),
+    'Calc Square project'
+    );
+
+    if(saved){
+        setActionStatus(t('saved'));
+    }
+}
+
+function openProjectFile(file){
+    if(!file){
+        return;
+    }
+
+    const reader =
+    new FileReader();
+
+    reader.onload =
+    ()=>{
+        try{
+            const payload =
+            JSON.parse(String(reader.result || '{}'));
+
+            if(
+            payload.type !== 'calc-square-project'
+            ||
+            !Array.isArray(payload.items)
+            ){
+                throw new Error('Invalid project file');
+            }
+
+            projectMeta = {
+                projectName:payload.meta?.projectName || '',
+                customer:payload.meta?.customer || '',
+                object:payload.meta?.object || '',
+                savedAt:payload.meta?.savedAt || payload.savedAt || ''
+            };
+
+            projectItems =
+            payload.items;
+
+            if(Array.isArray(payload.columns)){
+                projectColumnState =
+                payload.columns;
+                saveProjectColumnState();
+            }
+
+            if(typeof payload.showProjectSizeLine === 'boolean'){
+                showProjectSizeLine =
+                payload.showProjectSizeLine;
+
+                localStorage.setItem(
+                'calcSquareProjectSizeLine',
+                showProjectSizeLine ? 'visible' : 'hidden'
+                );
+            }
+
+            applyProjectMeta();
+            applyProjectSizeLineVisibility();
+            saveProjectMeta();
+            saveProjectItems();
+            renderProject();
+            applyProjectColumns();
+            syncFloatingProjectHeader();
+            setActionStatus(t('projectOpened'));
+        }
+        catch(e){
+            setActionStatus(t('projectOpenError'));
+        }
+        finally{
+            if(projectFileInput){
+                projectFileInput.value = '';
+            }
+        }
+    };
+
+    reader.onerror =
+    ()=>{
+        setActionStatus(t('projectOpenError'));
+    };
+
+    reader.readAsText(file,'utf-8');
+}
+
 function setActionStatus(message){
     if(!saveStatus){
         return;
@@ -3389,6 +3629,16 @@ function csvRow(values){
     return values.map(csvCell).join(';');
 }
 
+function htmlCell(value){
+    return String(value ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'",'&#39;')
+    .replaceAll('\n','<br>');
+}
+
 function projectFileBaseName(){
     const name =
     (projectMeta.projectName || 'calc-square-project')
@@ -3398,6 +3648,26 @@ function projectFileBaseName(){
     .trim();
 
     return name || 'calc-square-project';
+}
+
+function fileDateStamp(date=new Date()){
+    const pad =
+    (value)=>String(value).padStart(2,'0');
+
+    return [
+        date.getFullYear(),
+        pad(date.getMonth() + 1),
+        pad(date.getDate())
+    ].join('-') +
+    ' ' +
+    [
+        pad(date.getHours()),
+        pad(date.getMinutes())
+    ].join('-');
+}
+
+function projectFileName(extension){
+    return `${projectFileBaseName()} - ${fileDateStamp()}.${extension}`;
 }
 
 function buildMaterialTotals(){
@@ -3554,21 +3824,168 @@ function exportProjectCsv(){
     {type:'text/csv;charset=utf-8'}
     );
 
-    const link =
-    document.createElement('a');
-
-    link.href =
-    URL.createObjectURL(blob);
-
-    link.download =
-    `${projectFileBaseName()}.csv`;
-
-    document.body.appendChild(link);
-    link.click();
-    URL.revokeObjectURL(link.href);
-    link.remove();
+    downloadBlob(
+    blob,
+    projectFileName('csv')
+    );
 
     setActionStatus(t('exported'));
+}
+
+function buildPrintDocument(){
+    saveProject();
+
+    const materialTotals =
+    buildMaterialTotals();
+
+    let totalQuantity = 0;
+    let totalArea = 0;
+    let totalMass = 0;
+
+    const itemRows =
+    projectItems.map((item,index)=>{
+        const quantity = Number(item.quantity) || 0;
+        const area = Number(item.area) || 0;
+        const mass = Number(item.mass) || 0;
+
+        totalQuantity += quantity;
+        totalArea += area;
+        totalMass += mass;
+
+        return `
+        <tr>
+            <td>${index + 1}</td>
+            <td><strong>${htmlCell(localizedProjectName(item))}</strong></td>
+            <td>${htmlCell(localizedProjectDimensions(item))}</td>
+            <td>${htmlCell(localizedProjectDescription(item))}</td>
+            <td class="num">${quantity}</td>
+            <td>${htmlCell(localizedProjectMaterialName(item))}</td>
+            <td class="num">${htmlCell(detectThickness(item))}</td>
+            <td class="num">${area.toFixed(3)} м²</td>
+            <td class="num">${mass.toFixed(2)} кг</td>
+            <td>${htmlCell(item.comment || '')}</td>
+        </tr>
+        `;
+    }).join('');
+
+    const materialRows =
+    materialTotals.map((total,index)=>`
+        <tr>
+            <td>${index + 1}</td>
+            <td class="num">${total.quantity}</td>
+            <td><strong>${htmlCell(total.material)}</strong></td>
+            <td class="num">${htmlCell(total.thickness)}</td>
+            <td class="num">${total.area.toFixed(3)} м²</td>
+            <td class="num">${total.mass.toFixed(2)} кг</td>
+        </tr>
+    `).join('');
+
+    return `<!doctype html>
+    <html lang="${currentLang()}">
+    <head>
+    <meta charset="utf-8">
+    <title>${htmlCell(projectMeta.projectName || t('projectTitle'))}</title>
+    <style>
+    @page{margin:12mm;}
+    *{box-sizing:border-box;}
+    body{font-family:Arial,sans-serif;color:#111;margin:0;font-size:12px;}
+    h1{font-size:22px;margin:0 0 16px;text-align:center;text-transform:uppercase;}
+    .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+    .meta div{border:1px solid #ccc;padding:7px 9px;min-height:30px;}
+    .meta span{display:block;color:#666;font-size:10px;margin-bottom:3px;}
+    table{width:100%;border-collapse:collapse;margin-bottom:16px;page-break-inside:auto;}
+    th,td{border:1px solid #d8d8d8;padding:6px 7px;vertical-align:top;}
+    th{background:#e27d13;color:#fff;text-align:left;}
+    tr{page-break-inside:avoid;page-break-after:auto;}
+    .num{text-align:right;white-space:nowrap;}
+    .summary-title{background:#5d6670;color:#fff;font-weight:700;padding:8px;margin-top:10px;}
+    .total-row td{font-weight:700;background:#f3f3f3;}
+    </style>
+    </head>
+    <body>
+    <h1>${htmlCell(t('projectTitle'))}</h1>
+    <div class="meta">
+        <div><span>${htmlCell(t('projectName'))}</span>${htmlCell(projectMeta.projectName || '')}</div>
+        <div><span>${htmlCell(t('customer'))}</span>${htmlCell(projectMeta.customer || '')}</div>
+        <div><span>${htmlCell(t('object'))}</span>${htmlCell(projectMeta.object || '')}</div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>${htmlCell(t('name'))}</th>
+                <th>${htmlCell(t('dimensions'))}</th>
+                <th>${htmlCell(t('description'))}</th>
+                <th>${htmlCell(t('qty'))}</th>
+                <th>${htmlCell(t('material'))}</th>
+                <th>${htmlCell(t('thicknessShort'))}</th>
+                <th>${htmlCell(t('area'))}</th>
+                <th>${htmlCell(t('mass'))}</th>
+                <th>${htmlCell(t('comments'))}</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${itemRows || `<tr><td colspan="10">${htmlCell(t('emptyProject'))}</td></tr>`}
+            <tr class="total-row">
+                <td></td>
+                <td colspan="3">${htmlCell(t('totalRow'))}</td>
+                <td class="num">${totalQuantity}</td>
+                <td></td>
+                <td></td>
+                <td class="num">${totalArea.toFixed(3)} м²</td>
+                <td class="num">${totalMass.toFixed(2)} кг</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="summary-title">${htmlCell(t('materialSummary'))}</div>
+    <table>
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>${htmlCell(t('qty'))}</th>
+                <th>${htmlCell(t('material'))}</th>
+                <th>${htmlCell(t('thicknessShort'))}</th>
+                <th>${htmlCell(t('area'))}</th>
+                <th>${htmlCell(t('mass'))}</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${materialRows || `<tr><td colspan="6">${htmlCell(t('emptyProject'))}</td></tr>`}
+            <tr class="total-row">
+                <td></td>
+                <td class="num">${totalQuantity}</td>
+                <td>${htmlCell(t('materialKinds'))}: ${materialTotals.length}</td>
+                <td></td>
+                <td class="num">${totalArea.toFixed(3)} м²</td>
+                <td class="num">${totalMass.toFixed(2)} кг</td>
+            </tr>
+        </tbody>
+    </table>
+    </body>
+    </html>`;
+}
+
+function printProject(){
+    const printWindow =
+    window.open('', '_blank');
+
+    if(!printWindow){
+        window.print();
+        return;
+    }
+
+    printWindow.document.open();
+    printWindow.document.write(buildPrintDocument());
+    printWindow.document.close();
+    printWindow.focus();
+
+    setTimeout(
+    ()=>{
+        printWindow.print();
+    },
+    250
+    );
 }
 
 function saveProjectItems(){
@@ -4268,15 +4685,26 @@ projectInfoInputs().forEach(
 
 btnSave.addEventListener(
 'click',
-saveProject
+saveProjectFile
+);
+
+btnOpenProject.addEventListener(
+'click',
+()=>{
+    projectFileInput.click();
+}
+);
+
+projectFileInput.addEventListener(
+'change',
+()=>{
+    openProjectFile(projectFileInput.files?.[0]);
+}
 );
 
 btnPrint.addEventListener(
 'click',
-()=>{
-    saveProject();
-    window.print();
-}
+printProject
 );
 
 btnExport.addEventListener(
@@ -4526,6 +4954,16 @@ window.addEventListener(
     }
 
     if(
+    data.type === 'calcSquare:resizeAtlas'
+    ){
+        resizeAtlasFrame(
+        data.height
+        );
+
+        return;
+    }
+
+    if(
     data.type !== 'calcSquare:addProjectItem'
     ){
         return;
@@ -4576,6 +5014,13 @@ function applyRole(){
     t('cabinet');
 
     btnSave.style.display =
+    rules.save
+    ?
+    ''
+    :
+    'none';
+
+    btnOpenProject.style.display =
     rules.save
     ?
     ''
@@ -5039,7 +5484,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-12-1626</div>
+<div class="build-marker">build 2026-06-12-2138</div>
 
 </body>
 
