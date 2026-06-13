@@ -371,9 +371,38 @@
       return;
     }
 
+    if (!document.querySelector('link[href*="fonts.googleapis.com/css2?family=Exo+2"]')) {
+      const fontLink = document.createElement("link");
+      fontLink.rel = "stylesheet";
+      fontLink.href = "https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap";
+      document.head.appendChild(fontLink);
+    }
+
     const style = document.createElement("style");
     style.id = "preliminary-nav-styles";
     style.textContent = `
+      body{
+        font-family:'Exo 2',Arial,sans-serif;
+        font-style:italic;
+        background:#ececec;
+        color:#222;
+      }
+      button,
+      input,
+      select,
+      textarea,
+      .module-card,
+      .result-panel{
+        font-family:'Exo 2',Arial,sans-serif;
+      }
+      button,
+      input,
+      select,
+      textarea,
+      .result-panel,
+      .form-panel{
+        font-style:normal;
+      }
       .module-nav{
         display:flex;
         justify-content:space-between;

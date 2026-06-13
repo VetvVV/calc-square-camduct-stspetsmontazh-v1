@@ -3,13 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <title>Calc Square - ST Spetsmontazh</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 
 body{
 margin:0;
-font-family:Arial;
-background:#f2f2f2;
+font-family:'Exo 2',Arial,sans-serif;
+font-style:italic;
+background:#ececec;
+color:#222;
+}
+
+button,
+input,
+select,
+textarea,
+.result,
+.duct-tab-shell,
+.details-panel,
+.guest-limit-card{
+font-family:'Exo 2',Arial,sans-serif;
+}
+
+input,
+select,
+textarea,
+.result,
+.details-panel,
+.duct-tab-panel,
+.guest-limit-card{
+font-style:normal;
 }
 
 .wrap{
@@ -477,93 +501,36 @@ margin:10px 0 4px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-
+gap:12px;
 margin-bottom:24px;
-
-padding-bottom:12px;
-
+padding:12px 20px;
 border-bottom:1px solid #d7d7d7;
+background:#f6f6f6;
 }
 
-.back{
-text-decoration:none;
-
-color:#444;
-
-font-weight:700;
-}
-
-.back:hover{
-opacity:.7;
-}
-
-.brand{
-font-size:18px;
-
-font-weight:700;
-}
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:24px;
-
-padding-bottom:12px;
-
-border-bottom:1px solid #d7d7d7;
-
-}
-
-.back{
-
-text-decoration:none;
-
-color:#444;
-
-font-weight:700;
-
-}
-
-.back:hover{
-
-opacity:.7;
-
-}
-
-.brand{
-
-font-size:18px;
-
-font-weight:700;
-
-}
-
+.back,
 .category-back{
-
 border:0;
-
 border-radius:8px;
-
 padding:9px 14px;
-
 background:#eef0f3;
-
 color:#333;
-
 font-weight:700;
-
+font-style:normal;
+text-decoration:none;
 cursor:pointer;
-
 }
 
+.back:hover,
 .category-back:hover{
-
 background:#dfe3e8;
-
+opacity:1;
 }
 
+.brand{
+font-size:18px;
+font-weight:700;
+font-style:normal;
 }
 
 </style>
