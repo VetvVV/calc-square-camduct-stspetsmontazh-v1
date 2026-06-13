@@ -277,9 +277,14 @@
         break;
       }
       case "rectangular-cap":
-        mm2 = values.A * values.B * q;
-        formula = "S = A × B × Q";
-        substitution = `${values.A} × ${values.B} × ${q}`;
+        mm2 = (values.A * values.B + 2 * values.C * (values.A + values.B) + values.C * values.C) * q;
+        formula = "S = (A × B + 2 × C × (A + B) + C²) × Q";
+        substitution = `(${values.A} × ${values.B} + 2 × ${values.C} × (${values.A} + ${values.B}) + ${values.C}²) × ${q}`;
+        break;
+      case "combined-round-to-rectangular":
+        mm2 = ((values.D / 2 + values.A) * values.L + (values.D / 2 + values.B) * values.L) * 1.15 * q;
+        formula = "S = ((D/2 + A) × L + (D/2 + B) × L) × 1.15 × Q";
+        substitution = `((${values.D}/2 + ${values.A}) × ${values.L} + (${values.D}/2 + ${values.B}) × ${values.L}) × 1.15 × ${q}`;
         break;
       default:
         mm2 = Math.PI * (values.D || 200) * (values.C || 500) * q;
@@ -441,6 +446,7 @@
     url.searchParams.set("role", role);
     url.searchParams.set("lang", lang);
     if (category) {
+      url.searchParams.set("category", category);
       url.hash = category;
     }
     window.location.href = url.href;

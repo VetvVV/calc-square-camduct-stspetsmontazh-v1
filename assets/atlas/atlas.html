@@ -776,7 +776,7 @@ href="../../modules/combined/round-to-rectangular/module.html">
 
 <a class="item"
 href="../../modules/round/offset-transition/module.html">
-<div class="icon">в‰€</div>
+<div class="icon">≈</div>
 <span data-i18n="offsetShort">Смещение</span>
 </a>
 
@@ -833,7 +833,7 @@ const atlasI18n={
     "offset": "Offset<br>transition",
     "tee": "Tee",
     "cap": "Cap",
-    "roundToRect": "Round?Rect",
+    "roundToRect": "Round→Rect",
     "offsetShort": "Offset"
   }
 };
@@ -1099,11 +1099,22 @@ function initAtlasCardCollapse(){
     );
 }
 
-function focusAtlasHash(){
-    const category =
-    decodeURIComponent(
+function atlasSelectedCategory(){
+    const fromQuery =
+    new URLSearchParams(window.location.search).get('category');
+
+    if(fromQuery){
+        return decodeURIComponent(fromQuery);
+    }
+
+    return decodeURIComponent(
     (window.location.hash || '').replace(/^#/,'')
     );
+}
+
+function focusAtlasCategory(selectedCategory=atlasSelectedCategory()){
+    const category =
+    String(selectedCategory || '');
 
     if(!category){
         document.querySelectorAll('.card > h2[data-i18n]').forEach(
@@ -1175,14 +1186,15 @@ function focusAtlasHash(){
 applyAtlasLanguage();
 initAtlasCardCollapse();
 renderCatalogMap();
-focusAtlasHash();
+focusAtlasCategory();
 window.addEventListener('load',()=>{
     notifyAtlasResize();
-    focusAtlasHash();
+    focusAtlasCategory();
     setTimeout(notifyAtlasResize,300);
     setTimeout(notifyAtlasResize,1000);
     setTimeout(notifyAtlasResize,2000);
 });
+window.addEventListener('hashchange',()=>focusAtlasCategory());
 window.addEventListener('resize',notifyAtlasResize);
 
 if('ResizeObserver' in window){

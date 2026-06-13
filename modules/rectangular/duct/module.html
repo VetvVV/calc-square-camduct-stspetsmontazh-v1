@@ -37,17 +37,23 @@ font-style:normal;
 }
 
 .wrap{
-max-width:760px;
-margin:auto;
-padding:24px;
+width:min(760px,calc(100vw - 32px));
+margin:34px auto;
 }
 
+.module-card,
 .card{
-background:white;
-padding:20px;
+background:#fff;
+padding:28px;
 border-radius:12px;
+box-sizing:border-box;
+}
 
-
+.module-card h1{
+margin:0 0 20px;
+font-size:28px;
+line-height:1.2;
+font-weight:700;
 }
 
 .layout{
@@ -497,15 +503,12 @@ display:block;
 display:block;
 margin:10px 0 4px;
 }
-.topbar{
+.module-nav{
 display:flex;
 justify-content:space-between;
 align-items:center;
 gap:12px;
-margin-bottom:24px;
-padding:12px 20px;
-border-bottom:1px solid #d7d7d7;
-background:#f6f6f6;
+margin:0 0 18px;
 }
 
 .back,
@@ -527,43 +530,33 @@ background:#dfe3e8;
 opacity:1;
 }
 
-.brand{
-font-size:18px;
-font-weight:700;
-font-style:normal;
-}
-
 </style>
 
 </head>
 
 <body>
 
-  <div class="topbar">
+<div class="wrap">
+
+<main class="module-card card">
+
+<nav class="module-nav" aria-label="module navigation">
 
 <a href="../../../assets/atlas/atlas.html" class="back">
 ← Каталог
 </a>
 
-<div class="brand">
-Calc Square
-</div>
-
 <button class="category-back" type="button">
 Прямокутні →
 </button>
 
-</div>
+</nav>
 
-<div class="wrap">
-
-<div class="card">
-
-<h2>
+<h1 id="moduleTitle">
 
 Повітропроводи > Прямокутний
 
-</h2>
+</h1>
 
 <div class="layout">
 
@@ -795,7 +788,7 @@ id="out">
 </div>
 </div>
 
-</div>
+</main>
 
 </div>
 
@@ -1241,6 +1234,7 @@ window.location.href
 
 url.searchParams.set("role",currentRole());
 url.searchParams.set("lang",moduleLang());
+url.searchParams.set("category","rectangular");
 url.hash = "rectangular";
 window.location.href = url.href;
 
@@ -2240,7 +2234,7 @@ document.documentElement.lang=moduleLang();
 
 document.querySelector(".back").textContent=tr("catalog");
 document.querySelector(".category-back").textContent=tr("categoryRectangular");
-document.querySelector("h2").textContent=tr("title");
+document.getElementById("moduleTitle").textContent=tr("title");
 document.getElementById("previewImage").alt=tr("preview");
 
 document.querySelector('label[for="A"]');

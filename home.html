@@ -1672,6 +1672,11 @@ Date.now()
 );
 
 if(category){
+url.searchParams.set(
+'category',
+category
+);
+
 url.hash =
 category;
 }
@@ -3918,9 +3923,10 @@ function buildPrintDocument(){
     <meta charset="utf-8">
     <title>${htmlCell(projectMeta.projectName || t('projectTitle'))}</title>
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap');
     @page{margin:12mm;}
     *{box-sizing:border-box;}
-    body{font-family:Arial,sans-serif;color:#111;margin:0;font-size:12px;}
+    body{font-family:'Exo 2',Arial,sans-serif;color:#111;margin:0;font-size:12px;}
     h1{font-size:22px;margin:0 0 16px;text-align:center;text-transform:uppercase;}
     .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
     .meta div{border:1px solid #ccc;padding:7px 9px;min-height:30px;}
@@ -5516,7 +5522,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-13-183716</div>
+<div class="build-marker">build 2026-06-13-231240</div>
 
 </body>
 
