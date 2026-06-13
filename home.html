@@ -1624,7 +1624,7 @@ updateCalculatorScrollState,
 
 }
 
-function showAtlasCatalog(){
+function showAtlasCatalog(category=''){
 
 currentModulePath =
 null;
@@ -1670,6 +1670,11 @@ url.searchParams.set(
 'v',
 Date.now()
 );
+
+if(category){
+url.hash =
+category;
+}
 
 atlasFrame.src =
 url.href;
@@ -3552,31 +3557,49 @@ function openProjectFile(file){
             const payload =
             JSON.parse(String(reader.result || '{}'));
 
-            if(
-            payload.type !== 'calc-square-project'
+            const payloadIsArray =
+            Array.isArray(payload);
+
+            const openedItems =
+            payloadIsArray ? payload : payload.items;
+
+            const isKnownProject =
+            payloadIsArray
             ||
-            !Array.isArray(payload.items)
+            payload.type === 'calc-square-project'
+            ||
+            payload.format === 'calc-square-project';
+
+            if(
+            !isKnownProject
+            ||
+            !Array.isArray(openedItems)
             ){
                 throw new Error('Invalid project file');
             }
 
+            const payloadMeta =
+            !payloadIsArray && payload.meta && typeof payload.meta === 'object'
+            ? payload.meta
+            : {};
+
             projectMeta = {
-                projectName:payload.meta?.projectName || '',
-                customer:payload.meta?.customer || '',
-                object:payload.meta?.object || '',
-                savedAt:payload.meta?.savedAt || payload.savedAt || ''
+                projectName:payloadMeta.projectName || '',
+                customer:payloadMeta.customer || '',
+                object:payloadMeta.object || '',
+                savedAt:payloadMeta.savedAt || payload.savedAt || ''
             };
 
             projectItems =
-            payload.items;
+            openedItems;
 
-            if(Array.isArray(payload.columns)){
+            if(!payloadIsArray && Array.isArray(payload.columns)){
                 projectColumnState =
                 payload.columns;
                 saveProjectColumnState();
             }
 
-            if(typeof payload.showProjectSizeLine === 'boolean'){
+            if(!payloadIsArray && typeof payload.showProjectSizeLine === 'boolean'){
                 showProjectSizeLine =
                 payload.showProjectSizeLine;
 
@@ -4906,7 +4929,7 @@ window.addEventListener(
     if(
     data.type === 'calcSquare:showAtlasCatalog'
     ){
-        showAtlasCatalog();
+        showAtlasCatalog(data.category || '');
 
         layoutMode =
         window.innerWidth <= 900
@@ -5493,7 +5516,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-12-2242</div>
+<div class="build-marker">build 2026-06-13-143017</div>
 
 </body>
 

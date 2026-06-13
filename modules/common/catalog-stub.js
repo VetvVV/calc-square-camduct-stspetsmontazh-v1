@@ -6,8 +6,45 @@
     ready: "Модуль есть"
   };
 
+  function categoryKey() {
+    const value = String(config.category || "").toLowerCase();
+    if (value.includes("круг")) {
+      return "round";
+    }
+    if (value.includes("прям")) {
+      return "rectangular";
+    }
+    if (value.includes("комб")) {
+      return "combined";
+    }
+    return "";
+  }
+
+  function openAtlas(category = "") {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(
+        {
+          type: "calcSquare:showAtlasCatalog",
+          category
+        },
+        "*"
+      );
+      return;
+    }
+
+    const url = new URL("../../../assets/atlas/atlas.html", window.location.href);
+    if (category) {
+      url.hash = category;
+    }
+    window.location.href = url.href;
+  }
+
   document.title = config.title || "Calc Square";
   document.body.innerHTML = `
+    <nav class="stub-nav">
+      <button id="stubAtlas" type="button">← Атлас</button>
+      ${categoryKey() ? `<button id="stubCategory" type="button">${config.category} →</button>` : ""}
+    </nav>
     <main class="stub-card">
       <section class="stub-preview">
         <img src="../../common/stub-preview.svg" alt="">
@@ -23,4 +60,11 @@
       </section>
     </main>
   `;
+
+  document.getElementById("stubAtlas")?.addEventListener("click", () => {
+    openAtlas();
+  });
+  document.getElementById("stubCategory")?.addEventListener("click", () => {
+    openAtlas(categoryKey());
+  });
 })();

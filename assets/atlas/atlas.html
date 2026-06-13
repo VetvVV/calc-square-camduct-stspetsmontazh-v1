@@ -605,6 +605,7 @@ font-size:26px;
 .rectangular-duct,
 .rectangular-elbow,
 .rectangular-transition,
+.rectangular-cap,
 .round-to-rectangular
 {
     width:140px;
@@ -629,6 +630,26 @@ font-size:42px;
 
 }
 
+}
+
+.card > h2[data-i18n]{
+cursor:pointer;
+user-select:none;
+}
+
+.card > h2[data-i18n]::after{
+content:" \25BE";
+font-size:.7em;
+color:#d97706;
+vertical-align:middle;
+}
+
+.card > h2[data-i18n][data-collapsed="1"]::after{
+content:" \25B8";
+}
+
+.card.atlas-card-collapsed > :not(h2){
+display:none !important;
 }
 
 </style>
@@ -717,6 +738,17 @@ href="../../modules/rectangular/transition/module.html">
 
 </a>
 
+<a class="item"
+href="../../modules/rectangular/cap/module.html">
+
+    <img
+    src="../products/rectangular_cap.svg"
+    class="rectangular-cap">
+
+    <span data-i18n="cap">Заглушка</span>
+
+</a>
+
 </div>
 
 </div>
@@ -772,6 +804,7 @@ const atlasI18n={
     "transition": "Перехід",
     "offset": "Перехід<br>зі зміщенням",
     "tee": "Трійник",
+    "cap": "Заглушка",
     "roundToRect": "Круг→Прям",
     "offsetShort": "Зміщення"
   },
@@ -785,6 +818,7 @@ const atlasI18n={
     "transition": "Переход",
     "offset": "Переход<br>со смещением",
     "tee": "Тройник",
+    "cap": "Заглушка",
     "roundToRect": "Круг→Прям",
     "offsetShort": "Смещение"
   },
@@ -798,6 +832,7 @@ const atlasI18n={
     "transition": "Transition",
     "offset": "Offset<br>transition",
     "tee": "Tee",
+    "cap": "Cap",
     "roundToRect": "Round?Rect",
     "offsetShort": "Offset"
   }
@@ -1002,10 +1037,148 @@ document.addEventListener(
 }
 );
 
+function initAtlasCardCollapse(){
+    const heads =
+    document.querySelectorAll('.card > h2[data-i18n]');
+
+    const setCollapsed =
+    (head, collapsed)=>{
+        const card =
+        head.closest('.card');
+
+        if(!card){
+            return;
+        }
+
+        card.classList.toggle(
+        'atlas-card-collapsed',
+        collapsed
+        );
+
+        head.dataset.collapsed =
+        collapsed ? '1' : '0';
+
+        notifyAtlasResize();
+    };
+
+    heads.forEach(
+    (head)=>{
+        head.setAttribute('role','button');
+        head.setAttribute('tabindex','0');
+        head.setAttribute('aria-expanded','true');
+
+        setCollapsed(head, false);
+
+        const toggle =
+        ()=>{
+            const collapsed =
+            head.dataset.collapsed !== '1';
+
+            setCollapsed(
+            head,
+            collapsed
+            );
+
+            head.setAttribute(
+            'aria-expanded',
+            collapsed ? 'false' : 'true'
+            );
+        };
+
+        head.addEventListener('click',toggle);
+        head.addEventListener(
+        'keydown',
+        (event)=>{
+            if(event.key === 'Enter' || event.key === ' '){
+                event.preventDefault();
+                toggle();
+            }
+        }
+        );
+    }
+    );
+}
+
+function focusAtlasHash(){
+    const category =
+    decodeURIComponent(
+    (window.location.hash || '').replace(/^#/,'')
+    );
+
+    if(!category){
+        document.querySelectorAll('.card > h2[data-i18n]').forEach(
+        (head)=>{
+            const card =
+            head.closest('.card');
+
+            if(card){
+                card.classList.remove('atlas-card-collapsed');
+            }
+
+            head.dataset.collapsed = '0';
+            head.setAttribute('aria-expanded','true');
+        }
+        );
+
+        notifyAtlasResize();
+        return;
+    }
+
+    let targetHead = null;
+
+    document.querySelectorAll('.card > h2[data-i18n]').forEach(
+    (head)=>{
+        const card =
+        head.closest('.card');
+
+        const isTarget =
+        head.dataset.i18n === category;
+
+        if(isTarget){
+            targetHead =
+            head;
+        }
+
+        if(card){
+            card.classList.toggle(
+            'atlas-card-collapsed',
+            !isTarget
+            );
+        }
+
+        head.dataset.collapsed =
+        isTarget ? '0' : '1';
+
+        head.setAttribute(
+        'aria-expanded',
+        isTarget ? 'true' : 'false'
+        );
+    }
+    );
+
+    if(!targetHead){
+        return;
+    }
+
+    setTimeout(
+    ()=>{
+        targetHead.scrollIntoView({
+            block:'start',
+            behavior:'smooth'
+        });
+        notifyAtlasResize();
+    },
+    80
+    );
+}
+
 applyAtlasLanguage();
+initAtlasCardCollapse();
 renderCatalogMap();
+focusAtlasHash();
 window.addEventListener('load',()=>{
     notifyAtlasResize();
+    focusAtlasHash();
     setTimeout(notifyAtlasResize,300);
     setTimeout(notifyAtlasResize,1000);
     setTimeout(notifyAtlasResize,2000);

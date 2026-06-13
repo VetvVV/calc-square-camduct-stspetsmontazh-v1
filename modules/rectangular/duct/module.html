@@ -540,6 +540,30 @@ font-weight:700;
 
 }
 
+.category-back{
+
+border:0;
+
+border-radius:8px;
+
+padding:9px 14px;
+
+background:#eef0f3;
+
+color:#333;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+.category-back:hover{
+
+background:#dfe3e8;
+
+}
+
 }
 
 </style>
@@ -557,6 +581,10 @@ font-weight:700;
 <div class="brand">
 Calc Square
 </div>
+
+<button class="category-back" type="button">
+Прямокутні →
+</button>
 
 </div>
 
@@ -904,6 +932,7 @@ updatePreviewSvg();
 const i18n={
 uk:{
 catalog:'← Каталог',
+categoryRectangular:'Прямокутні →',
 title:'Повітропроводи > Прямокутний',
 width:'A - Ширина',
 height:'B - Висота',
@@ -981,6 +1010,7 @@ kg:'кг'
 },
 ru:{
 catalog:'← Каталог',
+categoryRectangular:'Прямоугольные →',
 title:'Воздуховоды > Прямоугольный',
 width:'A - Ширина',
 height:'B - Высота',
@@ -1058,6 +1088,7 @@ kg:'кг'
 },
 en:{
 catalog:'← Catalog',
+categoryRectangular:'Rectangular →',
 title:'Ducts > Rectangular',
 width:'A - Width',
 height:'B - Height',
@@ -1207,6 +1238,44 @@ type:"calcSquare:showAtlasCatalog"
 );
 
 }
+
+}
+);
+
+document.querySelector(".category-back").addEventListener(
+"click",
+(event)=>{
+
+if(
+window.parent
+&&
+window.parent !== window
+){
+
+event.preventDefault();
+
+window.parent.postMessage(
+{
+type:"calcSquare:showAtlasCatalog",
+category:"rectangular"
+},
+"*"
+);
+
+return;
+
+}
+
+const url =
+new URL(
+"../../../assets/atlas/atlas.html",
+window.location.href
+);
+
+url.searchParams.set("role",currentRole());
+url.searchParams.set("lang",moduleLang());
+url.hash = "rectangular";
+window.location.href = url.href;
 
 }
 );
@@ -2203,6 +2272,7 @@ function applyStaticLanguage(){
 document.documentElement.lang=moduleLang();
 
 document.querySelector(".back").textContent=tr("catalog");
+document.querySelector(".category-back").textContent=tr("categoryRectangular");
 document.querySelector("h2").textContent=tr("title");
 document.getElementById("previewImage").alt=tr("preview");
 

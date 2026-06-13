@@ -355,6 +355,30 @@ font-size:18px;
 font-weight:700;
 
 }
+
+.category-back{
+
+border:0;
+
+border-radius:8px;
+
+padding:9px 14px;
+
+background:#eef0f3;
+
+color:#333;
+
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+.category-back:hover{
+
+background:#dfe3e8;
+
+}
 }
 
 </style>
@@ -373,7 +397,31 @@ font-weight:700;
 Calc Square
 </div>
 
+<button class="category-back" type="button">
+Комбинированные →
+</button>
+
 </div>
+
+<script>
+document.querySelector(".back")?.addEventListener("click",(event)=>{
+if(window.parent && window.parent !== window){
+event.preventDefault();
+window.parent.postMessage({type:"calcSquare:showAtlasCatalog"},"*");
+}
+});
+
+document.querySelector(".category-back")?.addEventListener("click",(event)=>{
+if(window.parent && window.parent !== window){
+event.preventDefault();
+window.parent.postMessage({type:"calcSquare:showAtlasCatalog",category:"combined"},"*");
+return;
+}
+const url=new URL("../../../assets/atlas/atlas.html",window.location.href);
+url.hash="combined";
+window.location.href=url.href;
+});
+</script>
 
 <div class="wrap">
 

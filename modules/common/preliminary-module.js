@@ -33,7 +33,12 @@
       substitution: "Подстановка",
       units: "мм",
       kg: "кг",
-      m2: "м²"
+      m2: "м²",
+      of: "из",
+      atlas: "← Атлас",
+      round: "Круглые",
+      rectangular: "Прямоугольные",
+      combined: "Комбинированные"
     },
     uk: {
       material: "Матеріал",
@@ -51,7 +56,12 @@
       substitution: "Підстановка",
       units: "мм",
       kg: "кг",
-      m2: "м²"
+      m2: "м²",
+      of: "з",
+      atlas: "← Атлас",
+      round: "Круглі",
+      rectangular: "Прямокутні",
+      combined: "Комбіновані"
     },
     en: {
       material: "Material",
@@ -69,7 +79,12 @@
       substitution: "Substitution",
       units: "mm",
       kg: "kg",
-      m2: "m²"
+      m2: "m²",
+      of: "of",
+      atlas: "← Atlas",
+      round: "Round",
+      rectangular: "Rectangular",
+      combined: "Combined"
     }
   };
 
@@ -110,7 +125,7 @@
       return;
     }
     const remaining = guestRemaining();
-    counter.textContent = `${t.available}: ${remaining} ?? ${guestLimit}`;
+    counter.textContent = `${t.available}: ${remaining} ${t.of} ${guestLimit}`;
     button.disabled = remaining <= 0;
     button.textContent = remaining <= 0 ? t.limitReached : t.calculate;
   }
@@ -328,11 +343,90 @@
     return { values, result, material, thickness, mass };
   }
 
+  function categoryLabel() {
+    const category = moduleCategory();
+    return t[category] || "";
+  }
+
+  function moduleCategory() {
+    if (config.category) {
+      return config.category;
+    }
+
+    const path = window.location.pathname.toLowerCase();
+    if (path.includes("/modules/round/")) {
+      return "round";
+    }
+    if (path.includes("/modules/rectangular/")) {
+      return "rectangular";
+    }
+    if (path.includes("/modules/combined/")) {
+      return "combined";
+    }
+    return "";
+  }
+
+  function ensureNavStyles() {
+    if (document.getElementById("preliminary-nav-styles")) {
+      return;
+    }
+
+    const style = document.createElement("style");
+    style.id = "preliminary-nav-styles";
+    style.textContent = `
+      .module-nav{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+        margin:0 0 18px;
+      }
+      .module-nav button{
+        border:0;
+        border-radius:8px;
+        padding:9px 14px;
+        background:#eef0f3;
+        color:#333;
+        font-weight:700;
+        cursor:pointer;
+      }
+      .module-nav button:hover{background:#dfe3e8;}
+      .module-nav .module-category-button::after{content:" →";}
+    `;
+    document.head.appendChild(style);
+  }
+
+  function showAtlas(category = "") {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage(
+        {
+          type: "calcSquare:showAtlasCatalog",
+          category
+        },
+        "*"
+      );
+      return;
+    }
+
+    const url = new URL("../../../assets/atlas/atlas.html", window.location.href);
+    url.searchParams.set("role", role);
+    url.searchParams.set("lang", lang);
+    if (category) {
+      url.hash = category;
+    }
+    window.location.href = url.href;
+  }
+
   function render() {
     document.documentElement.lang = lang;
     document.title = config.title || "Calc Square";
+    ensureNavStyles();
     document.body.innerHTML = `
       <main class="module-card">
+        <nav class="module-nav" aria-label="module navigation">
+          <button id="back-to-atlas" type="button">${t.atlas}</button>
+          ${categoryLabel() ? `<button id="back-to-category" class="module-category-button" type="button">${categoryLabel()}</button>` : ""}
+        </nav>
         <h1>${config.title || "Калькулятор"}</h1>
         <div class="module-layout">
           <section class="preview-panel">
@@ -384,6 +478,12 @@
     `;
 
     renderThicknessOptions();
+    byId("back-to-atlas")?.addEventListener("click", () => {
+      showAtlas();
+    });
+    byId("back-to-category")?.addEventListener("click", () => {
+      showAtlas(moduleCategory());
+    });
     document.querySelectorAll("input, select").forEach((node) => {
       node.addEventListener("input", update);
       node.addEventListener("change", update);
