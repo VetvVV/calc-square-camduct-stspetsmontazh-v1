@@ -1649,7 +1649,7 @@ updateCalculatorScrollState,
 
 }
 
-function showAtlasCatalog(category=''){
+function showAtlasCatalog(category='', mode='all'){
 
 currentModulePath =
 null;
@@ -1694,6 +1694,11 @@ moduleRole
 url.searchParams.set(
 'v',
 Date.now()
+);
+
+url.searchParams.set(
+'view',
+category ? 'category' : mode
 );
 
 if(category){
@@ -4980,7 +4985,10 @@ window.addEventListener(
     if(
     data.type === 'calcSquare:showAtlasCatalog'
     ){
-        showAtlasCatalog(data.category || '');
+        showAtlasCatalog(
+        data.category || '',
+        data.mode || (data.category ? 'category' : 'all')
+        );
 
         layoutMode =
         window.innerWidth <= 900
@@ -5567,7 +5575,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-14-120712</div>
+<div class="build-marker">build 2026-06-14-163554</div>
 
 </body>
 

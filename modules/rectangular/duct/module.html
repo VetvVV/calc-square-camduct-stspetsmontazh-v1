@@ -1357,7 +1357,8 @@ event.preventDefault();
 
 window.parent.postMessage(
 {
-type:"calcSquare:showAtlasCatalog"
+type:"calcSquare:showAtlasCatalog",
+mode:"all"
 },
 "*"
 );
@@ -1382,6 +1383,7 @@ event.preventDefault();
 window.parent.postMessage(
 {
 type:"calcSquare:showAtlasCatalog",
+mode:"category",
 category:"rectangular"
 },
 "*"
@@ -1399,6 +1401,7 @@ window.location.href
 
 url.searchParams.set("role",currentRole());
 url.searchParams.set("lang",moduleLang());
+url.searchParams.set("view","category");
 url.searchParams.set("category","rectangular");
 url.hash = "rectangular";
 window.location.href = url.href;

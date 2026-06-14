@@ -670,6 +670,7 @@
       window.parent.postMessage(
         {
           type: "calcSquare:showAtlasCatalog",
+          mode: category ? "category" : "all",
           category
         },
         "*"
@@ -680,6 +681,7 @@
     const url = new URL("../../../assets/atlas/atlas.html", window.location.href);
     url.searchParams.set("role", role);
     url.searchParams.set("lang", lang);
+    url.searchParams.set("view", category ? "category" : "all");
     if (category) {
       url.searchParams.set("category", category);
       url.hash = category;

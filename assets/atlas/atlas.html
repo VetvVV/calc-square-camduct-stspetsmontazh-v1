@@ -1357,14 +1357,25 @@ function atlasSelectedCategory(){
     );
 }
 
+function atlasViewMode(){
+    return (
+    new URLSearchParams(window.location.search).get('view')
+    ||
+    ''
+    );
+}
+
 function focusAtlasCategory(selectedCategory=atlasSelectedCategory()){
     const category =
     String(selectedCategory || '');
 
+    const viewMode =
+    atlasViewMode();
+
     const hasValidCategory =
     ['round','rectangular','combined'].includes(category);
 
-    if(!hasValidCategory){
+    if(viewMode === 'all' || !hasValidCategory){
         document.querySelectorAll('.card > h2[data-i18n]').forEach(
         (head)=>{
             const card =
@@ -1380,6 +1391,7 @@ function focusAtlasCategory(selectedCategory=atlasSelectedCategory()){
         );
 
         notifyAtlasResize();
+        setTimeout(()=>window.scrollTo({top:0,left:0,behavior:'auto'}),0);
         return;
     }
 
