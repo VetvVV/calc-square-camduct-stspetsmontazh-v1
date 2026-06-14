@@ -119,19 +119,20 @@ width:100%;
 
 .duct-panel-controls{
 display:flex;
+flex-wrap:nowrap;
 align-items:center;
 gap:5px;
 padding:7px 9px;
-border-bottom:1px solid #c9c3ad;
 background:#e7dcbf;
+border-bottom:1px solid #d6cdb7;
 }
 
 .duct-panel-controls button{
 border:1px solid #cdbf98;
 background:#fff;
 color:#5b4e2a;
-font:inherit;
-font-size:12px;
+font-family:inherit;
+font-size:13px;
 font-weight:600;
 padding:5px 8px;
 border-radius:6px;
@@ -159,6 +160,7 @@ overflow:hidden;
 border:0;
 border-radius:0;
 border-right:1px solid #e0d4b0;
+font-size:12px;
 }
 
 .duct-panel-controls .seg button:last-child{
@@ -2046,13 +2048,13 @@ controls.className=
 
 controls.innerHTML=
 `
-<button class="ico" data-duct-panel-action="expand" type="button">⊞</button>
-<button class="ico" data-duct-panel-action="collapse" type="button">⊟</button>
+<button class="ico" data-duct-panel-action="expand" type="button" title="${ductTabText("expandAll")}">⊞</button>
+<button class="ico" data-duct-panel-action="collapse" type="button" title="${ductTabText("collapseAll")}">⊟</button>
 <span class="seg">
 <button data-duct-panel-preset="simple" type="button">${ductTabText("simpleMode")}</button>
 <button data-duct-panel-preset="full" type="button">${ductTabText("fullMode")}</button>
 </span>
-<button class="ico reset" data-duct-panel-action="reset" type="button">↺</button>
+<button class="ico reset" data-duct-panel-action="reset" type="button" title="${ductTabText("resetLayout")}">↺</button>
 `;
 
 const panelWrap=
