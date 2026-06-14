@@ -38,7 +38,21 @@
       atlas: "← Атлас",
       round: "Круглые",
       rectangular: "Прямоугольные",
-      combined: "Комбинированные"
+      combined: "Комбинированные",
+      sizes: "Размеры",
+      options: "Опции",
+      detail: "Деталь",
+      connectors: "Соединители",
+      help: "Помощь",
+      expandAll: "Развернуть всё",
+      collapseAll: "Свернуть всё",
+      simpleMode: "Простой",
+      fullMode: "Полный",
+      resetLayout: "Сбросить раскладку",
+      hidden: "Скрыто",
+      specDescription: "Описание (спецификация)",
+      connectorPlaceholder: "Соединители будут уточняться для каждого изделия.",
+      helpText: "Подсказки по размерам и обозначениям будут наполняться по мере уточнения карточки."
     },
     uk: {
       material: "Матеріал",
@@ -61,7 +75,21 @@
       atlas: "← Атлас",
       round: "Круглі",
       rectangular: "Прямокутні",
-      combined: "Комбіновані"
+      combined: "Комбіновані",
+      sizes: "Розміри",
+      options: "Опції",
+      detail: "Деталь",
+      connectors: "З'єднувачі",
+      help: "Допомога",
+      expandAll: "Розгорнути все",
+      collapseAll: "Згорнути все",
+      simpleMode: "Простий",
+      fullMode: "Повний",
+      resetLayout: "Скинути розкладку",
+      hidden: "Приховано",
+      specDescription: "Опис (специфікація)",
+      connectorPlaceholder: "З'єднувачі будуть уточнюватися для кожного виробу.",
+      helpText: "Підказки щодо розмірів і позначень будуть наповнюватися під час уточнення картки."
     },
     en: {
       material: "Material",
@@ -84,7 +112,21 @@
       atlas: "← Atlas",
       round: "Round",
       rectangular: "Rectangular",
-      combined: "Combined"
+      combined: "Combined",
+      sizes: "Dimensions",
+      options: "Options",
+      detail: "Detail",
+      connectors: "Connectors",
+      help: "Help",
+      expandAll: "Expand all",
+      collapseAll: "Collapse all",
+      simpleMode: "Simple",
+      fullMode: "Full",
+      resetLayout: "Reset layout",
+      hidden: "Hidden",
+      specDescription: "Specification description",
+      connectorPlaceholder: "Connectors will be refined for each product.",
+      helpText: "Dimension and label hints will be filled in as the card is refined."
     }
   };
 
@@ -344,6 +386,10 @@
     byId("mass").textContent = `${nf(mass, 2)} ${t.kg}`;
     byId("formula").textContent = result.formula;
     byId("substitution").textContent = `${result.substitution} ÷ 1 000 000 = ${nf(result.area)} ${t.m2}`;
+    const descLine = byId("desc-line");
+    if (descLine) {
+      descLine.textContent = config.description || dimensionText(values) || t.note;
+    }
 
     return { values, result, material, thickness, mass };
   }
@@ -426,6 +472,195 @@
       }
       .module-nav button:hover{background:#dfe3e8;}
       .module-nav .module-category-button::after{content:" →";}
+      .module-card{
+        width:min(820px,calc(100vw - 32px));
+      }
+      .module-title-row{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        margin:0 0 20px;
+        flex-wrap:wrap;
+      }
+      .module-title-row h1{
+        margin:0;
+      }
+      .module-layout{
+        display:grid;
+        grid-template-columns:minmax(280px,1fr) 320px;
+        gap:22px;
+        align-items:start;
+      }
+      .module-left-column{
+        display:flex;
+        flex-direction:column;
+        gap:18px;
+      }
+      .preview-panel svg,
+      .preview-panel object,
+      .preview{
+        width:100%;
+        height:250px;
+      }
+      .form-panel{
+        padding:0;
+        overflow:hidden;
+      }
+      .panel-controls{
+        display:flex;
+        flex-wrap:nowrap;
+        gap:5px;
+        align-items:center;
+        padding:7px 9px;
+        background:#e7dcbf;
+        border-bottom:1px solid #d6cdb7;
+      }
+      .panel-controls button{
+        border:1px solid #cdbf98;
+        background:#fff;
+        color:#5b4e2a;
+        font-family:inherit;
+        font-size:13px;
+        font-weight:600;
+        padding:5px 8px;
+        border-radius:6px;
+        cursor:pointer;
+        line-height:1;
+      }
+      .panel-controls button:hover{background:#f6f0df;}
+      .panel-controls .ico{font-size:16px;padding:4px 9px;}
+      .panel-controls .seg{
+        display:inline-flex;
+        border:1px solid #cdbf98;
+        border-radius:6px;
+        overflow:hidden;
+      }
+      .panel-controls .seg button{
+        border:0;
+        border-radius:0;
+        border-right:1px solid #e0d4b0;
+        font-size:12px;
+      }
+      .panel-controls .seg button:last-child{border-right:0;}
+      .panel-controls .seg button.active{
+        background:#d97706;
+        color:#fff;
+      }
+      .panel-controls .reset{margin-left:auto;color:#9a7b3a;}
+      .panels{
+        max-height:calc(100vh - 170px);
+        overflow-y:auto;
+      }
+      .panel{border-bottom:1px solid #e7ddc2;}
+      .panel:last-of-type{border-bottom:0;}
+      .panel-head{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        padding:9px 12px;
+        background:#efe6cf;
+        cursor:pointer;
+        user-select:none;
+      }
+      .panel-head:hover{background:#eae0c6;}
+      .panel-head .drag{
+        cursor:grab;
+        color:#bcae82;
+        font-size:15px;
+        padding:0 2px;
+      }
+      .panel-head .caret{
+        color:#9a8c5e;
+        font-size:11px;
+        width:12px;
+        transition:transform .15s;
+      }
+      .panel.collapsed .panel-head .caret{transform:rotate(-90deg);}
+      .panel-head .title{
+        flex:1;
+        font-weight:600;
+        font-size:14px;
+        color:#5b4e2a;
+      }
+      .panel-head .hide{
+        border:0;
+        background:transparent;
+        color:#bcae82;
+        font-size:17px;
+        cursor:pointer;
+        padding:1px 7px;
+        border-radius:4px;
+      }
+      .panel-head .hide:hover{
+        background:#e0d4b0;
+        color:#b00;
+      }
+      .panel-body{padding:11px 12px;}
+      .panel.collapsed .panel-body{display:none;}
+      .panel.dragging{opacity:.45;}
+      .panel.drag-over{box-shadow:inset 0 3px 0 #d97706;}
+      .panel-body label{
+        display:block;
+        margin-bottom:10px;
+        font-size:14.5px;
+      }
+      .panel-body label:last-child{margin-bottom:0;}
+      .panel-body input,
+      .panel-body select{
+        display:block;
+        width:100%;
+        height:34px;
+        margin-top:5px;
+        padding:6px 10px;
+        border:1px solid #888;
+        border-radius:4px;
+        background:#fff;
+        font-size:16px;
+        font-family:inherit;
+      }
+      .tab-empty,
+      .help-text{
+        color:#6d6247;
+        font-size:13px;
+        line-height:1.45;
+        margin:0;
+      }
+      .hidden-bar{
+        display:flex;
+        flex-wrap:wrap;
+        gap:6px;
+        align-items:center;
+        padding:9px 12px;
+        background:#f0ead8;
+        border-top:1px solid #e7ddc2;
+        font-size:13px;
+        color:#8a7c52;
+      }
+      .hidden-bar .chip{
+        background:#fff;
+        border:1px solid #d6cdb7;
+        border-radius:14px;
+        padding:3px 11px;
+        cursor:pointer;
+        font-size:12px;
+        font-weight:600;
+        color:#5b4e2a;
+      }
+      .hidden-bar .chip::before{content:"+ ";color:#1455ff;}
+      .result-panel{
+        margin-top:0;
+      }
+      .result-panel .row{
+        margin-bottom:12px;
+      }
+      .result-panel .row b{
+        display:block;
+        font-size:18px;
+      }
+      @media(max-width:780px){
+        .module-layout{grid-template-columns:1fr;}
+        .module-card h1{font-size:22px;}
+      }
     `;
     document.head.appendChild(style);
   }
@@ -452,6 +687,201 @@
     window.location.href = url.href;
   }
 
+  function initModulePanels() {
+    const panels = byId("module-panels");
+    const hiddenBar = byId("module-hidden-panels");
+    const controls = document.querySelector(".panel-controls");
+    if (!panels || !hiddenBar || !controls) {
+      return;
+    }
+
+    const titles = {
+      "panel-sizes": t.sizes,
+      "panel-options": t.options,
+      "panel-detail": t.detail,
+      "panel-connectors": t.connectors,
+      "panel-help": t.help
+    };
+    const defaultState = {
+      order: ["panel-sizes", "panel-options", "panel-detail", "panel-connectors", "panel-help"],
+      collapsed: ["panel-options", "panel-connectors", "panel-help"],
+      hidden: []
+    };
+    const key = `calcSquareModulePanels:${config.productType || config.formula || "module"}`;
+
+    function readState() {
+      try {
+        return JSON.parse(localStorage.getItem(key) || "null") || defaultState;
+      } catch (error) {
+        return defaultState;
+      }
+    }
+
+    function writeState() {
+      const state = {
+        order: Array.from(panels.children).map((panel) => panel.id),
+        collapsed: Array.from(panels.children).filter((panel) => panel.classList.contains("collapsed")).map((panel) => panel.id),
+        hidden: Array.from(panels.children).filter((panel) => panel.hidden).map((panel) => panel.id)
+      };
+      localStorage.setItem(key, JSON.stringify(state));
+    }
+
+    function renderHidden() {
+      const hiddenPanels = Array.from(panels.children).filter((panel) => panel.hidden);
+      hiddenBar.innerHTML = `<span>${t.hidden}:</span>`;
+      hiddenPanels.forEach((panel) => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "chip";
+        chip.dataset.panelId = panel.id;
+        chip.textContent = titles[panel.id] || panel.id;
+        hiddenBar.appendChild(chip);
+      });
+      hiddenBar.hidden = hiddenPanels.length === 0;
+    }
+
+    function applyState(state) {
+      (state.order || defaultState.order).forEach((id) => {
+        const panel = byId(id);
+        if (panel) {
+          panels.appendChild(panel);
+        }
+      });
+      Array.from(panels.children).forEach((panel) => {
+        panel.classList.toggle("collapsed", (state.collapsed || []).includes(panel.id));
+        panel.hidden = (state.hidden || []).includes(panel.id);
+      });
+      renderHidden();
+    }
+
+    function setPreset(name) {
+      controls.querySelectorAll("[data-panel-preset]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.panelPreset === name);
+      });
+    }
+
+    panels.addEventListener("click", (event) => {
+      if (event.target.closest(".hide") || event.target.closest(".drag")) {
+        return;
+      }
+      const head = event.target.closest(".panel-head");
+      if (!head) {
+        return;
+      }
+      head.parentElement.classList.toggle("collapsed");
+      writeState();
+    });
+
+    panels.addEventListener("click", (event) => {
+      const hide = event.target.closest(".hide");
+      if (!hide) {
+        return;
+      }
+      event.stopPropagation();
+      hide.closest(".panel").hidden = true;
+      renderHidden();
+      writeState();
+    });
+
+    hiddenBar.addEventListener("click", (event) => {
+      const chip = event.target.closest(".chip");
+      if (!chip) {
+        return;
+      }
+      const panel = byId(chip.dataset.panelId);
+      if (panel) {
+        panel.hidden = false;
+      }
+      renderHidden();
+      writeState();
+    });
+
+    controls.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) {
+        return;
+      }
+      const action = button.dataset.panelAct;
+      const preset = button.dataset.panelPreset;
+      if (action === "expand") {
+        Array.from(panels.children).forEach((panel) => panel.classList.remove("collapsed"));
+      }
+      if (action === "collapse") {
+        Array.from(panels.children).forEach((panel) => panel.classList.add("collapsed"));
+      }
+      if (action === "reset") {
+        localStorage.removeItem(key);
+        applyState(defaultState);
+        setPreset("");
+        return;
+      }
+      if (preset === "simple") {
+        Array.from(panels.children).forEach((panel) => {
+          panel.hidden = ["panel-options", "panel-connectors", "panel-help"].includes(panel.id);
+          panel.classList.remove("collapsed");
+        });
+        renderHidden();
+        setPreset("simple");
+      }
+      if (preset === "full") {
+        Array.from(panels.children).forEach((panel) => {
+          panel.hidden = false;
+          panel.classList.remove("collapsed");
+        });
+        renderHidden();
+        setPreset("full");
+      }
+      writeState();
+    });
+
+    let dragged = null;
+    function clearDragOver() {
+      panels.querySelectorAll(".drag-over").forEach((panel) => panel.classList.remove("drag-over"));
+    }
+
+    panels.addEventListener("dragstart", (event) => {
+      const head = event.target.closest(".panel-head");
+      if (!head) {
+        return;
+      }
+      dragged = head.parentElement;
+      dragged.classList.add("dragging");
+      event.dataTransfer.effectAllowed = "move";
+    });
+
+    panels.addEventListener("dragend", () => {
+      if (dragged) {
+        dragged.classList.remove("dragging");
+      }
+      dragged = null;
+      clearDragOver();
+      writeState();
+    });
+
+    panels.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      clearDragOver();
+      const over = event.target.closest(".panel");
+      if (over && over !== dragged && !over.hidden) {
+        over.classList.add("drag-over");
+      }
+    });
+
+    panels.addEventListener("drop", (event) => {
+      event.preventDefault();
+      const over = event.target.closest(".panel");
+      if (over && dragged && over !== dragged) {
+        const rect = over.getBoundingClientRect();
+        const after = event.clientY - rect.top > rect.height / 2;
+        panels.insertBefore(dragged, after ? over.nextSibling : over);
+      }
+      clearDragOver();
+      writeState();
+    });
+
+    applyState(readState());
+  }
+
   function render() {
     document.documentElement.lang = lang;
     document.title = config.title || "Calc Square";
@@ -462,57 +892,101 @@
           <button id="back-to-atlas" type="button">${t.atlas}</button>
           ${categoryLabel() ? `<button id="back-to-category" class="module-category-button" type="button">${categoryLabel()}</button>` : ""}
         </nav>
-        <h1>${config.title || "Калькулятор"}</h1>
+        <div class="module-title-row">
+          <h1>${config.title || "Калькулятор"}</h1>
+        </div>
         <div class="module-layout">
-          <section class="preview-panel">
-            <object class="preview" type="image/svg+xml" data="preview.svg"></object>
-            <div class="live-labels" aria-hidden="true">
-              ${(config.dimensionKeys || []).map((field, index) => (
-                `<span class="live-label live-label-${index + 1}" data-dim-label="${field.key}">${field.key} = ${field.default}</span>`
-              )).join("")}
-            </div>
-          </section>
-          <section class="form-panel">
-            ${(config.fields || []).map(renderField).join("")}
-            <label>
-              ${t.qty}
-              <select id="field-Q">
-                ${Array.from({ length: 10 }, (_, index) => index + 1).map((value) => (
-                  `<option value="${value}" ${value === initialNumber("Q", config.quantity || 1) ? "selected" : ""}>${value}</option>`
+          <div class="module-left-column">
+            <section class="preview-panel">
+              <object class="preview" type="image/svg+xml" data="preview.svg"></object>
+              <div class="live-labels" aria-hidden="true">
+                ${(config.dimensionKeys || []).map((field, index) => (
+                  `<span class="live-label live-label-${index + 1}" data-dim-label="${field.key}">${field.key} = ${field.default}</span>`
                 )).join("")}
-              </select>
-            </label>
-            <label>
-              ${t.material}
-              <select id="material">
-                ${materials.map((item) => `<option value="${item.key}" ${item.key === initialText("materialCode", initialText("material", materials[0].key)) ? "selected" : ""}>${item.label}</option>`).join("")}
-              </select>
-            </label>
-            <label>
-              ${t.thickness}
-              <select id="thickness"></select>
-            </label>
+              </div>
+            </section>
+            <section class="result-panel">
+              <div class="row">${t.area}<b id="area">0.000 ${t.m2}</b></div>
+              <div class="row">${t.mass}<b id="mass">0.00 ${t.kg}</b></div>
+              <div class="row">${t.specDescription}<b id="desc-line">${config.description || t.note}</b></div>
+              ${role === "guest" ? `
+                <button id="guest-calculate" type="button">${t.calculate}</button>
+                <span id="guest-counter"></span>
+              ` : ""}
+              ${isAdmin ? `
+                <details open>
+                  <summary>${t.note}</summary>
+                  <p><b>${t.formula}:</b> <span id="formula"></span></p>
+                  <p><b>${t.substitution}:</b> <span id="substitution"></span></p>
+                </details>
+              ` : `
+                <span id="formula" hidden></span>
+                <span id="substitution" hidden></span>
+              `}
+              ${canAdd ? `<button id="add-to-project" type="button">${isEdit ? t.saveChanges : t.add}</button>` : ""}
+            </section>
+          </div>
+          <section class="form-panel">
+            <div class="panel-controls">
+              <button class="ico" data-panel-act="expand" type="button" title="${t.expandAll}">⊞</button>
+              <button class="ico" data-panel-act="collapse" type="button" title="${t.collapseAll}">⊟</button>
+              <span class="seg">
+                <button data-panel-preset="simple" type="button">${t.simpleMode}</button>
+                <button data-panel-preset="full" type="button">${t.fullMode}</button>
+              </span>
+              <button class="ico reset" data-panel-act="reset" type="button" title="${t.resetLayout}">↺</button>
+            </div>
+            <div class="panels" id="module-panels">
+              <div class="panel" id="panel-sizes">
+                <div class="panel-head" draggable="true"><span class="drag">⠿</span><span class="caret">▼</span><span class="title">${t.sizes}</span><button class="hide" type="button">✕</button></div>
+                <div class="panel-body">
+                  ${(config.fields || []).map(renderField).join("")}
+                  <label>
+                    ${t.qty}
+                    <select id="field-Q">
+                      ${Array.from({ length: 10 }, (_, index) => index + 1).map((value) => (
+                        `<option value="${value}" ${value === initialNumber("Q", config.quantity || 1) ? "selected" : ""}>${value}</option>`
+                      )).join("")}
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <div class="panel collapsed" id="panel-options">
+                <div class="panel-head" draggable="true"><span class="drag">⠿</span><span class="caret">▼</span><span class="title">${t.options}</span><button class="hide" type="button">✕</button></div>
+                <div class="panel-body"><p class="tab-empty">${config.description || t.note}</p></div>
+              </div>
+              <div class="panel" id="panel-detail">
+                <div class="panel-head" draggable="true"><span class="drag">⠿</span><span class="caret">▼</span><span class="title">${t.detail}</span><button class="hide" type="button">✕</button></div>
+                <div class="panel-body">
+                  <label>
+                    ${t.material}
+                    <select id="material">
+                      ${materials.map((item) => `<option value="${item.key}" ${item.key === initialText("materialCode", initialText("material", materials[0].key)) ? "selected" : ""}>${item.label}</option>`).join("")}
+                    </select>
+                  </label>
+                  <label>
+                    ${t.thickness}
+                    <select id="thickness"></select>
+                  </label>
+                </div>
+              </div>
+              <div class="panel collapsed" id="panel-connectors">
+                <div class="panel-head" draggable="true"><span class="drag">⠿</span><span class="caret">▼</span><span class="title">${t.connectors}</span><button class="hide" type="button">✕</button></div>
+                <div class="panel-body"><p class="tab-empty">${t.connectorPlaceholder}</p></div>
+              </div>
+              <div class="panel collapsed" id="panel-help">
+                <div class="panel-head" draggable="true"><span class="drag">⠿</span><span class="caret">▼</span><span class="title">${t.help}</span><button class="hide" type="button">✕</button></div>
+                <div class="panel-body"><p class="help-text">${t.helpText}</p></div>
+              </div>
+            </div>
+            <div class="hidden-bar" id="module-hidden-panels" hidden><span>${t.hidden}:</span></div>
           </section>
         </div>
-        <section class="result-panel">
-          <div>${t.area}<strong id="area">0.000 ${t.m2}</strong></div>
-          <div>${t.mass}<strong id="mass">0.00 ${t.kg}</strong></div>
-          ${isAdmin ? `
-            <details open>
-              <summary>${t.note}</summary>
-              <p><b>${t.formula}:</b> <span id="formula"></span></p>
-              <p><b>${t.substitution}:</b> <span id="substitution"></span></p>
-            </details>
-          ` : `
-            <span id="formula" hidden></span>
-            <span id="substitution" hidden></span>
-          `}
-          ${canAdd ? `<button id="add-to-project" type="button">${isEdit ? t.saveChanges : t.add}</button>` : ""}
-        </section>
       </main>
     `;
 
     renderThicknessOptions();
+    initModulePanels();
     byId("back-to-atlas")?.addEventListener("click", () => {
       showAtlas();
     });
