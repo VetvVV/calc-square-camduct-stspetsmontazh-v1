@@ -643,17 +643,23 @@ font-size:42px;
 .card > h2[data-i18n]{
 cursor:pointer;
 user-select:none;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:6px;
+width:100%;
+text-align:center;
 }
 
 .card > h2[data-i18n]::after{
-content:" \25BE";
+content:"\25BE";
 font-size:.7em;
 color:#d97706;
-vertical-align:middle;
+line-height:1;
 }
 
 .card > h2[data-i18n][data-collapsed="1"]::after{
-content:" \25B8";
+content:"\25B8";
 }
 
 .card.atlas-card-collapsed > :not(h2){
