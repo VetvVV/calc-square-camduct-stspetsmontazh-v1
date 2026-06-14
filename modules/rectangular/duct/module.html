@@ -37,7 +37,7 @@ font-style:normal;
 }
 
 .wrap{
-width:min(760px,calc(100vw - 32px));
+width:min(820px,calc(100vw - 32px));
 margin:34px auto;
 }
 
@@ -56,20 +56,38 @@ line-height:1.2;
 font-weight:700;
 }
 
+.module-title-row{
+display:flex;
+align-items:center;
+gap:12px;
+margin:0 0 20px;
+flex-wrap:wrap;
+}
+
+.module-title-row h1{
+margin:0;
+}
+
 .layout{
 
 display:grid;
 
 grid-template-columns:
 
-1fr
+minmax(280px,1fr)
 
-260px;
+320px;
 
-gap:26px;
+gap:22px;
 
 align-items:start;
 
+}
+
+.module-left-column{
+display:flex;
+flex-direction:column;
+gap:18px;
 }
 
 .left,
@@ -96,42 +114,178 @@ border:1px solid #d7d7d7;
 border-radius:10px;
 background:#f7f4e8;
 overflow:hidden;
+width:100%;
 }
 
-.duct-tabs{
+.duct-panel-controls{
 display:flex;
 align-items:center;
-gap:0;
+gap:5px;
+padding:7px 9px;
 border-bottom:1px solid #c9c3ad;
-background:#ece8d7;
+background:#e7dcbf;
 }
 
-.duct-tab{
-appearance:none;
-border:none;
-border-right:1px solid #c9c3ad;
-background:transparent;
-padding:9px 11px;
+.duct-panel-controls button{
+border:1px solid #cdbf98;
+background:#fff;
+color:#5b4e2a;
 font:inherit;
-font-size:13px;
+font-size:12px;
+font-weight:600;
+padding:5px 8px;
+border-radius:6px;
 cursor:pointer;
-white-space:nowrap;
+line-height:1;
 }
 
-.duct-tab.active{
-background:white;
-font-weight:700;
+.duct-panel-controls button:hover{
+background:#f6f0df;
 }
 
-.duct-tab-panel{
-display:none;
+.duct-panel-controls .ico{
+font-size:16px;
+padding:4px 9px;
+}
+
+.duct-panel-controls .seg{
+display:inline-flex;
+border:1px solid #cdbf98;
+border-radius:6px;
+overflow:hidden;
+}
+
+.duct-panel-controls .seg button{
+border:0;
+border-radius:0;
+border-right:1px solid #e0d4b0;
+}
+
+.duct-panel-controls .seg button:last-child{
+border-right:0;
+}
+
+.duct-panel-controls .seg button.active{
+background:#d97706;
+color:#fff;
+}
+
+.duct-panel-controls .reset{
+margin-left:auto;
+color:#9a7b3a;
+}
+
+.duct-panels{
+max-height:calc(100vh - 170px);
+overflow-y:auto;
+}
+
+.duct-panel{
+border-bottom:1px solid #e7ddc2;
+}
+
+.duct-panel:last-of-type{
+border-bottom:0;
+}
+
+.duct-panel-head{
+display:flex;
+align-items:center;
+gap:8px;
+padding:9px 12px;
+background:#efe6cf;
+cursor:pointer;
+user-select:none;
+}
+
+.duct-panel-head:hover{
+background:#eae0c6;
+}
+
+.duct-panel-head .drag{
+cursor:grab;
+color:#bcae82;
+font-size:15px;
+padding:0 2px;
+}
+
+.duct-panel-head .caret{
+color:#9a8c5e;
+font-size:11px;
+width:12px;
+transition:transform .15s;
+}
+
+.duct-panel.collapsed .duct-panel-head .caret{
+transform:rotate(-90deg);
+}
+
+.duct-panel-head .title{
+flex:1;
+font-weight:600;
+font-size:14px;
+color:#5b4e2a;
+}
+
+.duct-panel-head .hide{
+border:0;
+background:transparent;
+color:#bcae82;
+font-size:17px;
+cursor:pointer;
+padding:1px 7px;
+border-radius:4px;
+}
+
+.duct-panel-head .hide:hover{
+background:#e0d4b0;
+color:#b00;
+}
+
+.duct-panel-body{
 padding:16px;
-min-height:250px;
+min-height:0;
 background:#f7f4e8;
 }
 
-.duct-tab-panel.active{
-display:block;
+.duct-panel.collapsed .duct-panel-body{
+display:none;
+}
+
+.duct-panel.dragging{
+opacity:.45;
+}
+
+.duct-panel.drag-over{
+box-shadow:inset 0 3px 0 #d97706;
+}
+
+.duct-hidden-bar{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+align-items:center;
+padding:9px 12px;
+background:#f0ead8;
+border-top:1px solid #e7ddc2;
+font-size:13px;
+color:#8a7c52;
+}
+
+.duct-hidden-bar .chip{
+background:#fff;
+border:1px solid #d6cdb7;
+border-radius:14px;
+padding:3px 11px;
+cursor:pointer;
+font-size:12px;
+font-weight:600;
+color:#5b4e2a;
+}
+
+.duct-hidden-bar .chip::before{
+content:"+ ";
+color:#1455ff;
 }
 
 .tab-note{
@@ -194,7 +348,7 @@ border-top:1px solid #ddd;
 grid-template-columns:1fr;
 }
 
-.duct-tabs{
+.duct-panel-controls{
 overflow-x:auto;
 }
 
@@ -217,7 +371,7 @@ margin-bottom:8px;
 input,
 select{
 
-width:140px;
+width:100%;
 
 padding:10px;
 
@@ -228,7 +382,7 @@ font-size:16px;
 }
 
 #material{
-min-width:180px;
+min-width:0;
 padding:8px;
 }
 
@@ -273,10 +427,15 @@ display:flex;
 justify-content:center;
 align-items:center;
 margin-top:0;
+min-height:260px;
+border:1px solid #ddd;
+border-radius:8px;
+background:#fafafa;
+overflow:hidden;
 }
 .preview img{
 
-width:650px;
+width:100%;
 
 max-width:100%;
 
@@ -318,10 +477,10 @@ transform:rotate(18deg);
 }
 
 .result{
-margin-top:20px;
 padding:16px;
 background:#f8f8f8;
 border-radius:10px;
+margin-top:0;
 }
 
 .calc-controls{
@@ -552,11 +711,15 @@ opacity:1;
 
 </nav>
 
+<div class="module-title-row">
+
 <h1 id="moduleTitle">
 
 Повітропроводи > Прямокутний
 
 </h1>
+
+</div>
 
 <div class="layout">
 
@@ -1536,21 +1699,39 @@ sizes:"Розміри",
 options:"Опції",
 detail:"Деталь",
 connectors:"З'єднувачі",
-optionsNote:"Опції виробу будуть додані на наступному етапі."
+optionsNote:"Опції виробу будуть додані на наступному етапі.",
+expandAll:"Розгорнути все",
+collapseAll:"Згорнути все",
+simpleMode:"Простий",
+fullMode:"Повний",
+resetLayout:"Скинути розкладку",
+hidden:"Приховано"
 },
 ru:{
 sizes:"Размеры",
 options:"Опции",
 detail:"Деталь",
 connectors:"Соединители",
-optionsNote:"Опции изделия будут добавлены на следующем этапе."
+optionsNote:"Опции изделия будут добавлены на следующем этапе.",
+expandAll:"Развернуть всё",
+collapseAll:"Свернуть всё",
+simpleMode:"Простой",
+fullMode:"Полный",
+resetLayout:"Сбросить раскладку",
+hidden:"Скрыто"
 },
 en:{
 sizes:"Sizes",
 options:"Options",
 detail:"Detail",
 connectors:"Connectors",
-optionsNote:"Product options will be added at the next stage."
+optionsNote:"Product options will be added at the next stage.",
+expandAll:"Expand all",
+collapseAll:"Collapse all",
+simpleMode:"Simple",
+fullMode:"Full",
+resetLayout:"Reset layout",
+hidden:"Hidden"
 }
 };
 
@@ -1568,35 +1749,13 @@ key;
 
 function setDuctTab(tab){
 
-document
-.querySelectorAll("[data-duct-tab]")
-.forEach(
-button=>{
-const active=
-button.dataset.ductTab===tab;
+document.querySelectorAll("[data-duct-panel]").forEach(panel=>{
+const active=panel.dataset.ductPanel===tab;
+panel.hidden=false;
+panel.classList.toggle("collapsed",!active);
+});
 
-button.classList.toggle(
-"active",
-active
-);
-
-button.setAttribute(
-"aria-selected",
-active ? "true" : "false"
-);
-}
-);
-
-document
-.querySelectorAll("[data-duct-tab-panel]")
-.forEach(
-panel=>{
-panel.classList.toggle(
-"active",
-panel.dataset.ductTabPanel===tab
-);
-}
-);
+renderDuctHiddenPanels();
 
 resizeParent();
 
@@ -1605,12 +1764,44 @@ resizeParent();
 function refreshDuctTabLanguage(){
 
 document
-.querySelectorAll("[data-duct-tab]")
+.querySelectorAll("[data-duct-panel-title]")
+.forEach(
+node=>{
+const key=node.closest("[data-duct-panel]")?.dataset.ductPanel;
+if(!key){
+return;
+}
+node.textContent=
+ductTabText(key);
+}
+);
+
+document
+.querySelectorAll("[data-duct-panel-hide]")
+.forEach(
+button=>{
+button.setAttribute("title","×");
+}
+);
+
+document
+.querySelectorAll("[data-duct-panel-action]")
+.forEach(
+button=>{
+const action=button.dataset.ductPanelAction;
+if(action==="expand") button.setAttribute("title",ductTabText("expandAll"));
+if(action==="collapse") button.setAttribute("title",ductTabText("collapseAll"));
+if(action==="reset") button.setAttribute("title",ductTabText("resetLayout"));
+}
+);
+
+document
+.querySelectorAll("[data-duct-panel-preset]")
 .forEach(
 button=>{
 button.textContent=
 ductTabText(
-button.dataset.ductTab
+button.dataset.ductPanelPreset==="simple" ? "simpleMode" : "fullMode"
 );
 }
 );
@@ -1622,6 +1813,38 @@ if(optionsNote){
 optionsNote.textContent=
 ductTabText("optionsNote");
 }
+
+}
+
+function renderDuctHiddenPanels(){
+
+const panels=
+document.getElementById("ductPanels");
+
+const hiddenBar=
+document.getElementById("ductHiddenPanels");
+
+if(!panels || !hiddenBar){
+return;
+}
+
+const hiddenPanels=
+Array.from(panels.children).filter(panel=>panel.hidden);
+
+hiddenBar.innerHTML=
+`<span>${ductTabText("hidden")}:</span>`;
+
+hiddenPanels.forEach(panel=>{
+const chip=document.createElement("button");
+chip.type="button";
+chip.className="chip";
+chip.dataset.panelId=panel.id;
+chip.textContent=ductTabText(panel.dataset.ductPanel);
+hiddenBar.appendChild(chip);
+});
+
+hiddenBar.hidden=
+hiddenPanels.length===0;
 
 }
 
@@ -1815,21 +2038,31 @@ document.createElement("div");
 shell.className=
 "duct-tab-shell";
 
-const tabs=
+const controls=
 document.createElement("div");
 
-tabs.className=
-"duct-tabs";
+controls.className=
+"duct-panel-controls";
 
-tabs.setAttribute(
-"role",
-"tablist"
-);
+controls.innerHTML=
+`
+<button class="ico" data-duct-panel-action="expand" type="button">⊞</button>
+<button class="ico" data-duct-panel-action="collapse" type="button">⊟</button>
+<span class="seg">
+<button data-duct-panel-preset="simple" type="button">${ductTabText("simpleMode")}</button>
+<button data-duct-panel-preset="full" type="button">${ductTabText("fullMode")}</button>
+</span>
+<button class="ico reset" data-duct-panel-action="reset" type="button">↺</button>
+`;
 
-tabs.setAttribute(
-"aria-label",
-"Duct settings"
-);
+const panelWrap=
+document.createElement("div");
+
+panelWrap.className=
+"duct-panels";
+
+panelWrap.id=
+"ductPanels";
 
 const panels={};
 
@@ -1840,53 +2073,35 @@ const panels={};
 "connectors"
 ].forEach(
 (key,index)=>{
-const button=
-document.createElement("button");
-
-button.type=
-"button";
-
-button.className=
-`duct-tab${index===0 ? " active" : ""}`;
-
-button.dataset.ductTab=
-key;
-
-button.setAttribute(
-"role",
-"tab"
-);
-
-button.setAttribute(
-"aria-selected",
-index===0 ? "true" : "false"
-);
-
-button.addEventListener(
-"click",
-()=>setDuctTab(key)
-);
-
-tabs.appendChild(
-button
-);
-
 const panel=
 document.createElement("div");
 
 panel.className=
-`duct-tab-panel${index===0 ? " active" : ""}`;
+`duct-panel${["options","connectors"].includes(key) ? " collapsed" : ""}`;
 
-panel.dataset.ductTabPanel=
+panel.id=
+`duct-panel-${key}`;
+
+panel.dataset.ductPanel=
 key;
 
-panel.setAttribute(
-"role",
-"tabpanel"
-);
+panel.innerHTML=
+`
+<div class="duct-panel-head" draggable="true">
+<span class="drag">⠿</span>
+<span class="caret">▼</span>
+<span class="title" data-duct-panel-title>${ductTabText(key)}</span>
+<button class="hide" data-duct-panel-hide type="button">×</button>
+</div>
+<div class="duct-panel-body"></div>
+`;
 
 panels[key]=
-panel;
+panel.querySelector(".duct-panel-body");
+
+panelWrap.appendChild(
+panel
+);
 }
 );
 
@@ -1929,22 +2144,68 @@ panels.detail.appendChild(
 detailSource
 );
 
+const hiddenBar=
+document.createElement("div");
+
+hiddenBar.className=
+"duct-hidden-bar";
+
+hiddenBar.id=
+"ductHiddenPanels";
+
+hiddenBar.hidden=
+true;
+
 shell.appendChild(
-tabs
+controls
 );
 
-Object.values(
-panels
-).forEach(
-panel=>shell.appendChild(panel)
+shell.appendChild(
+panelWrap
+);
+
+shell.appendChild(
+hiddenBar
+);
+
+const leftColumn=
+document.createElement("div");
+
+leftColumn.className=
+"module-left-column";
+
+layout.insertBefore(
+leftColumn,
+layout.firstElementChild
+);
+
+leftColumn.appendChild(
+preview
+);
+
+const calcControls=
+document.getElementById(
+"calcControls"
+);
+
+const resultPanel=
+document.getElementById(
+"out"
 );
 
 if(
-layout.firstElementChild!==preview
+calcControls
 ){
-layout.insertBefore(
-preview,
-layout.firstElementChild
+leftColumn.appendChild(
+calcControls
+);
+}
+
+if(
+resultPanel
+){
+leftColumn.appendChild(
+resultPanel
 );
 }
 
@@ -1955,6 +2216,211 @@ shell
 refreshDuctTabLanguage();
 
 renderOptionsPanel();
+
+initDuctPanelControls();
+
+}
+
+function initDuctPanelControls(){
+
+const panels=
+document.getElementById("ductPanels");
+
+const controls=
+document.querySelector(".duct-panel-controls");
+
+const hiddenBar=
+document.getElementById("ductHiddenPanels");
+
+if(!panels || !controls || !hiddenBar){
+return;
+}
+
+const defaultState={
+order:["duct-panel-sizes","duct-panel-options","duct-panel-detail","duct-panel-connectors"],
+collapsed:["duct-panel-options","duct-panel-connectors"],
+hidden:[]
+};
+
+const storageKey=
+"calcSquareDuctPanels:rectangular-duct";
+
+function readState(){
+try{
+return JSON.parse(localStorage.getItem(storageKey) || "null") || defaultState;
+}catch(error){
+return defaultState;
+}
+}
+
+function writeState(){
+const state={
+order:Array.from(panels.children).map(panel=>panel.id),
+collapsed:Array.from(panels.children).filter(panel=>panel.classList.contains("collapsed")).map(panel=>panel.id),
+hidden:Array.from(panels.children).filter(panel=>panel.hidden).map(panel=>panel.id)
+};
+localStorage.setItem(storageKey,JSON.stringify(state));
+}
+
+function applyState(state){
+(state.order || defaultState.order).forEach(id=>{
+const panel=document.getElementById(id);
+if(panel){
+panels.appendChild(panel);
+}
+});
+
+Array.from(panels.children).forEach(panel=>{
+panel.classList.toggle("collapsed",(state.collapsed || []).includes(panel.id));
+panel.hidden=(state.hidden || []).includes(panel.id);
+});
+
+renderDuctHiddenPanels();
+}
+
+function setPreset(name){
+controls.querySelectorAll("[data-duct-panel-preset]").forEach(button=>{
+button.classList.toggle("active",button.dataset.ductPanelPreset===name);
+});
+}
+
+panels.addEventListener("click",event=>{
+if(event.target.closest("[data-duct-panel-hide]") || event.target.closest(".drag")){
+return;
+}
+const head=event.target.closest(".duct-panel-head");
+if(!head){
+return;
+}
+head.parentElement.classList.toggle("collapsed");
+writeState();
+requestParentResize();
+});
+
+panels.addEventListener("click",event=>{
+const hide=event.target.closest("[data-duct-panel-hide]");
+if(!hide){
+return;
+}
+event.stopPropagation();
+hide.closest(".duct-panel").hidden=true;
+renderDuctHiddenPanels();
+writeState();
+requestParentResize();
+});
+
+hiddenBar.addEventListener("click",event=>{
+const chip=event.target.closest(".chip");
+if(!chip){
+return;
+}
+const panel=document.getElementById(chip.dataset.panelId);
+if(panel){
+panel.hidden=false;
+}
+renderDuctHiddenPanels();
+writeState();
+requestParentResize();
+});
+
+controls.addEventListener("click",event=>{
+const button=event.target.closest("button");
+if(!button){
+return;
+}
+
+const action=button.dataset.ductPanelAction;
+const preset=button.dataset.ductPanelPreset;
+
+if(action==="expand"){
+Array.from(panels.children).forEach(panel=>panel.classList.remove("collapsed"));
+}
+
+if(action==="collapse"){
+Array.from(panels.children).forEach(panel=>panel.classList.add("collapsed"));
+}
+
+if(action==="reset"){
+localStorage.removeItem(storageKey);
+applyState(defaultState);
+setPreset("");
+writeState();
+requestParentResize();
+return;
+}
+
+if(preset==="simple"){
+Array.from(panels.children).forEach(panel=>{
+panel.hidden=["duct-panel-options","duct-panel-connectors"].includes(panel.id);
+panel.classList.remove("collapsed");
+});
+renderDuctHiddenPanels();
+setPreset("simple");
+}
+
+if(preset==="full"){
+Array.from(panels.children).forEach(panel=>{
+panel.hidden=false;
+panel.classList.remove("collapsed");
+});
+renderDuctHiddenPanels();
+setPreset("full");
+}
+
+writeState();
+requestParentResize();
+});
+
+let dragged=null;
+
+function clearDragOver(){
+panels.querySelectorAll(".drag-over").forEach(panel=>panel.classList.remove("drag-over"));
+}
+
+panels.addEventListener("dragstart",event=>{
+const head=event.target.closest(".duct-panel-head");
+if(!head){
+return;
+}
+dragged=head.parentElement;
+dragged.classList.add("dragging");
+event.dataTransfer.effectAllowed="move";
+});
+
+panels.addEventListener("dragend",()=>{
+if(dragged){
+dragged.classList.remove("dragging");
+}
+dragged=null;
+clearDragOver();
+writeState();
+requestParentResize();
+});
+
+panels.addEventListener("dragover",event=>{
+event.preventDefault();
+clearDragOver();
+const over=event.target.closest(".duct-panel");
+if(over && dragged && over!==dragged && !over.hidden){
+over.classList.add("drag-over");
+}
+});
+
+panels.addEventListener("drop",event=>{
+event.preventDefault();
+const over=event.target.closest(".duct-panel");
+if(over && dragged && over!==dragged){
+const rect=over.getBoundingClientRect();
+const after=event.clientY - rect.top > rect.height / 2;
+panels.insertBefore(dragged,after ? over.nextSibling : over);
+}
+clearDragOver();
+writeState();
+requestParentResize();
+});
+
+applyState(readState());
+refreshDuctTabLanguage();
 
 }
 
