@@ -8,19 +8,24 @@
 
   function categoryKey() {
     const value = String(config.category || "").toLowerCase();
-    if (value.includes("круг")) {
+    if (["round", "rectangular", "combined"].includes(value)) {
+      return value;
+    }
+    if (value.includes("круг") || value.includes("round")) {
       return "round";
     }
-    if (value.includes("прям")) {
+    if (value.includes("прям") || value.includes("rect")) {
       return "rectangular";
     }
-    if (value.includes("комб")) {
+    if (value.includes("комб") || value.includes("combined")) {
       return "combined";
     }
     return "";
   }
 
   function openAtlas(category = "") {
+    category = ["round", "rectangular", "combined"].includes(category) ? category : categoryKey();
+
     if (window.parent && window.parent !== window) {
       window.parent.postMessage(
         {

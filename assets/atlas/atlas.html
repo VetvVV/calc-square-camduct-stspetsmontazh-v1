@@ -1350,17 +1350,47 @@ function initAtlasCardCollapse(){
     );
 }
 
-function atlasSelectedCategory(){
-    const fromQuery =
-    new URLSearchParams(window.location.search).get('category');
+function normalizeAtlasCategory(category){
+    const value =
+    String(category || '').toLowerCase();
 
-    if(fromQuery){
-        return decodeURIComponent(fromQuery);
+    if(['round','rectangular','combined'].includes(value)){
+        return value;
     }
 
-    return decodeURIComponent(
+    if(value.includes('круг') || value.includes('round')){
+        return 'round';
+    }
+
+    if(value.includes('прям') || value.includes('rect')){
+        return 'rectangular';
+    }
+
+    if(value.includes('комб') || value.includes('combined')){
+        return 'combined';
+    }
+
+    return '';
+}
+
+function atlasSelectedCategory(){
+    const params =
+    new URLSearchParams(window.location.search);
+
+    if((params.get('view') || '') === 'all'){
+        return '';
+    }
+
+    const fromQuery =
+    params.get('category');
+
+    if(fromQuery){
+        return normalizeAtlasCategory(decodeURIComponent(fromQuery));
+    }
+
+    return normalizeAtlasCategory(decodeURIComponent(
     (window.location.hash || '').replace(/^#/,'')
-    );
+    ));
 }
 
 function atlasViewMode(){
@@ -1373,7 +1403,7 @@ function atlasViewMode(){
 
 function focusAtlasCategory(selectedCategory=atlasSelectedCategory()){
     const category =
-    String(selectedCategory || '');
+    normalizeAtlasCategory(selectedCategory);
 
     const viewMode =
     atlasViewMode();
@@ -1382,6 +1412,9 @@ function focusAtlasCategory(selectedCategory=atlasSelectedCategory()){
     ['round','rectangular','combined'].includes(category);
 
     if(viewMode === 'all' || !hasValidCategory){
+        document.body.dataset.atlasView =
+        'all';
+
         document.querySelectorAll('.card > h2[data-i18n]').forEach(
         (head)=>{
             const card =
@@ -1400,6 +1433,9 @@ function focusAtlasCategory(selectedCategory=atlasSelectedCategory()){
         setTimeout(()=>window.scrollTo({top:0,left:0,behavior:'auto'}),0);
         return;
     }
+
+    document.body.dataset.atlasView =
+    category;
 
     let targetHead = null;
 

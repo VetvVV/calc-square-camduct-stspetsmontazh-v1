@@ -1649,7 +1649,36 @@ updateCalculatorScrollState,
 
 }
 
+function normalizeAtlasCategory(category){
+const value =
+String(category || '').toLowerCase();
+
+if(['round','rectangular','combined'].includes(value)){
+return value;
+}
+
+if(value.includes('круг') || value.includes('round')){
+return 'round';
+}
+
+if(value.includes('прям') || value.includes('rect')){
+return 'rectangular';
+}
+
+if(value.includes('комб') || value.includes('combined')){
+return 'combined';
+}
+
+return '';
+}
+
 function showAtlasCatalog(category='', mode='all'){
+
+category =
+normalizeAtlasCategory(category);
+
+mode =
+category ? 'category' : mode;
 
 currentModulePath =
 null;
@@ -1709,6 +1738,9 @@ category
 
 url.hash =
 category;
+}else{
+url.hash =
+'';
 }
 
 atlasFrame.src =
@@ -5575,7 +5607,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-14-165507</div>
+<div class="build-marker">build 2026-06-14-171338</div>
 
 </body>
 

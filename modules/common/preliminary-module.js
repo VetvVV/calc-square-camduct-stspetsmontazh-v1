@@ -396,12 +396,30 @@
 
   function categoryLabel() {
     const category = moduleCategory();
-    return t[category] || "";
+    return t[category] || config.category || "";
+  }
+
+  function normalizeCategory(category) {
+    const value = String(category || "").toLowerCase();
+    if (["round", "rectangular", "combined"].includes(value)) {
+      return value;
+    }
+    if (value.includes("круг") || value.includes("round")) {
+      return "round";
+    }
+    if (value.includes("прям") || value.includes("rect")) {
+      return "rectangular";
+    }
+    if (value.includes("комб") || value.includes("combined")) {
+      return "combined";
+    }
+    return "";
   }
 
   function moduleCategory() {
-    if (config.category) {
-      return config.category;
+    const configuredCategory = normalizeCategory(config.category);
+    if (configuredCategory) {
+      return configuredCategory;
     }
 
     const path = window.location.pathname.toLowerCase();
@@ -666,6 +684,8 @@
   }
 
   function showAtlas(category = "") {
+    category = normalizeCategory(category);
+
     if (window.parent && window.parent !== window) {
       window.parent.postMessage(
         {
