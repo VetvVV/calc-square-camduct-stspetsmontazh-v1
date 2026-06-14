@@ -1377,7 +1377,7 @@ function atlasSelectedCategory(){
     const params =
     new URLSearchParams(window.location.search);
 
-    if((params.get('view') || '') === 'all'){
+    if((params.get('view') || '') !== 'category'){
         return '';
     }
 
@@ -1388,9 +1388,7 @@ function atlasSelectedCategory(){
         return normalizeAtlasCategory(decodeURIComponent(fromQuery));
     }
 
-    return normalizeAtlasCategory(decodeURIComponent(
-    (window.location.hash || '').replace(/^#/,'')
-    ));
+    return '';
 }
 
 function atlasViewMode(){
@@ -1411,7 +1409,7 @@ function focusAtlasCategory(selectedCategory=atlasSelectedCategory()){
     const hasValidCategory =
     ['round','rectangular','combined'].includes(category);
 
-    if(viewMode === 'all' || !hasValidCategory){
+    if(viewMode !== 'category' || !hasValidCategory){
         document.body.dataset.atlasView =
         'all';
 

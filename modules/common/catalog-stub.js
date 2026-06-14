@@ -24,7 +24,8 @@
   }
 
   function openAtlas(category = "") {
-    category = ["round", "rectangular", "combined"].includes(category) ? category : categoryKey();
+    category = String(category || "");
+    category = category ? (["round", "rectangular", "combined"].includes(category) ? category : categoryKey()) : "";
 
     if (window.parent && window.parent !== window) {
       window.parent.postMessage(
