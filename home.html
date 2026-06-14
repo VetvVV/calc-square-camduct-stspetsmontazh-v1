@@ -1743,8 +1743,25 @@ url.hash =
 '';
 }
 
-atlasFrame.src =
+const nextFrame =
+document.createElement('iframe');
+
+nextFrame.id =
+'atlasFrame';
+
+nextFrame.scrolling =
+'auto';
+
+nextFrame.src =
 url.href;
+
+attachAtlasFrameLoad(
+nextFrame
+);
+
+atlasFrame.replaceWith(
+nextFrame
+);
 
 }
 
@@ -2061,15 +2078,13 @@ updateCalculatorScrollState(contentHeight);
 
 }
 
-document.addEventListener(
-'DOMContentLoaded',
-()=>{
+function attachAtlasFrameLoad(frame){
 
-const atlasFrame =
-document.getElementById('atlasFrame');
+if(!frame){
+    return;
+}
 
-if(atlasFrame){
-    atlasFrame.addEventListener(
+frame.addEventListener(
     'load',
     ()=>{
         resizeAtlasFrame();
@@ -2078,8 +2093,17 @@ if(atlasFrame){
         setTimeout(resizeAtlasFrame,1200);
         setTimeout(resizeAtlasFrame,2500);
     }
-    );
+);
+
 }
+
+document.addEventListener(
+'DOMContentLoaded',
+()=>{
+
+attachAtlasFrameLoad(
+document.getElementById('atlasFrame')
+);
 
 }
 );
@@ -5607,7 +5631,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-14-172211</div>
+<div class="build-marker">build 2026-06-14-180750</div>
 
 </body>
 
