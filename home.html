@@ -945,6 +945,29 @@ overflow:visible;
 
 }
 
+@media (min-width:901px){
+    .atlas-panel:not(.module-open){
+        height:calc(100vh - 90px);
+        position:sticky;
+        top:90px;
+        align-self:flex-start;
+        overflow:hidden;
+    }
+
+    .atlas-panel:not(.module-open) #atlasContent,
+    .atlas-panel:not(.module-open) #atlasCatalog{
+        height:100%;
+        min-height:0;
+        overflow:hidden;
+    }
+
+    .atlas-panel:not(.module-open) #atlasFrame{
+        height:100% !important;
+        min-height:0 !important;
+        overflow:auto;
+    }
+}
+
 .position-modal{
 position:fixed;
 inset:0;
@@ -1090,9 +1113,11 @@ display:none !important;
 body.role-guest .atlas-panel{
 width:100% !important;
 display:block;
-min-height:auto;
+height:calc(100vh - 90px);
+min-height:0;
 padding-left:0;
 border-left:none;
+overflow:hidden;
 }
 
 body.role-guest .workspace-layout{
@@ -1102,15 +1127,15 @@ min-height:auto;
 
 body.role-guest #atlasContent,
 body.role-guest #atlasCatalog{
-height:auto !important;
-min-height:calc(100vh - 90px);
-overflow:visible;
+height:100% !important;
+min-height:0;
+overflow:hidden;
 }
 
 body.role-guest #atlasFrame{
-height:calc(100vh - 90px);
-min-height:calc(100vh - 90px);
-overflow:hidden;
+height:100% !important;
+min-height:0 !important;
+overflow:auto;
 }
 
 #atlasContent{
@@ -1550,7 +1575,7 @@ style="display:none;width:100%;">
 
 <iframe
 id="atlasFrame"
-scrolling="no"
+scrolling="auto"
 src="assets/atlas/atlas.html">
 </iframe>
 
@@ -1696,6 +1721,26 @@ if(
 ||
 atlasFrame.offsetParent === null
 ){
+    return;
+}
+
+const atlasPanel =
+document.querySelector('.atlas-panel');
+
+const isDesktopAtlasPanel =
+window.innerWidth > 900
+&&
+atlasPanel
+&&
+!atlasPanel.classList.contains('module-open');
+
+if(isDesktopAtlasPanel){
+    atlasFrame.style.height =
+    '100%';
+
+    atlasFrame.style.minHeight =
+    '0';
+
     return;
 }
 
@@ -5522,7 +5567,7 @@ document.addEventListener(
 
 </script>
 
-<div class="build-marker">build 2026-06-14-111314</div>
+<div class="build-marker">build 2026-06-14-120406</div>
 
 </body>
 
