@@ -1,7 +1,8 @@
 (function(){
   const params=new URLSearchParams(location.search);
   const lang=params.get("lang")||"ru";
-  const role=params.get("role")||"guest";
+  const roles=["guest","user","client","admin"];
+  const role=roles.includes(params.get("role"))?params.get("role"):"guest";
   const moduleKey=params.get("module")||"rectangular-transition";
   const editIndex=params.has("edit")?Number(params.get("edit")):null;
   const guestUsageKey="calcSquareGuestUsageCleanV1";

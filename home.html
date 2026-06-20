@@ -31,6 +31,7 @@ button,input,select,textarea{font:inherit}
 .role-chip{border:1px solid #d9dde3;border-radius:7px;background:#fff;color:#5b6573;padding:8px 11px;font-size:12px;line-height:1;font-weight:800;text-transform:uppercase}
 .guest-counter{border:1px solid #ead4b5;border-radius:7px;background:#fff7ed;color:#9a5800;padding:8px 11px;font-size:12px;line-height:1;font-weight:800}
 body:not([data-role="guest"]) .guest-counter{display:none}
+body[data-role="guest"] .role-chip{display:none}
 .app{--project-width:78vw;height:calc(100vh - 72px);display:grid;grid-template-columns:minmax(520px,min(var(--project-width),calc(100vw - 360px))) 10px minmax(300px,1fr);gap:10px;padding:0}
 body[data-layout="project"] .app{grid-template-columns:minmax(0,1fr)}
 body[data-layout="atlas"] .app{grid-template-columns:minmax(0,1fr)}
@@ -46,7 +47,8 @@ body[data-role="user"] .project-clear-all,body[data-role="user"] .project-edit,b
 body[data-role="user"] .project-comment{background:#f6f7f8;color:#6b7280;resize:none;pointer-events:none}
 .side,.work{background:transparent;border-radius:0;box-shadow:none}
 .side{padding:0 18px 0 0;display:flex;flex-direction:column;gap:10px;min-height:0}
-.nav-actions{display:flex;justify-content:flex-start;gap:6px}
+.nav-actions{display:none;justify-content:flex-start;gap:6px}
+body[data-layout="project"] .nav-actions{display:flex}
 .nav-actions button{padding:7px 12px;min-height:30px;font-size:12px;text-transform:none;font-style:normal}
 .project{display:flex;flex-direction:column;gap:10px;min-height:0;flex:1}
 .project-hero{text-align:center;padding:8px 0 10px}
@@ -57,16 +59,21 @@ body[data-role="user"] .project-comment{background:#f6f7f8;color:#6b7280;resize:
 .spec-controls button,.spec-controls label{height:24px;border:1px solid #cfd3da;border-radius:6px;background:#fff;color:#4b5563;padding:4px 8px;font-size:11px;font-weight:600;font-style:italic;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
 .spec-controls button{cursor:pointer;font-style:normal}
 .spec-controls input{margin:0}
-.name-dims{display:none;color:#6b7280;margin-top:4px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.name-dims{display:none;color:#6b7280;margin-top:4px;font-size:12px;font-weight:600;white-space:normal;overflow-wrap:anywhere;max-width:100%}
 body.dims-under-name:not(.dims-column-off) .name-dims:not(:empty){display:block}
 .name-dims:empty{display:none}
 .project-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .project-head h2{font-size:18px;margin:0}
-.project-table{overflow-y:auto;overflow-x:hidden;border:0;border-radius:16px;background:#fff;min-height:180px;width:100%;max-width:100%;margin:0;flex:1 1 auto;box-shadow:0 4px 18px rgba(0,0,0,.06)}
+.project-head-tools{display:flex;align-items:center;gap:8px}
+.project-table{overflow-y:auto;overflow-x:hidden;border:0;border-radius:16px;background:#fff;min-height:120px;width:100%;max-width:100%;margin:0;flex:1 1 auto;box-shadow:0 4px 18px rgba(0,0,0,.06)}
 .project-table.has-x-overflow{overflow-x:auto}
 .project-grid{display:grid;grid-template-columns:var(--project-cols,52px 220px 150px 220px 72px 210px 58px 92px 90px 250px 64px);min-width:max(100%,var(--project-grid-width,1388px));align-items:stretch}
+.project-table.fit-wrap,.summary-table.fit-wrap{overflow-x:hidden}
+.project-table.fit-wrap .project-grid,.summary-table.fit-wrap .project-grid{grid-template-columns:var(--project-fit-cols,34px minmax(78px,1.35fr) minmax(76px,.95fr) minmax(92px,1.15fr) 48px minmax(82px,1fr) 38px 58px 58px minmax(92px,1.05fr) 48px);min-width:100%}
+.project-table.fit-wrap .project-cell,.summary-table.fit-wrap .project-cell{padding:10px 8px;font-size:12px;overflow-wrap:anywhere}
+.project-table.fit-wrap .project-cell.is-col-hidden,.summary-table.fit-wrap .project-cell.is-col-hidden,.project-table.fit-wrap .project-cell.is-fit-hidden,.summary-table.fit-wrap .project-cell.is-fit-hidden{display:none}
 .project-cell{position:relative;min-width:0;height:100%;padding:11px 10px;border-left:1px solid #e5e7eb;border-top:1px solid #ececec;font-size:13px;line-height:1.3;background:#fff;overflow:hidden;white-space:normal;overflow-wrap:break-word;font-style:normal}
-.project-cell.is-col-hidden{visibility:hidden;padding-left:0;padding-right:0;border-left:0;overflow:hidden;white-space:nowrap;overflow-wrap:normal;font-size:0;line-height:0;height:0;max-height:0;min-height:0}
+.project-cell.is-col-hidden{display:none}
 .project-cell:first-child{border-left:0}
 .project-head-row{position:sticky;top:0;z-index:8;align-items:stretch}
 .project-head-row .project-cell{height:42px;min-height:42px;max-height:42px;padding:0 10px;border-top:0;background:var(--accent);color:#fff;font-weight:800;font-style:italic;display:flex;align-items:center;justify-content:space-between;gap:6px;overflow:hidden}
@@ -78,8 +85,12 @@ body.dims-under-name:not(.dims-column-off) .name-dims:not(:empty){display:block}
 .project-grid .project-cell:nth-child(11){position:sticky;right:0;z-index:4;background:rgba(255,255,255,.86);box-shadow:-1px 0 0 #e5e7eb}
 .project-row:nth-child(even) .project-cell:nth-child(11){background:rgba(250,250,250,.86)}
 .project-head-row .project-cell:nth-child(11){z-index:9;background:#d97a1c;box-shadow:-1px 0 0 rgba(255,255,255,.25)}
+.project-table.fit-wrap .project-grid .project-cell:nth-child(11){position:relative;right:auto;z-index:auto;box-shadow:none}
+.project-table.fit-wrap .project-head-row .project-cell:nth-child(11){z-index:auto}
+.project-table.compact-fit .project-grid .project-cell:nth-child(11){background:rgba(255,255,255,.92)}
+.project-table.compact-fit .project-head-row .project-cell:nth-child(11){background:#d97a1c}
 .project-cell.is-numeric{text-align:center;white-space:nowrap}
-.project-cell strong{display:block;font-size:14px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.project-cell strong{display:block;font-size:14px;font-weight:800;overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere}
 .project-cell small{display:block;color:#7b838e;margin-top:3px}
 .project-empty{grid-column:1/-1;padding:28px;text-align:center;color:var(--muted);background:#fff;border-top:1px solid #ececec}
 .project-comment{width:100%;min-height:34px;border:1px solid #d1d5db;border-radius:6px;padding:6px 8px;resize:vertical;background:#fff;font-size:13px}
@@ -87,8 +98,8 @@ body.dims-under-name:not(.dims-column-off) .name-dims:not(:empty){display:block}
 .project-edit,.project-remove{width:28px;height:28px;border:0;border-radius:8px;background:rgba(238,240,243,.62);backdrop-filter:blur(3px);cursor:pointer;opacity:.72}
 .project-edit:hover{background:rgba(255,243,223,.92);color:#b86205;opacity:1}
 .project-remove:hover{background:rgba(254,226,226,.92);color:#b91c1c;opacity:1}
-.project-clear-all{width:28px;height:28px;border:0;border-radius:8px;background:rgba(255,255,255,.18);color:#fff;font-weight:800;cursor:pointer}
-.project-clear-all:hover{background:rgba(255,255,255,.32)}
+.project-clear-all{width:28px;height:28px;border:0;border-radius:8px;background:rgba(223,122,18,.16);color:#bd6306;font-weight:800;cursor:pointer}
+.project-clear-all:hover{background:rgba(223,122,18,.28)}
 .clear-menu{position:fixed;z-index:120;display:none;min-width:140px;border:1px solid #d1d5db;border-radius:9px;background:#fff;box-shadow:0 16px 38px rgba(0,0,0,.18);padding:6px}
 .clear-menu.open{display:block}
 .clear-menu button{display:block;width:100%;border:0;border-radius:7px;background:#fff;color:#24272d;padding:9px 11px;text-align:left;font-size:13px;font-weight:800;cursor:pointer}
@@ -98,12 +109,12 @@ body.dims-under-name:not(.dims-column-off) .name-dims:not(:empty){display:block}
 .project-tip strong{display:block;margin-top:8px;font-size:13px}
 .project-tip small{display:block;margin-top:4px;color:#6b7280}
 .project-total .project-cell{min-height:42px;font-weight:700;background:#f2f4f7;border-top:2px solid #d97a1c}
-.material-summary{display:none;border-radius:10px;overflow:hidden;background:#fff;border:1px solid #d1d5db}
-body[data-role="client"] .material-summary,body[data-role="admin"] .material-summary{display:block}
+.material-summary{display:none;border-radius:10px;overflow:hidden;background:#fff;border:1px solid #d1d5db;flex:0 0 auto;min-height:112px;max-height:26vh}
+body[data-role="client"] .material-summary,body[data-role="admin"] .material-summary{display:flex;flex-direction:column}
 .summary-title{background:#5d6673;color:#fff;font-weight:800;font-style:italic;padding:12px 16px}
-.summary-table{overflow:auto}
+.summary-table{overflow:auto;min-height:54px;max-height:calc(26vh - 45px)}
 .summary-table .project-head-row .project-cell{height:38px;min-height:38px;max-height:38px}
-.project-actions{display:none;justify-content:center;gap:18px;flex-wrap:wrap;padding:10px 0 0}
+.project-actions{display:none;justify-content:center;gap:18px;flex-wrap:wrap;padding:10px 0 0;flex:0 0 auto}
 body[data-role="client"] .project-actions,body[data-role="admin"] .project-actions{display:flex}
 .project-actions button{min-width:110px}
 .project-actions .icon-btn{min-width:44px;width:44px;padding:9px}
@@ -123,11 +134,15 @@ body[data-role="client"] .project-actions,body[data-role="admin"] .project-actio
 .login-submit,.register-submit,.guest-submit{width:100%;height:38px;border:0;border-radius:7px;font-weight:800;text-transform:uppercase;cursor:pointer}
 .login-submit{background:var(--accent);color:#fff}
 .register-submit{margin-top:8px;background:#fff;color:var(--accent);border:1px solid var(--accent)}
+.register-submit:disabled{border-color:#d1d5db;color:#9ca3af;background:#f3f4f6;cursor:not-allowed}
 .guest-submit{background:#ececec;color:#3f4652}
 .login-divider{margin:14px 0;text-align:center;color:#9ca3af;font-size:13px;font-weight:800;font-style:italic}
+.login-help{margin:-10px 0 12px;color:#6b7280;font-size:12px;line-height:1.35;text-align:center;font-weight:700;white-space:pre-line}
+.role-hint{min-height:34px;margin-top:10px;color:#5b6573;font-size:12px;line-height:1.35;text-align:center;font-weight:700}
 .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .role-option{height:36px;border:1px solid #d1d5db;border-radius:7px;background:#fff;color:#5b6573;font-size:13px;font-weight:800;cursor:pointer}
 .role-option.active{border-color:var(--accent);background:var(--accent);color:#fff}
+.role-option[data-role="admin"]:not(.admin-unlocked){display:none}
 .login-error{min-height:17px;margin-top:10px;color:#b91c1c;font-size:12px;text-align:center;font-weight:700}
 iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ececec}
 @media(max-width:900px){
@@ -155,7 +170,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
 </style>
 </head>
 <body>
-<div class="build-marker" hidden>build 2026-06-20-1351</div>
+<div class="build-marker" hidden>build 2026-06-20-1721</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/calc_square_logo.png" alt="">
@@ -211,7 +226,13 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
         <label><input type="checkbox" data-col-toggle="8" checked> <span data-i="mass">Масса</span></label>
         <label><input type="checkbox" data-col-toggle="9" checked> <span data-i="comment">Комментарий</span></label>
       </div>
-      <div class="project-head"><h2 data-i="spec">Спецификация</h2><span id="count">0</span></div>
+      <div class="project-head">
+        <h2 data-i="spec">Спецификация</h2>
+        <div class="project-head-tools">
+          <span id="count">0</span>
+          <button class="project-clear-all" id="clearProjectHeader" type="button" title="Очистить спецификацию">×</button>
+        </div>
+      </div>
       <div class="project-table">
         <div class="project-grid project-head-row">
           <span class="project-cell is-numeric">№</span>
@@ -224,7 +245,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
           <span class="project-cell is-numeric" data-i="area">Площадь</span>
           <span class="project-cell is-numeric" data-i="mass">Масса</span>
           <span class="project-cell" data-i="comment">Комментарий</span>
-          <span class="project-cell is-numeric"><button class="project-clear-all" id="clearProjectHeader" type="button" title="Очистить спецификацию">×</button></span>
+          <span class="project-cell is-numeric"></span>
         </div>
         <div id="projectRows"></div>
         <div class="project-grid project-total" id="projectTotal"></div>
@@ -278,18 +299,17 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <form class="login-card" id="loginForm">
     <button class="login-close" id="loginClose" type="button" aria-label="Закрыть">×</button>
     <h2 data-i="cabinet">Кабинет</h2>
+    <div class="login-help" id="loginHelp"></div>
     <input class="login-field" id="loginName" autocomplete="username" data-i-ph="loginName" placeholder="Логин">
     <input class="login-field" id="loginPassword" type="password" autocomplete="current-password" data-i-ph="loginPassword" placeholder="Пароль">
     <button class="login-submit" type="submit" data-i="signIn">Войти</button>
     <button class="register-submit" id="registerBtn" type="button" data-i="registerDemo">Зарегистрировать демо</button>
-    <div class="login-divider" data-i="or">или</div>
-    <button class="guest-submit" id="guestBtn" type="button" data-i="continueGuest">Продолжить как гость</button>
     <div class="role-grid" id="roleGrid">
-      <button class="role-option" type="button" data-role="guest" data-i="guestRole">Гость</button>
       <button class="role-option" type="button" data-role="user" data-i="userRole">Пользователь</button>
       <button class="role-option" type="button" data-role="client" data-i="clientRole">Клиент</button>
       <button class="role-option" type="button" data-role="admin" data-i="adminRole">Админ</button>
     </div>
+    <div class="role-hint" id="roleHint"></div>
     <div class="login-error" id="loginError"></div>
   </form>
 </div>
@@ -308,6 +328,8 @@ const loginName=document.getElementById("loginName");
 const loginPassword=document.getElementById("loginPassword");
 const loginError=document.getElementById("loginError");
 const registerBtn=document.getElementById("registerBtn");
+const loginHelp=document.getElementById("loginHelp");
+const roleHint=document.getElementById("roleHint");
 const roleChip=document.getElementById("roleChip");
 const projectRows=document.getElementById("projectRows");
 const projectTotal=document.getElementById("projectTotal");
@@ -335,14 +357,16 @@ const guestUsageKey="calcSquareGuestUsageCleanV1";
 const demoUsersKey="calcSquareDemoUsersCleanV1";
 const guestDailyLimit=5;
 const roles=["guest","user","client","admin"];
+const adminUnlockPassword="admin";
 const defaultColumnWidths=[52,220,150,220,72,210,58,92,90,250,64];
 const minColumnWidths=[40,120,90,120,54,120,44,70,70,130,50];
+const fitColumnTracks=["34px","minmax(78px,1.35fr)","minmax(76px,.95fr)","minmax(92px,1.15fr)","48px","minmax(82px,1fr)","38px","58px","58px","minmax(92px,1.05fr)","48px"];
 let columnWidths=[...defaultColumnWidths];
 let selectedLoginRole="guest";
 let layoutMode="split";
 const UI_TEXT={
   ru:{
-    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",clear:"Очистить",spec:"Спецификация",
+    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",logout:"Выход",clear:"Очистить",spec:"Спецификация",
     projectSpec:"Проект / Спецификация",projectName:"Название проекта",projectCustomer:"Заказчик",projectObject:"Объект",
     autoWidth:"Автоширина",resetView:"Скинуть вид",resetSort:"Скинуть сортировку",dimsUnderName:"Размеры под названием",
     name:"Наименование",dimensions:"Размеры",description:"Описание",quantity:"К-во",
@@ -353,11 +377,13 @@ const UI_TEXT={
     cabinet:"Кабинет",loginName:"Логин",loginPassword:"Пароль",signIn:"Войти",or:"или",continueGuest:"Продолжить как гость",
     guestRole:"Гость",userRole:"Пользователь",clientRole:"Клиент",adminRole:"Админ",badLogin:"Логин или пароль не совпадают с выбранной ролью",
     registerDemo:"Зарегистрировать демо",demoRegistered:"Демо-аккаунт создан",userExists:"Такой логин уже есть",loginRequired:"Введите логин и пароль",guestRegister:"Гость не требует регистрации",
+    demoHelp:"Демо-режим: user/user или client/client. Админ откроется, если в роли Клиент ввести пароль admin.",
+    currentLogin:"Текущий вход: {role}{login}",roleHintGuest:"Гость: только атлас и калькуляторы, до 5 открытий калькулятора в сутки.",roleHintUser:"Пользователь: атлас, расчёты и просмотр спецификации без сохранения, печати, экспорта и редактирования.",roleHintClient:"Клиент: доступно всё, кроме просмотра формул в калькуляторах.",roleHintAdmin:"Админ: полный демо-доступ ко всем действиям.",
     guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь, клиент или админ.",
     guestCounter:"Гость: {left}/5",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?"
   },
   uk:{
-    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",clear:"Очистити",spec:"Специфікація",
+    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вихід",clear:"Очистити",spec:"Специфікація",
     projectSpec:"Проєкт / Специфікація",projectName:"Назва проєкту",projectCustomer:"Замовник",projectObject:"Об'єкт",
     autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути сортування",dimsUnderName:"Розміри під назвою",
     name:"Найменування",dimensions:"Розміри",description:"Опис",quantity:"К-ть",
@@ -368,11 +394,13 @@ const UI_TEXT={
     cabinet:"Кабінет",loginName:"Логін",loginPassword:"Пароль",signIn:"Увійти",or:"або",continueGuest:"Продовжити як гість",
     guestRole:"Гість",userRole:"Користувач",clientRole:"Клієнт",adminRole:"Адмін",badLogin:"Логін або пароль не збігаються з обраною роллю",
     registerDemo:"Зареєструвати демо",demoRegistered:"Демо-акаунт створено",userExists:"Такий логін вже є",loginRequired:"Введіть логін і пароль",guestRegister:"Гість не потребує реєстрації",
+    demoHelp:"Демо-режим: user/user або client/client. Адмін відкриється, якщо в ролі Клієнт ввести пароль admin.",
+    currentLogin:"Поточний вхід: {role}{login}",roleHintGuest:"Гість: тільки атлас і калькулятори, до 5 відкриттів калькулятора на добу.",roleHintUser:"Користувач: атлас, розрахунки і перегляд специфікації без збереження, друку, експорту і редагування.",roleHintClient:"Клієнт: доступно все, крім перегляду формул у калькуляторах.",roleHintAdmin:"Адмін: повний демо-доступ до всіх дій.",
     guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач, клієнт або адмін.",
     guestCounter:"Гість: {left}/5",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?"
   },
   en:{
-    language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",clear:"Clear",spec:"Specification",
+    language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Logout",clear:"Clear",spec:"Specification",
     projectSpec:"Project / Specification",projectName:"Project name",projectCustomer:"Customer",projectObject:"Object",
     autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset sorting",dimsUnderName:"Dimensions under name",
     name:"Item",dimensions:"Dimensions",description:"Description",quantity:"Qty",
@@ -383,6 +411,8 @@ const UI_TEXT={
     cabinet:"Cabinet",loginName:"Login",loginPassword:"Password",signIn:"Sign in",or:"or",continueGuest:"Continue as guest",
     guestRole:"Guest",userRole:"User",clientRole:"Client",adminRole:"Admin",badLogin:"Login or password does not match the selected role",
     registerDemo:"Register demo",demoRegistered:"Demo account created",userExists:"This login already exists",loginRequired:"Enter login and password",guestRegister:"Guest does not need registration",
+    demoHelp:"Demo mode: user/user or client/client. Admin appears after entering admin as the Client password.",
+    currentLogin:"Current login: {role}{login}",roleHintGuest:"Guest: atlas and calculators only, up to 5 calculator opens per day.",roleHintUser:"User: atlas, calculations, and specification viewing without save, print, export, or editing.",roleHintClient:"Client: everything is available except calculator formulas.",roleHintAdmin:"Admin: full demo access to all actions.",
     guestLimit:"Guest limit: 5 calculations per day. Sign in as user, client, or admin.",
     guestCounter:"Guest: {left}/5",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?"
   }
@@ -568,15 +598,32 @@ function roleLabel(role){
   const map={guest:"guestRole",user:"userRole",client:"clientRole",admin:"adminRole"};
   return t(map[role]||"guestRole");
 }
+function roleHintText(role){
+  const map={guest:"roleHintGuest",user:"roleHintUser",client:"roleHintClient",admin:"roleHintAdmin"};
+  return t(map[role]||"roleHintGuest");
+}
+function updateLoginInfo(){
+  const settings=readSettings();
+  const role=currentRole();
+  const loginText=settings.login&&role!=="guest"?` · ${settings.login}`:"";
+  loginHelp.textContent=t("currentLogin").replace("{role}",roleLabel(role)).replace("{login}",loginText)+"\n"+t("demoHelp");
+  roleHint.textContent=roleHintText(selectedLoginRole);
+  registerBtn.disabled=selectedLoginRole==="admin";
+  const adminButton=document.querySelector('.role-option[data-role="admin"]');
+  const adminUnlocked=selectedLoginRole==="admin"||(selectedLoginRole==="client"&&loginPassword.value===adminUnlockPassword);
+  adminButton?.classList.toggle("admin-unlocked",adminUnlocked);
+}
 function renderRole(){
   const role=currentRole();
   document.body.dataset.role=role;
   roleChip.textContent=roleLabel(role);
+  loginBtn.textContent=role==="guest"?t("login"):t("logout");
   renderGuestCounter();
   document.querySelectorAll(".role-option").forEach((button)=>button.classList.toggle("active",button.dataset.role===selectedLoginRole));
+  updateLoginInfo();
 }
 function openLogin(){
-  selectedLoginRole=currentRole();
+  selectedLoginRole=currentRole()==="guest"?"user":currentRole();
   loginError.textContent="";
   loginModal.hidden=false;
   renderRole();
@@ -598,7 +645,7 @@ function tryLogin(){
   closeLogin();
 }
 function registerDemoAccount(){
-  if(selectedLoginRole==="guest"){loginError.textContent=t("guestRegister");return}
+  if(selectedLoginRole==="admin"){loginError.textContent=t("badLogin");return}
   const input=loginInput();
   if(!input.login||!input.password){loginError.textContent=t("loginRequired");return}
   const users=readDemoUsers();
@@ -772,8 +819,13 @@ function effectiveColumnWidths(){
 }
 function applyColumnWidths(){
   const widths=effectiveColumnWidths().map((value)=>Math.round(value));
-  document.documentElement.style.setProperty("--project-cols",widths.map((value)=>`${value}px`).join(" "));
-  document.documentElement.style.setProperty("--project-grid-width",`${widths.reduce((sum,value)=>sum+value,0)}px`);
+  const visible=currentColumnVisibility();
+  const dimsUnderName=showDimensionsUnderName();
+  const visibleWidths=widths.filter((value)=>value>0);
+  const fitTracks=fitColumnTracks.filter((track,index)=>visible[index]!==false&&!(dimsUnderName&&index===2));
+  document.documentElement.style.setProperty("--project-cols",visibleWidths.map((value)=>`${value}px`).join(" "));
+  document.documentElement.style.setProperty("--project-fit-cols",fitTracks.join(" "));
+  document.documentElement.style.setProperty("--project-grid-width",`${visibleWidths.reduce((sum,value)=>sum+value,0)}px`);
   updateProjectOverflow();
 }
 function saveColumnWidths(){
@@ -782,11 +834,41 @@ function saveColumnWidths(){
 }
 function projectTable(){return document.querySelector(".project-table")}
 function summaryTable(){return document.querySelector(".summary-table")}
+function baseVisibleColumnIndexes(){
+  const visible=currentColumnVisibility();
+  const dimsUnderName=showDimensionsUnderName();
+  return defaultColumnWidths.map((_,index)=>index).filter((index)=>visible[index]!==false&&!(dimsUnderName&&index===2));
+}
+function compactVisibleColumnIndexes(node,baseIndexes){
+  const isSummary=node.classList.contains("summary-table");
+  const preferred=isSummary?[0,4,5,7,8]:[0,1,3,4,7,8,10];
+  const fallback=isSummary?[0,4,5,7,8]:[0,1,2,4,7,8,10];
+  const chosen=preferred.filter((index)=>baseIndexes.includes(index));
+  if(!chosen.includes(3)&&!isSummary&&baseIndexes.includes(2))chosen.splice(Math.min(2,chosen.length),0,2);
+  return chosen.length?chosen:fallback.filter((index)=>baseIndexes.includes(index));
+}
+function applyFitColumns(node,indexes){
+  node.style.setProperty("--project-fit-cols",indexes.map((index)=>fitColumnTracks[index]).join(" "));
+  node.querySelectorAll(".project-grid").forEach((grid)=>{
+    [...grid.children].forEach((cell,index)=>{
+      if(index<defaultColumnWidths.length)cell.classList.toggle("is-fit-hidden",!indexes.includes(index));
+    });
+  });
+}
 function updateProjectOverflow(){
   requestAnimationFrame(()=>{
     const table=projectTable();
-    if(!table)return;
-    table.classList.toggle("has-x-overflow",table.scrollWidth>table.clientWidth+1);
+    const baseIndexes=baseVisibleColumnIndexes();
+    const minSum=baseIndexes.reduce((sum,index)=>sum+minColumnWidths[index],0);
+    [table,summaryTable()].filter(Boolean).forEach((node)=>{
+      const shouldFitWrap=node.clientWidth>0&&minSum>node.clientWidth;
+      const shouldCompact=shouldFitWrap&&node.clientWidth<560;
+      const indexes=shouldCompact?compactVisibleColumnIndexes(node,baseIndexes):baseIndexes;
+      node.classList.toggle("fit-wrap",shouldFitWrap);
+      node.classList.toggle("compact-fit",shouldCompact);
+      node.classList.toggle("has-x-overflow",!shouldFitWrap&&node.scrollWidth>node.clientWidth+1);
+      applyFitColumns(node,indexes);
+    });
   });
 }
 function setLayoutMode(mode){
@@ -801,7 +883,7 @@ function cycleLayoutMode(){
 }
 function showAtlasPane(){
   if(window.matchMedia("(max-width:900px)").matches)setMobileView("atlas");
-  else setLayoutMode(layoutMode==="atlas"?"split":"atlas");
+  else setLayoutMode(layoutMode==="project"?"split":layoutMode==="atlas"?"split":"atlas");
   openUrl("assets/atlas/atlas.html");
 }
 function showProjectPane(){
@@ -1154,11 +1236,11 @@ document.getElementById("openSpec").addEventListener("click",()=>{if(canModifyPr
 document.getElementById("openSpecFile").addEventListener("change",(event)=>{const file=event.target.files?.[0];if(file&&canModifyProject())openSpecFile(file);event.target.value=""});
 document.getElementById("fullscreenSpec").addEventListener("click",()=>{if(canModifyProject())side.requestFullscreen?.()});
 lang.addEventListener("change",()=>{saveSettings();applyLanguage();openUrl(currentFrameUrl(),{countGuest:false})});
-loginBtn.addEventListener("click",openLogin);
+loginBtn.addEventListener("click",()=>{currentRole()==="guest"?openLogin():saveRole("guest")});
 document.getElementById("loginClose").addEventListener("click",closeLogin);
-document.getElementById("guestBtn").addEventListener("click",()=>{saveRole("guest");closeLogin()});
 loginForm.addEventListener("submit",(event)=>{event.preventDefault();tryLogin()});
 registerBtn.addEventListener("click",registerDemoAccount);
+loginPassword.addEventListener("input",updateLoginInfo);
 loginModal.addEventListener("click",(event)=>{if(event.target===loginModal)closeLogin()});
 document.addEventListener("keydown",(event)=>{if(event.key==="Escape"&&!loginModal.hidden)closeLogin()});
 document.getElementById("roleGrid").addEventListener("click",(event)=>{
@@ -1167,10 +1249,14 @@ document.getElementById("roleGrid").addEventListener("click",(event)=>{
   selectedLoginRole=button.dataset.role;
   loginError.textContent="";
   renderRole();
-  if(selectedLoginRole!=="guest"){
+  if(selectedLoginRole==="admin"){
+    loginName.value="admin";
+    loginPassword.value="admin";
+  }else if(selectedLoginRole!=="guest"){
     loginName.value=selectedLoginRole;
     loginPassword.value=selectedLoginRole;
   }
+  updateLoginInfo();
 });
 window.addEventListener("message",(event)=>{
   if(!isTrustedFrameMessage(event))return;
