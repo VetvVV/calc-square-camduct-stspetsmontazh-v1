@@ -66,6 +66,10 @@ body.spec-controls-collapsed .spec-controls{max-height:0;opacity:0;transform:tra
 .project-head-row .project-cell.sortable{cursor:pointer}
 .project-head-row .project-cell.sortable:hover{background:#c96d0b}
 .project-head-row .project-cell.sortable::after{content:attr(data-sort-mark);margin-left:auto;color:#fff;font-size:11px}
+.project-head-row .project-cell.is-draggable{cursor:grab}
+.project-head-row .project-cell.is-dragging{opacity:.62;background:#b86205}
+.project-head-row .project-cell.is-drop-target{box-shadow:inset 3px 0 0 #fff,inset -3px 0 0 #fff}
+body.reordering-cols{cursor:grabbing;user-select:none}
 .name-dims{display:none;color:#6b7280;margin-top:4px;font-size:12px;font-weight:600;white-space:normal;overflow-wrap:anywhere;max-width:100%}
 body.dims-under-name:not(.dims-column-off) .name-dims:not(:empty){display:block}
 .name-dims:empty{display:none}
@@ -218,7 +222,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
 </style>
 </head>
 <body>
-<div class="build-marker" hidden>build 2026-06-21-0018</div>
+<div class="build-marker" hidden>build 2026-06-21-0039</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/calc_square_logo.png" alt="">
@@ -289,7 +293,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
         <div class="project-grid project-head-row">
           <span class="project-cell is-numeric sortable" data-sort-key="pos">№</span>
           <span class="project-cell sortable" data-sort-key="name" data-i="name">Наименование</span>
-          <span class="project-cell" data-i="dimensions">Размеры</span>
+          <span class="project-cell sortable" data-sort-key="dimensions" data-i="dimensions">Размеры</span>
           <span class="project-cell" data-i="description">Описание</span>
           <span class="project-cell is-numeric sortable" data-sort-key="qty" data-i="quantity">К-ть</span>
           <span class="project-cell sortable" data-sort-key="material" data-i="material">Материал</span>
@@ -650,29 +654,35 @@ function currentColumnVisibility(){
   return Array.isArray(visible)&&visible.length===defaultColumnWidths.length?visible:[...defaultColumnWidths].map(()=>true);
 }
 function showDimensionsUnderName(){
-  const visible=currentColumnVisibility();
-  return !!readInterfaceState().dimsUnderName&&visible[2]!==false;
+  return !!readInterfaceState().dimsUnderName;
 }
 function applyColumnVisibility(){
   const visible=currentColumnVisibility();
   const dimsUnderName=showDimensionsUnderName();
   document.body.classList.toggle("dims-column-off",visible[2]===false);
-  colToggleInputs.forEach((input)=>{input.checked=visible[Number(input.dataset.colToggle)]!==false});
+  colToggleInputs.forEach((input)=>{
+    const index=Number(input.dataset.colToggle);
+    input.checked=index===2&&dimsUnderName?false:visible[index]!==false;
+  });
   document.querySelectorAll(".project-grid").forEach((grid)=>{
     [...grid.children].forEach((cell,index)=>{
       if(index<defaultColumnWidths.length){
         cell.hidden=false;
         cell.classList.toggle("is-col-hidden",visible[index]===false||(dimsUnderName&&index===2));
+        cell.dataset.colIndex=String(index);
       }
     });
   });
+  applyColumnOrder();
   applyColumnWidths();
   updateProjectOverflow();
 }
 function setColumnVisibility(index,checked){
   const visible=currentColumnVisibility();
   visible[index]=checked;
-  saveInterfaceState({visibleColumns:visible});
+  const patch={visibleColumns:visible};
+  if(index===2&&checked)patch.dimsUnderName=false;
+  saveInterfaceState(patch);
   if(index===2){renderProject();return}
   applyColumnVisibility();
 }
@@ -683,6 +693,21 @@ function applyDimsUnderName(){
   applyColumnVisibility();
   applyColumnWidths();
   updateProjectOverflow();
+}
+function applyColumnOrder(){
+  const order=currentColumnOrder();
+  document.querySelectorAll(".project-grid").forEach((grid)=>{
+    [...grid.children].forEach((cell,index)=>{
+      if(index<defaultColumnWidths.length){
+        const visual=order.indexOf(index);
+        cell.style.order=visual>=0?String(visual):"";
+        cell.dataset.colIndex=String(index);
+      }
+    });
+  });
+  document.querySelectorAll(".project-head-row .project-cell").forEach((cell,index)=>{
+    cell.classList.toggle("is-draggable",index>0&&index<defaultColumnWidths.length-1);
+  });
 }
 function summaryPinned(){
   return readInterfaceState().summaryPinned!==false;
@@ -710,6 +735,7 @@ function currentFilters(){
   return {
     pos:String(saved.pos||""),
     name:String(saved.name||""),
+    dimensions:String(saved.dimensions||""),
     qty:String(saved.qty||""),
     material:String(saved.material||""),
     thickness:String(saved.thickness||"")
@@ -717,7 +743,7 @@ function currentFilters(){
 }
 let activeFilterKey="";
 function filterLabel(key){
-  const map={pos:"filterNo",name:"filterName",qty:"filterQty",material:"filterMaterial",thickness:"filterThickness"};
+  const map={pos:"filterNo",name:"filterName",dimensions:"dimensions",qty:"filterQty",material:"filterMaterial",thickness:"filterThickness"};
   return t(map[key]||key);
 }
 function setFilterValue(key,value){
@@ -752,6 +778,7 @@ function closeFilterMenu(){
 function rowText(item,key,index){
   if(key==="pos")return String(index+1);
   if(key==="name")return displayProductName(item);
+  if(key==="dimensions")return formatDimensions(item);
   if(key==="qty")return String(item.quantity||1);
   if(key==="material")return displayMaterial(item);
   if(key==="thickness")return String(item.thickness||"");
@@ -810,8 +837,9 @@ function resetProjectView(){
     dimsUnderName:false,
     summaryPinned:true,
     specControlsCollapsed:false,
+    columnOrder:defaultColumnOrder(),
     sort:null,
-    filters:{pos:"",name:"",qty:"",material:"",thickness:""},
+    filters:{pos:"",name:"",dimensions:"",qty:"",material:"",thickness:""},
     projectScrollLeft:0,
     projectScrollTop:0,
     summaryScrollLeft:0,
@@ -1062,6 +1090,26 @@ function readColumnWidths(){
   }catch(e){}
   return [...defaultColumnWidths];
 }
+function defaultColumnOrder(){return defaultColumnWidths.map((_,index)=>index)}
+function currentColumnOrder(){
+  const saved=readInterfaceState().columnOrder;
+  const fallback=defaultColumnOrder();
+  if(!Array.isArray(saved)||saved.length!==fallback.length)return fallback;
+  const normalized=saved.map(Number);
+  const valid=normalized.every((value,index)=>Number.isInteger(value)&&value>=0&&value<fallback.length&&normalized.indexOf(value)===index);
+  if(!valid)return fallback;
+  return [0,...normalized.filter((value)=>value!==0&&value!==fallback.length-1),fallback.length-1];
+}
+function saveColumnOrder(order){
+  saveInterfaceState({columnOrder:[0,...order.filter((value)=>value!==0&&value!==defaultColumnWidths.length-1),defaultColumnWidths.length-1]});
+  applyColumnWidths();
+  applyColumnVisibility();
+}
+function orderedColumnIndexes(){
+  const visible=currentColumnVisibility();
+  const dimsUnderName=showDimensionsUnderName();
+  return currentColumnOrder().filter((index)=>visible[index]!==false&&!(dimsUnderName&&index===2));
+}
 function effectiveColumnWidths(){
   const visible=currentColumnVisibility();
   const dimsUnderName=!!readInterfaceState().dimsUnderName;
@@ -1092,11 +1140,13 @@ function applyColumnWidths(){
   const widths=effectiveColumnWidths().map((value)=>Math.round(value));
   const visible=currentColumnVisibility();
   const dimsUnderName=showDimensionsUnderName();
-  const visibleWidths=widths.filter((value)=>value>0);
-  const fitTracks=fitColumnTracks.filter((track,index)=>visible[index]!==false&&!(dimsUnderName&&index===2));
+  const ordered=orderedColumnIndexes();
+  const visibleWidths=ordered.map((index)=>widths[index]).filter((value)=>value>0);
+  const fitTracks=currentColumnOrder().filter((index)=>visible[index]!==false&&!(dimsUnderName&&index===2)).map((index)=>fitColumnTracks[index]);
   document.documentElement.style.setProperty("--project-cols",visibleWidths.map((value)=>`${value}px`).join(" "));
   document.documentElement.style.setProperty("--project-fit-cols",fitTracks.join(" "));
   document.documentElement.style.setProperty("--project-grid-width",`${visibleWidths.reduce((sum,value)=>sum+value,0)}px`);
+  applyColumnOrder();
   updateProjectOverflow();
 }
 function saveColumnWidths(){
@@ -1108,13 +1158,13 @@ function summaryTable(){return document.querySelector(".summary-table")}
 function baseVisibleColumnIndexes(){
   const visible=currentColumnVisibility();
   const dimsUnderName=showDimensionsUnderName();
-  return defaultColumnWidths.map((_,index)=>index).filter((index)=>visible[index]!==false&&!(dimsUnderName&&index===2));
+  return currentColumnOrder().filter((index)=>visible[index]!==false&&!(dimsUnderName&&index===2));
 }
 function compactVisibleColumnIndexes(node,baseIndexes){
   const isSummary=node.classList.contains("summary-table");
   const preferred=isSummary?[0,4,5,6,7,8]:[0,1,3,4,7,8,10];
   const fallback=isSummary?[0,4,5,6,7,8]:[0,1,2,4,7,8,10];
-  const chosen=preferred.filter((index)=>baseIndexes.includes(index));
+  const chosen=baseIndexes.filter((index)=>preferred.includes(index));
   if(!chosen.includes(3)&&!isSummary&&baseIndexes.includes(2))chosen.splice(Math.min(2,chosen.length),0,2);
   return chosen.length?chosen:fallback.filter((index)=>baseIndexes.includes(index));
 }
@@ -1302,6 +1352,53 @@ function bindColumnResizers(){
     cell.appendChild(handle);
   });
 }
+function bindColumnReorder(){
+  const header=document.querySelector(".project-table .project-head-row");
+  if(!header)return;
+  let drag=null;
+  header.addEventListener("pointerdown",(event)=>{
+    if(event.button!==0||event.target.closest(".col-resizer"))return;
+    const cell=event.target.closest(".project-cell");
+    if(!cell)return;
+    const index=Number(cell.dataset.colIndex??[...header.children].indexOf(cell));
+    if(index<=0||index>=defaultColumnWidths.length-1)return;
+    drag={index,startX:event.clientX,startY:event.clientY,active:false,target:index,cell};
+  });
+  window.addEventListener("pointermove",(event)=>{
+    if(!drag)return;
+    if(!drag.active){
+      if(Math.hypot(event.clientX-drag.startX,event.clientY-drag.startY)<6)return;
+      drag.active=true;
+      clearTimeout(sortClickTimer);
+      document.body.classList.add("reordering-cols");
+      drag.cell.classList.add("is-dragging");
+    }
+    document.querySelectorAll(".project-head-row .project-cell.is-drop-target").forEach((cell)=>cell.classList.remove("is-drop-target"));
+    const target=event.target.closest?.(".project-table .project-head-row .project-cell")||document.elementFromPoint(event.clientX,event.clientY)?.closest?.(".project-table .project-head-row .project-cell");
+    const targetIndex=Number(target?.dataset.colIndex);
+    if(Number.isInteger(targetIndex)&&targetIndex>0&&targetIndex<defaultColumnWidths.length-1){
+      drag.target=targetIndex;
+      target.classList.add("is-drop-target");
+    }
+  });
+  window.addEventListener("pointerup",(event)=>{
+    if(!drag)return;
+    const current=drag;
+    drag=null;
+    document.body.classList.remove("reordering-cols");
+    document.querySelectorAll(".project-head-row .project-cell.is-dragging,.project-head-row .project-cell.is-drop-target").forEach((cell)=>cell.classList.remove("is-dragging","is-drop-target"));
+    if(!current.active||current.index===current.target)return;
+    event.preventDefault();
+    suppressHeaderClickUntil=Date.now()+350;
+    const order=currentColumnOrder();
+    const from=order.indexOf(current.index);
+    const to=order.indexOf(current.target);
+    if(from<1||to<1||from===to)return;
+    order.splice(from,1);
+    order.splice(to,0,current.index);
+    saveColumnOrder(order);
+  });
+}
 function renderProject(){
   projectRows.innerHTML="";
   const entries=filteredProjectEntries();
@@ -1450,10 +1547,29 @@ function displayMaterial(item){
   const key=item.materialKey||materialKeyFromLabel(item.material);
   return pickText(MATERIAL_TEXT[key],item.material||"");
 }
+function cleanDescriptionText(text,item){
+  const dimensions=formatDimensions(item);
+  let value=String(text||"").trim();
+  if(!value)return "";
+  const dimensionVariants=[
+    dimensions,
+    dimensions.replace(/\s*×\s*/g," x "),
+    dimensions.replace(/\s*×\s*/g," × ")+" мм",
+    dimensions.replace(/\s*×\s*/g," x ")+" мм",
+    dimensions.replace(/\s*×\s*/g," × ")+" mm",
+    dimensions.replace(/\s*×\s*/g," x ")+" mm"
+  ].filter(Boolean).sort((a,b)=>b.length-a.length);
+  dimensionVariants.forEach((variant)=>{
+    const escaped=variant.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/\s+/g,"\\s*");
+    value=value.replace(new RegExp(`^\\s*${escaped}\\s*(?:[·,;:-]+\\s*)?`,"i"),"");
+  });
+  value=value.replace(/^\s*(мм|mm)\s*(?:[·,;:-]+)?\s*/i,"").trim();
+  return normalizeLookupText(value)===normalizeLookupText(dimensions)?"":value;
+}
 function displayDescription(item){
   const unit=lang.value==="en"?"mm":"мм";
   const base=item.description||item.size||formatDimensions(item);
-  return String(base).replaceAll(" мм",` ${unit}`);
+  return cleanDescriptionText(String(base).replaceAll(" мм",` ${unit}`),item);
 }
 function openProjectItem(index){
   const item=project[index];
@@ -1506,14 +1622,21 @@ projectNameInput.addEventListener("input",saveProjectMeta);
 projectCustomerInput.addEventListener("input",saveProjectMeta);
 projectObjectInput.addEventListener("input",saveProjectMeta);
 specPanelToggle.addEventListener("click",toggleSpecControls);
-dimsUnderNameInput.addEventListener("change",()=>{saveInterfaceState({dimsUnderName:dimsUnderNameInput.checked});renderProject()});
+dimsUnderNameInput.addEventListener("change",()=>{
+  const visible=currentColumnVisibility();
+  visible[2]=!dimsUnderNameInput.checked;
+  saveInterfaceState({dimsUnderName:dimsUnderNameInput.checked,visibleColumns:visible});
+  renderProject();
+});
 summaryPinnedInput.addEventListener("change",()=>{saveInterfaceState({summaryPinned:summaryPinnedInput.checked});applySummaryPin()});
 colToggleInputs.forEach((input)=>input.addEventListener("change",()=>setColumnVisibility(Number(input.dataset.colToggle),input.checked)));
 document.getElementById("autoFitAll").addEventListener("click",autoFitAllColumns);
 document.getElementById("resetLayout").addEventListener("click",resetProjectView);
 document.getElementById("resetSorting").addEventListener("click",resetProjectOrder);
+let suppressHeaderClickUntil=0;
 let sortClickTimer=null;
 document.querySelector(".project-head-row").addEventListener("click",(event)=>{
+  if(Date.now()<suppressHeaderClickUntil)return;
   const cell=event.target.closest(".sortable");
   if(!cell?.dataset.sortKey)return;
   clearTimeout(sortClickTimer);
@@ -1610,6 +1733,7 @@ applyDimsUnderName();
 applySummaryPin();
 applyColumnVisibility();
 bindColumnResizers();
+bindColumnReorder();
 applyLanguage();
 function setProjectWidth(px){
   const min=520;
