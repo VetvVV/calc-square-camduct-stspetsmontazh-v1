@@ -16,6 +16,11 @@
     en:{atlas:"← Atlas",category:"Category →",sizes:"Dimensions",options:"Options",detail:"Detail",connectors:"Connectors",help:"Help",expand:"Expand all",collapse:"Collapse all",simple:"Simple",full:"Full",reset:"Reset",hidden:"Hidden",area:"Area",mass:"Product mass",desc:"Specification description",calc:"Calculation",comment:"Comment",commentPh:"Specification note",add:"Add to project",update:"Save",guest:"Project adding is disabled for guests.",material:"Material",thickness:"Thickness",qty:"Quantity",galv:"Galvanized steel",ss430:"Stainless 430 technical",ss304:"Stainless 304 food",mm:"mm",kg:"kg",standard:"Standard ✓",custom:"Custom ✎",formula:"Formula",calcHidden:"Formula details are hidden in client mode. Engineering access can be requested from a manager.",notReady:"Calculation will be refined from CAMduct table.",minus:"−",nom:"nom",plus:"+",connectionHelp:"− nipple, nom - nominal, + coupling. Transitions have connection settings per end.",saved:"Added.",top:"top",bottom:"bottom",left:"left","right":"right",angle:"Angle",main:"main",branch:"branch",avgDiameter:"average D",inclinedLength:"sloped L",avgPerimeter:"average perimeter"}
   };
   const t=i18n[lang]||i18n.ru;
+  Object.assign(i18n.ru,{units:"Ед. измерения",unitMM:"мм",unitIN:"дюймы",ft2:"ft²",lb:"lb",conn1:"Соединение 1",conn2:"Соединение 2",lock:"Продольный замок (S1)",lockAm:"Американский",lockSize:"Размер замка",sheetSplit:"Панель не влезает на лист — разделить, русский замок",pdf:"Сохранить PDF"});
+  Object.assign(i18n.uk,{units:"Од. виміру",unitMM:"мм",unitIN:"дюйми",ft2:"ft²",lb:"lb",conn1:"З'єднання 1",conn2:"З'єднання 2",lock:"Поздовжній замок (S1)",lockAm:"Американський",lockSize:"Розмір замка",sheetSplit:"Панель не влазить на лист — розділити, російський замок",pdf:"Зберегти PDF"});
+  Object.assign(i18n.en,{units:"Units",unitMM:"mm",unitIN:"inch",ft2:"ft²",lb:"lb",conn1:"Connection 1",conn2:"Connection 2",lock:"Longitudinal lock (S1)",lockAm:"American",lockSize:"Lock size",sheetSplit:"Panel exceeds sheet — split, Russian lock",pdf:"Save PDF"});
+  let UNIT="mm";const UF=()=>UNIT==="in"?25.4:1;
+  const RAILMM=10;const RECT_CONN=["Ш20","Ш30","Ш20 Сам","Ш30 Сам","Рейка","ГК"];
   const materials=[
     {key:"galv",label:t.galv,density:7850,thickness:[0.5,0.7,0.9,1.0]},
     {key:"ss430",label:t.ss430,density:7850,thickness:[0.55,0.7,0.8,1.0]},
@@ -95,7 +100,7 @@
         <div class="title-row"><h1>${pick(cfg.title)}</h1><span class="badge" id="modeBadge">${cfg.type==="table"?t.standard:(canViewFormulas?t.formula:t.calc)}</span></div>
         <div class="layout">
           <div class="left-col">
-            <section class="preview-panel">${previewHtml()}<span class="live-label lbl-a" id="lblA"></span><span class="live-label lbl-b" id="lblB"></span><span class="live-label lbl-c" id="lblC"></span></section>
+            <section class="preview-panel" id="previewBox">${previewHtml()}<span class="live-label lbl-a" id="lblA"></span><span class="live-label lbl-b" id="lblB"></span><span class="live-label lbl-c" id="lblC"></span></section>
             <section class="result-panel">
               <div class="result-row">${t.area}<b id="area">0.000 м²</b></div>
               <div class="result-row">${t.mass}<b id="mass">0.00 ${t.kg}</b></div>
@@ -107,7 +112,7 @@
           </div>
           <section class="form-panel">
             <div class="panel-controls"><button class="ico" data-act="expand" title="${t.expand}" type="button">⊞</button><button class="ico" data-act="collapse" title="${t.collapse}" type="button">⊟</button><span class="seg"><button type="button" data-preset="simple">${t.simple}</button><button type="button" data-preset="full">${t.full}</button></span><button class="ico reset" data-act="reset" title="${t.reset}" type="button">↺</button></div>
-            <div class="panels" id="panels">${panel("sizes",t.sizes,fieldsHtml(cfg.fields)+qtyHtml(),false)}${panel("options",t.options,optionsHtml(),true)}${panel("detail",t.detail,detailHtml(),false)}${panel("connectors",t.connectors,connectorsHtml(),true)}${panel("help",t.help,helpHtml(),true)}</div>
+            <div class="panels" id="panels">${panel("sizes",t.sizes,unitRowHtml()+fieldsHtml(cfg.fields)+qtyHtml(),false)}${panel("options",t.options,optionsHtml(),true)}${panel("detail",t.detail,detailHtml(),false)}${panel("connectors",t.connectors,connectorsHtml(),true)}${panel("help",t.help,helpHtml(),true)}</div>
             <div class="hidden-bar" id="hiddenBar" hidden></div>
           </section>
         </div>
@@ -145,9 +150,21 @@
   function optionsHtml(){return cfg.type==="table"?`<p class="tab-empty">${t.notReady}</p>`:(canViewFormulas?`<p class="tab-empty">${t.formula}</p>`:`<p class="tab-empty">${t.calcHidden}</p>`)}
   function detailHtml(){return`<div class="field"><label for="material">${t.material}</label><select id="material">${materials.map(m=>`<option value="${m.key}">${m.label}</option>`).join("")}</select></div><div class="field"><label for="thickness">${t.thickness}</label><select id="thickness"></select></div>`}
   function connectorsHtml(){
+    if(cfg.category==="rectangular"){
+      const opts=RECT_CONN.map((c,i)=>`<option${i===0?" selected":""}>${c}</option>`).join("");
+      return`<div class="field"><label>${t.conn1}</label><select id="conn1">${opts}</select></div>`+
+             `<div class="field"><label>${t.conn2}</label><select id="conn2">${opts}</select></div>`+
+             `<div class="field"><label>${t.lock}</label><input id="lockVal" readonly value="${t.lockAm}" style="background:#ece4cf;color:#888;font-style:italic"></div>`+
+             `<div class="field"><label>${t.lockSize}</label><input id="lockSizeVal" readonly style="background:#ece4cf;color:#888;font-style:italic"></div>`+
+             `<p class="help-text" id="sheetWarn" style="color:#a85b08;font-weight:600;display:none"></p>`;
+    }
     if(!cfg.connections?.length)return`<p class="tab-empty">${t.connectionHelp}</p>`;
     return`<div class="connection-grid">${cfg.connections.map(key=>`<div class="connection-row" data-conn="${key}"><span>${key}</span><label><input type="checkbox" data-conn-kind="minus" checked>${t.minus}</label><label><input type="checkbox" data-conn-kind="nom">${t.nom}</label><label><input type="checkbox" data-conn-kind="plus">${t.plus}</label></div>`).join("")}</div>`;
   }
+  function unitRowHtml(){return`<div class="field"><label for="units">${t.units}</label><select id="units"><option value="mm">${t.unitMM}</option><option value="in">${t.unitIN}</option></select></div>`}
+  function setUnit(u){const from=UF();UNIT=u;const to=UF();document.querySelectorAll("[data-key]").forEach(el=>{const k=el.dataset.key;if(k==="Q")return;if(el.type==="number"){const val=parseFloat(el.value);if(!isNaN(val)){el.value=(u==="in")?(+(val*from/to).toFixed(2)):Math.round(val*from/to);state[k]=el.value;}}else if(el.type==="text"){const c=offsetCode(el.value);if(typeof c==="number"){const nv=(u==="in")?(+(c*from/to).toFixed(2)):Math.round(c*from/to);el.value=offsetDisplay(nv);state[k]=el.value;}}});update();}
+  function setRail(connId,fieldKey){const sl=document.getElementById(connId),f=document.getElementById("f-"+fieldKey);if(!sl||!f)return;if(sl.value==="Рейка"){if(!f.readOnly)f.dataset.prev=f.value;f.value=0;f.readOnly=true;f.style.opacity=.6;}else if(f.readOnly){f.value=f.dataset.prev||25;f.readOnly=false;f.style.opacity=1;}state[f.dataset.key]=f.value;}
+  function toMM(values){const v={...values};cfg.fields.filter(f=>f.type==="number").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});cfg.fields.filter(f=>f.type==="offset").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});return v;}
   function helpHtml(){return`<p class="help-text">${t.connectionHelp}</p>`}
   function bind(){
     document.getElementById("toAtlas").addEventListener("click",()=>sendOpen(moduleUrl("")));
@@ -220,6 +237,10 @@
     if(params.has("comment"))comment.value=params.get("comment");
     comment.addEventListener("input",update);
     document.getElementById("addBtn")?.addEventListener("click",addToProject);
+    const unitsSel=document.getElementById("units");if(unitsSel)unitsSel.addEventListener("change",()=>setUnit(unitsSel.value));
+    const c1=document.getElementById("conn1"),c2=document.getElementById("conn2");
+    if(c1)c1.addEventListener("change",()=>{setRail("conn1","F");update();});
+    if(c2)c2.addEventListener("change",()=>{setRail("conn2","G");update();});
   }
   function renderThicknessOptions(){
     const material=materials.find(m=>m.key===document.getElementById("material").value)||materials[0];
@@ -234,26 +255,34 @@
     values.material=document.getElementById("material").value;
     values.thickness=Number(document.getElementById("thickness").value||0.5);
     values.quantity=Math.max(1,Math.round(Number(values.Q||1)));
+    values.conn1=document.getElementById("conn1")?.value||"";
+    values.conn2=document.getElementById("conn2")?.value||"";
     return values;
   }
   function update(){
     const values=currentValues();
-    result=calculate(values);
+    result=calculate(toMM(values));
     const material=materials.find(m=>m.key===values.material)||materials[0];
     result.mass=result.area*values.thickness*material.density/1000;
     result.description=description(values);
-    document.getElementById("area").textContent=nf(result.area)+" м²";
-    document.getElementById("mass").textContent=nf(result.mass,2)+" "+t.kg;
+    const inch=UNIT==="in";
+    const aDisp=inch?result.area*10.7639:result.area,aU=inch?(" "+t.ft2):" м²";
+    const mDisp=inch?result.mass*2.20462:result.mass,mU=inch?(" "+t.lb):(" "+t.kg);
+    document.getElementById("area").textContent=nf(aDisp)+aU;
+    document.getElementById("mass").textContent=nf(mDisp,2)+mU;
     document.getElementById("descLine").textContent=result.description;
     document.getElementById("statusLine").textContent=result.status||"";
     const calcNote=document.getElementById("calcNote");
     if(calcNote)calcNote.textContent=result.note||"";
     document.getElementById("modeBadge").textContent=canViewFormulas?(result.badge||document.getElementById("modeBadge").textContent):(cfg.type==="table"?result.badge:t.calc);
-    updateLabels(values);
+    if(cfg.category==="rectangular"){const ls=document.getElementById("lockSizeVal");if(ls)ls.value=(values.thickness>=0.9?"5/28":"6/30");const sw=document.getElementById("sheetWarn");if(sw){if(result.sheetWarn){sw.style.display="block";sw.textContent="⚠ "+result.sheetWarn;}else sw.style.display="none";}}
+    const box=document.getElementById("previewBox");
+    const pv=window.CalcSquarePreview?window.CalcSquarePreview(moduleKey,values):null;
+    if(pv&&box){box.innerHTML=pv;}else{updateLabels(values);}
   }
   function calculate(v){
     const q=v.quantity||1;
-    let area=0,note="";
+    let area=0,note="",sheetWarn="";
     switch(cfg.formula){
       case"roundDuct":area=Math.PI*v.D*v.L*q/1e6;note=`S = π × D × L × Q`;break;
       case"roundElbow":{const arc=Math.PI*v.R*v.Angle/180;area=Math.PI*v.D*arc*q/1e6;note=`S = π × D × arc × Q`;break}
@@ -263,28 +292,30 @@
       case"roundInset":area=(Math.PI*v.D+8)*v.H*q/1e6;note=`P = πD + 8`;break;
       case"rectDuct":area=2*(v.A+v.B)*v.L*q/1e6;note=`S = 2 × (A+B) × L × Q`;break;
       case"rectElbow":{const arc=Math.PI*v.R*v.Angle/180;area=2*(v.A+v.B)*arc*q/1e6;note=`S = 2 × (A+B) × arc × Q`;break}
-      case"rectTransition":{const r=rectTransition(v);area=r.area*q;note=r.note;break}
+      case"rectTransition":{const r=rectTransition(v);area=r.area*q;note=r.note;sheetWarn=r.sheetWarn;break}
       case"rectTee":area=(2*(v.A+v.B)*v.L+2*(v.A1+v.B1)*v.H)*q/1e6;note=`S = ${t.main} + ${t.branch}`;break;
       case"rectCap":area=(v.A*v.B+2*v.F*(v.A+v.B))*q/1e6;note=`S = A×B + 2F(A+B)`;break;
       case"rectInset":area=2*(v.A+v.B)*v.H*q/1e6;note=`S = 2 × (A+B) × H × Q`;break;
       case"roundRect":area=((Math.PI*v.D+2*(v.A+v.B))/2)*v.L*q/1e6;note=`S = ${t.avgPerimeter} × L`;break;
       default:area=0;note=t.notReady;
     }
-    return{area,description:"",note,badge:cfg.type==="table"?tableBadge(v):t.formula,status:cfg.type==="table"?tableStatus(v):""};
+    return{area,description:"",note,sheetWarn,badge:cfg.type==="table"?tableBadge(v):t.formula,status:cfg.type==="table"?tableStatus(v):""};
   }
   function rectTransition(v){
-    const L=Math.max(0,v.E-v.F-v.G);
+    const railF=v.conn1==="Рейка",railG=v.conn2==="Рейка";
+    const F=railF?0:(v.F||0),G=railG?0:(v.G||0);
+    const Fa=F+(railF?RAILMM:0),Ga=G+(railG?RAILMM:0);
+    const L=Math.max(0,v.E-F-G);
     const dAh=(v.A-v.C)/2,dBh=(v.B-v.D)/2;
     const centerH=typeof v.H==="number"?v.H:v.H==="right"?-dAh:v.H==="left"?dAh:0;
     const centerI=typeof v.I==="number"?v.I:v.I==="top"?dBh:v.I==="bottom"?-dBh:0;
     const oT=centerI-dBh,oB=centerI+dBh,oL=centerH-dAh,oR=centerH+dAh;
     const Xt=Math.sqrt(L*L+oT*oT),Xb=Math.sqrt(L*L+oB*oB),Xl=Math.sqrt(L*L+oL*oL),Xr=Math.sqrt(L*L+oR*oR);
     const Aavg=(v.A+v.C)/2,Bavg=(v.B+v.D)/2;
-    const St=Xt*Aavg+v.F*v.A+v.G*v.C;
-    const Sb=Xb*Aavg+v.F*v.A+v.G*v.C;
-    const Sl=Xl*Bavg+v.F*v.B+v.G*v.D;
-    const Sr=Xr*Bavg+v.F*v.B+v.G*v.D;
-    return{area:(St+Sb+Sl+Sr)/1e6,note:`CAMduct: ${t.top} ${nf(St/1e6)}, ${t.bottom} ${nf(Sb/1e6)}, ${t.left} ${nf(Sl/1e6)}, ${t.right} ${nf(Sr/1e6)}; Lcalc=${nf(L,0)} ${t.mm}`};
+    const St=Xt*Aavg+Fa*v.A+Ga*v.C,Sb=Xb*Aavg+Fa*v.A+Ga*v.C,Sl=Xl*Bavg+Fa*v.B+Ga*v.D,Sr=Xr*Bavg+Fa*v.B+Ga*v.D;
+    const oversize=(Math.max(Xt,Xb)>1240)||(Math.max(Xl,Xr)>1240)||(Aavg>1240)||(Bavg>1240);
+    const ruSize=(v.thickness>=0.9)?"14/14":"12/12";
+    return{area:(St+Sb+Sl+Sr)/1e6,sheetWarn:oversize?`${t.sheetSplit} (${ruSize})`:"",note:`CAMduct: ${t.top} ${nf(St/1e6)}, ${t.bottom} ${nf(Sb/1e6)}, ${t.left} ${nf(Sl/1e6)}, ${t.right} ${nf(Sr/1e6)}; Lcalc=${nf(L,0)} ${t.mm}`};
   }
   function tableBadge(v){return isStandard(v)?t.standard:t.custom}
   function tableStatus(v){return isStandard(v)?"":t.notReady}
@@ -355,7 +386,8 @@
       materialKey:v.material,
       thickness:v.thickness,
       area:result.area,
-      mass:result.mass
+      mass:result.mass,
+      connectors:cfg.category==="rectangular"?{conn1:v.conn1,conn2:v.conn2,lock:(v.thickness>=0.9?"5/28":"6/30")}:undefined
     };
     const message=editIndex!==null?{type:"calcSquare:updateProjectItem",index:editIndex,item}:{type:"calcSquare:addProjectItem",item};
     window.parent?.postMessage(message,parentTargetOrigin());
