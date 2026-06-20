@@ -7,6 +7,13 @@
 var C_A='#1455ff',C_B='#0a9bb5',C_C='#d81515',C_D='#e08a00',C_E='#0a8a22',C_H='#8b3fd6',C_I='#c2185b';
 var BLUE='#1455ff',RED='#d81515',GREEN='#0a8a22';
 var EX=[0.8660254,0.5], EY=[-0.8660254,0.5], EZ=[0,-1];
+var L10N={
+  ru:{front:"Вид спереди",axo:"Аксонометрия"},
+  uk:{front:"Вид спереду",axo:"Аксонометрія"},
+  en:{front:"Front view",axo:"Axonometric"}
+};
+var ACTIVE_LANG='ru';
+function txt(key){return (L10N[ACTIVE_LANG]||L10N.ru)[key]||L10N.ru[key]||key;}
 function vadd(a,b){return [a[0]+b[0],a[1]+b[1]];}
 function vmul(v,s){return [v[0]*s,v[1]*s];}
 function axo(x,y,z){ return [ x*EX[0]+y*EY[0]+z*EZ[0], x*EX[1]+y*EY[1]+z*EZ[1] ]; }
@@ -124,7 +131,7 @@ function _rectTrans(v){
     var MoC=ff([0,0]),MiC=ff([H,-I]),Mh=ff([H,0]);
     var bx0=Math.min(MoTL[0],MoBL[0]),bx1=Math.max(MoTR[0],MoBR[0]),by0=Math.min(MoTL[1],MoTR[1]),by1=Math.max(MoBL[1],MoBR[1]);
     var g='';
-    g+='<text x="116" y="16" fill="#888" font-size="12" text-anchor="middle">Вид спереди</text>';
+    g+='<text x="116" y="16" fill="#888" font-size="12" text-anchor="middle">'+txt('front')+'</text>';
     g+=poly([MoTL,MoTR,MoBR,MoBL],'#f4f4f4','#bbb',1);
     g+=poly([MiTL,MiTR,MiBR,MiBL],'#ffffff','#bbb',1);
     g+=seg(MoTL,MoTR,C_A,3.5);
@@ -148,7 +155,7 @@ function _rectTrans(v){
     var F=cap3(0,0,0,A,B), K=cap3(E,H,I,Cc,Dd);
     var fi=makeFitRegion(F.concat(K),238,0,222,230,40);
     var Fm=F.map(fi),Km=K.map(fi),cen=centroid(Fm.concat(Km));
-    g+='<text x="349" y="16" fill="#888" font-size="12" text-anchor="middle">Аксонометрия</text>';
+    g+='<text x="349" y="16" fill="#888" font-size="12" text-anchor="middle">'+txt('axo')+'</text>';
     g+='<line x1="234" y1="24" x2="234" y2="208" stroke="#e2e2e2" stroke-width="1"/>';
     for(var i=0;i<4;i++){var j=(i+1)%4;g+=poly([Fm[i],Fm[j],Km[j],Km[i]],'#ededed','#c8c8c8',1);}
     g+=poly(Fm,'none','#9fb6e6',1.6);
@@ -167,8 +174,9 @@ function resolveTransOffsets(v){
   var ii=(typeof I==="number")?I:(I==="top"?dBh:I==="bottom"?-dBh:0);
   return {H:hh,I:ii};
 }
-global.CalcSquarePreview=function(moduleKey,v){
+global.CalcSquarePreview=function(moduleKey,v,lang){
   try{
+    ACTIVE_LANG=L10N[lang]?lang:'ru';
     if(moduleKey==="rectangular-duct") return _rectDuct({A:num(v.A),B:num(v.B),L:num(v.L)});
     if(moduleKey==="round-duct")       return _roundDuct({D:num(v.D),L:num(v.L)});
     if(moduleKey==="round-elbow")      return _elbow({D:num(v.D),R:num(v.R),ang:num(v.Angle)});

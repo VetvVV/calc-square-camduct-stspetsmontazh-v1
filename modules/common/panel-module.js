@@ -277,7 +277,7 @@
     document.getElementById("modeBadge").textContent=canViewFormulas?(result.badge||document.getElementById("modeBadge").textContent):(cfg.type==="table"?result.badge:t.calc);
     if(cfg.category==="rectangular"){const ls=document.getElementById("lockSizeVal");if(ls)ls.value=(values.thickness>=0.9?"5/28":"6/30");const sw=document.getElementById("sheetWarn");if(sw){if(result.sheetWarn){sw.style.display="block";sw.textContent="⚠ "+result.sheetWarn;}else sw.style.display="none";}}
     const box=document.getElementById("previewBox");
-    const pv=window.CalcSquarePreview?window.CalcSquarePreview(moduleKey,values):null;
+    const pv=window.CalcSquarePreview?window.CalcSquarePreview(moduleKey,values,lang):null;
     if(pv&&box){box.innerHTML=pv;}else{updateLabels(values);}
   }
   function calculate(v){

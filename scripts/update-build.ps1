@@ -1,6 +1,8 @@
 $ErrorActionPreference = 'Stop'
 
-$Build = 'build ' + (Get-Date).ToString('yyyy-MM-dd-HHmm')
+$Now = Get-Date
+$Build = 'build ' + $Now.ToString('yyyy-MM-dd-HHmm')
+$CacheBuild = 'build-' + $Now.ToString('yyyy-MM-dd-HHmmss')
 $Root = Resolve-Path (Join-Path $PSScriptRoot '..')
 $HomePath = Join-Path $Root 'home.html'
 $VersionPath = Join-Path $Root 'VERSION.txt'
@@ -11,8 +13,8 @@ if (-not (Test-Path $HomePath)) {
 }
 
 $HomeText = [System.IO.File]::ReadAllText($HomePath, [System.Text.Encoding]::UTF8)
-$MarkerPattern = '<div class="build-marker" hidden>build\s+\d{4}-\d{2}-\d{2}-\d{4,6}</div>'
-$Marker = '<div class="build-marker" hidden>' + $Build + '</div>'
+$MarkerPattern = '<div class="build-marker"[^>]*>build\s+\d{4}-\d{2}-\d{2}-\d{4,6}</div>'
+$Marker = '<div class="build-marker" hidden data-cache="' + $CacheBuild + '">' + $Build + '</div>'
 
 if ([regex]::IsMatch($HomeText, $MarkerPattern)) {
     $HomeText = [regex]::Replace($HomeText, $MarkerPattern, $Marker, 1)
