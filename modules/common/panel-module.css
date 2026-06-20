@@ -1,6 +1,6 @@
 *{box-sizing:border-box}
 :root{--bg:#ececec;--card:#fff;--ink:#1f2328;--muted:#6b7280;--line:#d6cdb7;--cream:#f6f0df;--cream-head:#efe6cf;--accent:#d97706;--blue:#1455ff;--red:#d00;--green:#008a22}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Exo 2",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;padding:24px}
 button,input,select,textarea{font:inherit}
 .module-card{width:min(920px,calc(100vw - 32px));margin:0 auto 28px;padding:28px;border-radius:12px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .module-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
