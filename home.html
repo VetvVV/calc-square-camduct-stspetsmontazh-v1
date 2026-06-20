@@ -120,8 +120,9 @@ body[data-role="client"] .project-actions,body[data-role="admin"] .project-actio
 .login-card h2{margin:0 0 22px;text-align:center;color:#5b6573;font-size:20px;font-weight:800;font-style:italic;text-transform:uppercase}
 .login-close{position:absolute;right:12px;top:10px;width:30px;height:30px;border:0;background:transparent;color:#6b7280;font-size:26px;line-height:1;cursor:pointer}
 .login-field{width:100%;height:38px;margin-bottom:12px;border:1px solid #d1d5db;border-radius:7px;background:#fff;padding:0 12px;font-size:13px}
-.login-submit,.guest-submit{width:100%;height:38px;border:0;border-radius:7px;font-weight:800;text-transform:uppercase;cursor:pointer}
+.login-submit,.register-submit,.guest-submit{width:100%;height:38px;border:0;border-radius:7px;font-weight:800;text-transform:uppercase;cursor:pointer}
 .login-submit{background:var(--accent);color:#fff}
+.register-submit{margin-top:8px;background:#fff;color:var(--accent);border:1px solid var(--accent)}
 .guest-submit{background:#ececec;color:#3f4652}
 .login-divider{margin:14px 0;text-align:center;color:#9ca3af;font-size:13px;font-weight:800;font-style:italic}
 .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
@@ -154,7 +155,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
 </style>
 </head>
 <body>
-<div class="build-marker" hidden>build 2026-06-20-1329</div>
+<div class="build-marker" hidden>build 2026-06-20-1351</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/calc_square_logo.png" alt="">
@@ -280,6 +281,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
     <input class="login-field" id="loginName" autocomplete="username" data-i-ph="loginName" placeholder="Логин">
     <input class="login-field" id="loginPassword" type="password" autocomplete="current-password" data-i-ph="loginPassword" placeholder="Пароль">
     <button class="login-submit" type="submit" data-i="signIn">Войти</button>
+    <button class="register-submit" id="registerBtn" type="button" data-i="registerDemo">Зарегистрировать демо</button>
     <div class="login-divider" data-i="or">или</div>
     <button class="guest-submit" id="guestBtn" type="button" data-i="continueGuest">Продолжить как гость</button>
     <div class="role-grid" id="roleGrid">
@@ -305,6 +307,7 @@ const loginForm=document.getElementById("loginForm");
 const loginName=document.getElementById("loginName");
 const loginPassword=document.getElementById("loginPassword");
 const loginError=document.getElementById("loginError");
+const registerBtn=document.getElementById("registerBtn");
 const roleChip=document.getElementById("roleChip");
 const projectRows=document.getElementById("projectRows");
 const projectTotal=document.getElementById("projectTotal");
@@ -329,7 +332,9 @@ const colWidthsKey="calcSquareProjectColumnWidthsCleanV2";
 const interfaceStateKey="calcSquareInterfaceStateCleanV1";
 const layoutModeKey="calcSquareLayoutModeCleanV1";
 const guestUsageKey="calcSquareGuestUsageCleanV1";
+const demoUsersKey="calcSquareDemoUsersCleanV1";
 const guestDailyLimit=5;
+const roles=["guest","user","client","admin"];
 const defaultColumnWidths=[52,220,150,220,72,210,58,92,90,250,64];
 const minColumnWidths=[40,120,90,120,54,120,44,70,70,130,50];
 let columnWidths=[...defaultColumnWidths];
@@ -347,6 +352,7 @@ const UI_TEXT={
     product:"Изделие",edit:"Редактировать",delete:"Удалить",pcs:"шт",kg:"кг",resize:"Изменить ширину спецификации",title:"Calc Square CAMduct",
     cabinet:"Кабинет",loginName:"Логин",loginPassword:"Пароль",signIn:"Войти",or:"или",continueGuest:"Продолжить как гость",
     guestRole:"Гость",userRole:"Пользователь",clientRole:"Клиент",adminRole:"Админ",badLogin:"Логин или пароль не совпадают с выбранной ролью",
+    registerDemo:"Зарегистрировать демо",demoRegistered:"Демо-аккаунт создан",userExists:"Такой логин уже есть",loginRequired:"Введите логин и пароль",guestRegister:"Гость не требует регистрации",
     guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь, клиент или админ.",
     guestCounter:"Гость: {left}/5",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?"
   },
@@ -361,6 +367,7 @@ const UI_TEXT={
     product:"Виріб",edit:"Редагувати",delete:"Видалити",pcs:"шт",kg:"кг",resize:"Змінити ширину специфікації",title:"Calc Square CAMduct",
     cabinet:"Кабінет",loginName:"Логін",loginPassword:"Пароль",signIn:"Увійти",or:"або",continueGuest:"Продовжити як гість",
     guestRole:"Гість",userRole:"Користувач",clientRole:"Клієнт",adminRole:"Адмін",badLogin:"Логін або пароль не збігаються з обраною роллю",
+    registerDemo:"Зареєструвати демо",demoRegistered:"Демо-акаунт створено",userExists:"Такий логін вже є",loginRequired:"Введіть логін і пароль",guestRegister:"Гість не потребує реєстрації",
     guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач, клієнт або адмін.",
     guestCounter:"Гість: {left}/5",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?"
   },
@@ -375,6 +382,7 @@ const UI_TEXT={
     product:"Item",edit:"Edit",delete:"Delete",pcs:"pcs",kg:"kg",resize:"Resize specification",title:"Calc Square CAMduct",
     cabinet:"Cabinet",loginName:"Login",loginPassword:"Password",signIn:"Sign in",or:"or",continueGuest:"Continue as guest",
     guestRole:"Guest",userRole:"User",clientRole:"Client",adminRole:"Admin",badLogin:"Login or password does not match the selected role",
+    registerDemo:"Register demo",demoRegistered:"Demo account created",userExists:"This login already exists",loginRequired:"Enter login and password",guestRegister:"Guest does not need registration",
     guestLimit:"Guest limit: 5 calculations per day. Sign in as user, client, or admin.",
     guestCounter:"Guest: {left}/5",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?"
   }
@@ -438,9 +446,35 @@ function applyLanguage(){
   renderProject();
 }
 function readSettings(){try{return JSON.parse(localStorage.getItem(settingsKey)||"{}")}catch(e){return {}}}
-function currentRole(){return readSettings().role||"guest"}
+function currentRole(){
+  const role=readSettings().role;
+  return roles.includes(role)?role:"guest";
+}
 function canModifyProject(){return ["client","admin"].includes(currentRole())}
 function saveSettings(){const settings=readSettings();settings.lang=lang.value;localStorage.setItem(settingsKey,JSON.stringify(settings))}
+function defaultDemoUsers(){
+  return [
+    {login:"user",password:"user",role:"user"},
+    {login:"client",password:"client",role:"client"},
+    {login:"admin",password:"admin",role:"admin"}
+  ];
+}
+function normalizeDemoUser(account){
+  const login=String(account?.login||"").trim().toLowerCase();
+  const password=String(account?.password||"");
+  const role=roles.includes(account?.role)?account.role:"user";
+  return login&&password&&role!=="guest"?{login,password,role}:null;
+}
+function readDemoUsers(){
+  let saved=[];
+  try{saved=JSON.parse(localStorage.getItem(demoUsersKey)||"[]")}catch(e){saved=[]}
+  const users=[...defaultDemoUsers(),...(Array.isArray(saved)?saved:[])].map(normalizeDemoUser).filter(Boolean);
+  return users.filter((user,index)=>users.findIndex((item)=>item.login===user.login)===index);
+}
+function saveDemoUsers(users){
+  const defaults=new Set(defaultDemoUsers().map((user)=>user.login));
+  localStorage.setItem(demoUsersKey,JSON.stringify(users.filter((user)=>!defaults.has(user.login))));
+}
 function readInterfaceState(){try{return JSON.parse(localStorage.getItem(interfaceStateKey)||"{}")}catch(e){return {}}}
 function saveInterfaceState(patch){
   const state={...readInterfaceState(),...patch};
@@ -519,10 +553,12 @@ function resetProjectView(){
   applyDimsUnderName();
   restoreScrollPositions();
 }
-function saveRole(role){
+function saveRole(role,loginValue=""){
+  role=roles.includes(role)?role:"guest";
   const settings=readSettings();
   settings.lang=lang.value;
   settings.role=role;
+  settings.login=loginValue;
   localStorage.setItem(settingsKey,JSON.stringify(settings));
   selectedLoginRole=role;
   renderRole();
@@ -547,19 +583,39 @@ function openLogin(){
   setTimeout(()=>loginName.focus(),0);
 }
 function closeLogin(){loginModal.hidden=true}
-function loginCredentials(role){
-  return {user:{login:"user",password:"user"},client:{login:"client",password:"client"},admin:{login:"admin",password:"admin"}}[role]||null;
+function loginInput(){
+  return {login:loginName.value.trim().toLowerCase(),password:loginPassword.value};
+}
+function findDemoUser(login,password,role){
+  return readDemoUsers().find((user)=>user.role===role&&user.login===login&&user.password===password)||null;
 }
 function tryLogin(){
   if(selectedLoginRole==="guest"){saveRole("guest");closeLogin();return}
-  const creds=loginCredentials(selectedLoginRole);
-  const ok=creds&&loginName.value.trim().toLowerCase()===creds.login&&loginPassword.value===creds.password;
-  if(!ok){loginError.textContent=t("badLogin");return}
-  saveRole(selectedLoginRole);
+  const input=loginInput();
+  const account=findDemoUser(input.login,input.password,selectedLoginRole);
+  if(!account){loginError.textContent=t("badLogin");return}
+  saveRole(account.role,account.login);
+  closeLogin();
+}
+function registerDemoAccount(){
+  if(selectedLoginRole==="guest"){loginError.textContent=t("guestRegister");return}
+  const input=loginInput();
+  if(!input.login||!input.password){loginError.textContent=t("loginRequired");return}
+  const users=readDemoUsers();
+  if(users.some((user)=>user.login===input.login)){loginError.textContent=t("userExists");return}
+  users.push({login:input.login,password:input.password,role:selectedLoginRole});
+  saveDemoUsers(users);
+  loginError.textContent=t("demoRegistered");
+  saveRole(selectedLoginRole,input.login);
   closeLogin();
 }
 function currentFrameUrl(){
   try{return frame.contentWindow?.location?.href||frame.src||"assets/atlas/atlas.html"}catch(e){return frame.src||"assets/atlas/atlas.html"}
+}
+function isTrustedFrameMessage(event){
+  if(event.source!==frame.contentWindow)return false;
+  if(location.protocol==="file:")return true;
+  return event.origin===location.origin;
 }
 function buildVersion(){
   return document.querySelector(".build-marker")?.textContent?.replace(/\s+/g,"-")||"dev";
@@ -674,7 +730,7 @@ function openSpecFile(file){
   reader.onload=()=>{
     try{
       const data=JSON.parse(String(reader.result||"{}"));
-      project=Array.isArray(data)?data:Array.isArray(data.items)?data.items:[];
+      project=normalizeProject(Array.isArray(data)?data:Array.isArray(data.items)?data.items:[]);
       if(data.meta){saveInterfaceState({projectMeta:data.meta});restoreProjectMeta()}
       saveProject();
     }catch(e){alert("Не удалось открыть файл спецификации.")}
@@ -1102,6 +1158,7 @@ loginBtn.addEventListener("click",openLogin);
 document.getElementById("loginClose").addEventListener("click",closeLogin);
 document.getElementById("guestBtn").addEventListener("click",()=>{saveRole("guest");closeLogin()});
 loginForm.addEventListener("submit",(event)=>{event.preventDefault();tryLogin()});
+registerBtn.addEventListener("click",registerDemoAccount);
 loginModal.addEventListener("click",(event)=>{if(event.target===loginModal)closeLogin()});
 document.addEventListener("keydown",(event)=>{if(event.key==="Escape"&&!loginModal.hidden)closeLogin()});
 document.getElementById("roleGrid").addEventListener("click",(event)=>{
@@ -1116,6 +1173,7 @@ document.getElementById("roleGrid").addEventListener("click",(event)=>{
   }
 });
 window.addEventListener("message",(event)=>{
+  if(!isTrustedFrameMessage(event))return;
   const data=event.data||{};
   if(data.type==="calcSquare:open"){openUrl(data.url)}
   if(data.type==="calcSquare:addProjectItem"&&canModifyProject()){project.push(data.item);saveProject()}

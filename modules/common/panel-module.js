@@ -349,11 +349,12 @@
       mass:result.mass
     };
     const message=editIndex!==null?{type:"calcSquare:updateProjectItem",index:editIndex,item}:{type:"calcSquare:addProjectItem",item};
-    window.parent?.postMessage(message,"*");
+    window.parent?.postMessage(message,parentTargetOrigin());
   }
+  function parentTargetOrigin(){return location.protocol==="file:"||location.origin==="null"?"*":location.origin}
   function sendOpen(url){
     const absolute=new URL(url,location.href).href;
-    window.parent&&window.parent!==window?window.parent.postMessage({type:"calcSquare:open",url:absolute},"*"):location.href=absolute;
+    window.parent&&window.parent!==window?window.parent.postMessage({type:"calcSquare:open",url:absolute},parentTargetOrigin()):location.href=absolute;
   }
   function initPanels(){
     const panels=document.getElementById("panels"),hiddenBar=document.getElementById("hiddenBar"),controls=document.querySelector(".panel-controls");

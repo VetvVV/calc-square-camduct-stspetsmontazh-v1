@@ -60,10 +60,11 @@ document.querySelector(".version").textContent=params.get("v")||"dev";
 document.title="Calc Square · "+(text[lang]||text.ru).title;
 const cats=document.getElementById("cats");
 function pick(value){return value?.[lang]||value?.ru||value?.en||""}
+function parentTargetOrigin(){return location.protocol==="file:"||location.origin==="null"?"*":location.origin}
 function openModule(key){
   const url="../../modules/common/calculator.html?module="+encodeURIComponent(key)+"&lang="+encodeURIComponent(lang)+"&role="+encodeURIComponent(role);
   if(window.parent&&window.parent!==window){
-    window.parent.postMessage({type:"calcSquare:open",url:new URL(url,location.href).href},"*");
+    window.parent.postMessage({type:"calcSquare:open",url:new URL(url,location.href).href},parentTargetOrigin());
   }else{
     location.href=url;
   }
