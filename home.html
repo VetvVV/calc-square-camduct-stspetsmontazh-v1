@@ -63,6 +63,9 @@ body.spec-controls-collapsed .spec-controls{max-height:0;opacity:0;transform:tra
 .spec-controls button,.spec-controls label{height:24px;border:1px solid #cfd3da;border-radius:6px;background:#fff;color:#4b5563;padding:4px 8px;font-size:11px;font-weight:600;font-style:italic;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
 .spec-controls button{cursor:pointer;font-style:normal}
 .spec-controls input{margin:0}
+.project-head-row .project-cell.sortable{cursor:pointer}
+.project-head-row .project-cell.sortable:hover{background:#c96d0b}
+.project-head-row .project-cell.sortable::after{content:attr(data-sort-mark);margin-left:auto;color:#fff;font-size:11px}
 .name-dims{display:none;color:#6b7280;margin-top:4px;font-size:12px;font-weight:600;white-space:normal;overflow-wrap:anywhere;max-width:100%}
 body.dims-under-name:not(.dims-column-off) .name-dims:not(:empty){display:block}
 .name-dims:empty{display:none}
@@ -90,20 +93,20 @@ body.summary-flow .project-table.has-x-overflow{overflow-x:auto}
 .project-head-row .project-cell:hover .col-resizer::after,.col-resizer:focus-visible::after{opacity:1}
 .resizing-cols{cursor:col-resize;user-select:none}
 .project-row:nth-child(even) .project-cell{background:#fafafa}
-.project-grid .project-cell:nth-child(11){position:sticky;right:0;z-index:4;background:rgba(255,255,255,.86);box-shadow:-1px 0 0 #e5e7eb}
-.project-row:nth-child(even) .project-cell:nth-child(11){background:rgba(250,250,250,.86)}
+.project-grid .project-cell:nth-child(11){position:sticky;right:0;z-index:4;background:transparent;border-left:0;box-shadow:none;padding-left:2px;padding-right:4px}
+.project-row:nth-child(even) .project-cell:nth-child(11){background:transparent}
 .project-head-row .project-cell:nth-child(11){z-index:9;background:#d97a1c;box-shadow:-1px 0 0 rgba(255,255,255,.25)}
 .project-table.fit-wrap .project-grid .project-cell:nth-child(11){position:relative;right:auto;z-index:auto;box-shadow:none}
 .project-table.fit-wrap .project-head-row .project-cell:nth-child(11){z-index:auto}
-.project-table.compact-fit .project-grid .project-cell:nth-child(11){background:rgba(255,255,255,.92)}
+.project-table.compact-fit .project-grid .project-cell:nth-child(11){background:transparent}
 .project-table.compact-fit .project-head-row .project-cell:nth-child(11){background:#d97a1c}
 .project-cell.is-numeric{text-align:center;white-space:nowrap}
 .project-cell strong{display:block;font-size:14px;font-weight:800;overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere}
 .project-cell small{display:block;color:#7b838e;margin-top:3px}
 .project-empty{grid-column:1/-1;padding:28px;text-align:center;color:var(--muted);background:#fff;border-top:1px solid #ececec}
 .project-comment{width:100%;min-height:34px;border:1px solid #d1d5db;border-radius:6px;padding:6px 8px;resize:vertical;background:#fff;font-size:13px}
-.project-row-actions{display:flex;justify-content:center;gap:5px}
-.project-edit,.project-remove{width:28px;height:28px;border:0;border-radius:8px;background:rgba(238,240,243,.62);backdrop-filter:blur(3px);cursor:pointer;opacity:.72}
+.project-row-actions{display:flex;justify-content:center;gap:3px}
+.project-edit,.project-remove{width:24px;height:24px;border:0;border-radius:8px;background:rgba(238,240,243,.72);backdrop-filter:blur(3px);cursor:pointer;opacity:.72}
 .project-edit:hover{background:rgba(255,243,223,.92);color:#b86205;opacity:1}
 .project-remove:hover{background:rgba(254,226,226,.92);color:#b91c1c;opacity:1}
 .project-clear-all{width:28px;height:28px;border:0;border-radius:8px;background:rgba(223,122,18,.16);color:#bd6306;font-weight:800;cursor:pointer}
@@ -114,6 +117,16 @@ body[data-role="user"] .project-clear-all:hover,body[data-role="user"] .project-
 .clear-menu.open{display:block}
 .clear-menu button{display:block;width:100%;border:0;border-radius:7px;background:#fff;color:#24272d;padding:9px 11px;text-align:left;font-size:13px;font-weight:800;cursor:pointer}
 .clear-menu button:hover{background:#fff3df;color:#b86205}
+.filter-menu{position:fixed;z-index:130;display:none;width:240px;border:1px solid #d1d5db;border-radius:10px;background:#fff;box-shadow:0 18px 42px rgba(0,0,0,.18);padding:10px}
+.filter-menu.open{display:block}
+.filter-menu-title{margin:0 0 8px;color:#5b6573;font-size:12px;font-weight:800;text-transform:uppercase}
+.filter-menu input{width:100%;height:34px;border:1px solid #d1d5db;border-radius:7px;padding:0 10px;font-size:13px}
+.filter-options{max-height:190px;margin:8px 0;overflow:auto;border-top:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;padding:5px 0}
+.filter-options button{display:block;width:100%;border:0;border-radius:6px;background:#fff;padding:7px 8px;text-align:left;color:#24272d;font-size:12px;font-weight:700;cursor:pointer}
+.filter-options button:hover{background:#fff3df;color:#b86205}
+.filter-menu-actions{display:flex;gap:8px}
+.filter-menu-actions button{flex:1;border:1px solid #d1d5db;border-radius:7px;background:#f8fafc;color:#4b5563;padding:7px 8px;font-size:12px;font-weight:800;cursor:pointer}
+.filter-menu-actions button:first-child{background:#fff3df;border-color:#ead4b5;color:#bd6306}
 .project-tip{position:fixed;z-index:90;display:none;width:220px;border:1px solid #d1d5db;border-radius:8px;background:#fff;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:10px;pointer-events:none}
 .project-tip img{width:100%;height:110px;object-fit:contain;background:#f7f7f7;border-radius:6px}
 .project-tip strong{display:block;margin-top:8px;font-size:13px}
@@ -205,7 +218,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
 </style>
 </head>
 <body>
-<div class="build-marker" hidden>build 2026-06-20-2058</div>
+<div class="build-marker" hidden>build 2026-06-21-0018</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/calc_square_logo.png" alt="">
@@ -250,7 +263,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
         <div class="spec-controls" id="specControls">
           <button type="button" id="autoFitAll" data-i="autoWidth">Автоширина</button>
           <button type="button" id="resetLayout" data-i="resetView">Скинуть вид</button>
-          <button type="button" id="resetSorting" data-i="resetSort">Скинуть сортировку</button>
+          <button type="button" id="resetSorting" data-i="resetSort">Сбросить порядок</button>
           <label><input type="checkbox" id="dimsUnderName"> <span data-i="dimsUnderName">Размеры под названием</span></label>
           <label><input type="checkbox" id="summaryPinned" checked> <span data-i="summaryPinned">Фиксировать итог</span></label>
           <label><input type="checkbox" data-col-toggle="0" checked> №</label>
@@ -274,13 +287,13 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
       </div>
       <div class="project-table">
         <div class="project-grid project-head-row">
-          <span class="project-cell is-numeric">№</span>
-          <span class="project-cell" data-i="name">Наименование</span>
+          <span class="project-cell is-numeric sortable" data-sort-key="pos">№</span>
+          <span class="project-cell sortable" data-sort-key="name" data-i="name">Наименование</span>
           <span class="project-cell" data-i="dimensions">Размеры</span>
           <span class="project-cell" data-i="description">Описание</span>
-          <span class="project-cell is-numeric" data-i="quantity">К-ть</span>
-          <span class="project-cell" data-i="material">Материал</span>
-          <span class="project-cell is-numeric">t</span>
+          <span class="project-cell is-numeric sortable" data-sort-key="qty" data-i="quantity">К-ть</span>
+          <span class="project-cell sortable" data-sort-key="material" data-i="material">Материал</span>
+          <span class="project-cell is-numeric sortable" data-sort-key="thickness">t</span>
           <span class="project-cell is-numeric" data-i="area">Площадь</span>
           <span class="project-cell is-numeric" data-i="mass">Масса</span>
           <span class="project-cell" data-i="comment">Комментарий</span>
@@ -329,6 +342,15 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
 <div class="project-tip" id="projectTip"></div>
 <div class="clear-menu" id="clearMenu" role="menu">
   <button type="button" data-clear-action="clear">Очистить</button>
+</div>
+<div class="filter-menu" id="filterMenu">
+  <div class="filter-menu-title" id="filterMenuTitle"></div>
+  <input id="filterMenuInput">
+  <div class="filter-options" id="filterMenuOptions"></div>
+  <div class="filter-menu-actions">
+    <button type="button" id="filterMenuClear" data-i="clear">Очистить</button>
+    <button type="button" id="filterMenuClose" data-i="accessLater">Позже</button>
+  </div>
 </div>
 <div class="mobile-switch" id="mobileSwitch">
   <button type="button" data-mobile-view="project" data-i="spec">Спецификация</button>
@@ -418,6 +440,12 @@ const projectObjectInput=document.getElementById("projectObject");
 const specPanelToggle=document.getElementById("specPanelToggle");
 const dimsUnderNameInput=document.getElementById("dimsUnderName");
 const summaryPinnedInput=document.getElementById("summaryPinned");
+const filterMenu=document.getElementById("filterMenu");
+const filterMenuTitle=document.getElementById("filterMenuTitle");
+const filterMenuInput=document.getElementById("filterMenuInput");
+const filterMenuOptions=document.getElementById("filterMenuOptions");
+const filterMenuClear=document.getElementById("filterMenuClear");
+const filterMenuClose=document.getElementById("filterMenuClose");
 const colToggleInputs=[...document.querySelectorAll("[data-col-toggle]")];
 const guestCounter=document.getElementById("guestCounter");
 const count=document.getElementById("count");
@@ -436,9 +464,9 @@ const guestDailyLimit=5;
 const companySiteUrl="https://stspecmontag.com.ua/";
 const roles=["guest","user","client","admin"];
 const adminUnlockPassword="admin";
-const defaultColumnWidths=[52,220,150,220,72,210,58,92,90,250,64];
-const minColumnWidths=[40,120,90,120,54,120,44,70,70,130,50];
-const fitColumnTracks=["34px","minmax(78px,1.35fr)","minmax(76px,.95fr)","minmax(92px,1.15fr)","48px","minmax(82px,1fr)","38px","58px","58px","minmax(92px,1.05fr)","48px"];
+const defaultColumnWidths=[52,220,150,220,72,210,58,92,90,250,48];
+const minColumnWidths=[40,120,90,120,54,120,44,70,70,130,42];
+const fitColumnTracks=["34px","minmax(78px,1.35fr)","minmax(76px,.95fr)","minmax(92px,1.15fr)","48px","minmax(82px,1fr)","38px","58px","58px","minmax(92px,1.05fr)","42px"];
 let columnWidths=[...defaultColumnWidths];
 let selectedLoginRole="guest";
 let layoutMode="split";
@@ -446,7 +474,7 @@ const UI_TEXT={
   ru:{
     language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",logout:"Выход",clear:"Очистить",spec:"Спецификация",
     projectSpec:"Проект / Спецификация",projectName:"Название проекта",projectCustomer:"Заказчик",projectObject:"Объект",
-    autoWidth:"Автоширина",resetView:"Скинуть вид",resetSort:"Скинуть сортировку",specSettings:"Настройки спецификации",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
+    autoWidth:"Автоширина",resetView:"Скинуть вид",resetSort:"Сбросить порядок",specSettings:"Настройки спецификации",filterNo:"№",filterName:"Наименование",filterQty:"К-во",filterMaterial:"Материал",filterThickness:"t",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
     name:"Наименование",dimensions:"Размеры",description:"Описание",quantity:"К-во",
     material:"Материал",area:"Площадь",mass:"Масса",comment:"Комментарий",
     total:"Итого",totalAreaLabel:"Итого площадь",totalMassLabel:"Итого масса",
@@ -464,7 +492,7 @@ const UI_TEXT={
   uk:{
     language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вихід",clear:"Очистити",spec:"Специфікація",
     projectSpec:"Проєкт / Специфікація",projectName:"Назва проєкту",projectCustomer:"Замовник",projectObject:"Об'єкт",
-    autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути сортування",specSettings:"Налаштування специфікації",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
+    autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути порядок",specSettings:"Налаштування специфікації",filterNo:"№",filterName:"Найменування",filterQty:"К-ть",filterMaterial:"Матеріал",filterThickness:"t",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
     name:"Найменування",dimensions:"Розміри",description:"Опис",quantity:"К-ть",
     material:"Матеріал",area:"Площа",mass:"Маса",comment:"Коментар",
     total:"Підсумок",totalAreaLabel:"Підсумкова площа",totalMassLabel:"Підсумкова маса",
@@ -482,7 +510,7 @@ const UI_TEXT={
   en:{
     language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Logout",clear:"Clear",spec:"Specification",
     projectSpec:"Project / Specification",projectName:"Project name",projectCustomer:"Customer",projectObject:"Object",
-    autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset sorting",specSettings:"Specification settings",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
+    autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset order",specSettings:"Specification settings",filterNo:"No.",filterName:"Item",filterQty:"Qty",filterMaterial:"Material",filterThickness:"t",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
     name:"Item",dimensions:"Dimensions",description:"Description",quantity:"Qty",
     material:"Material",area:"Area",mass:"Mass",comment:"Comment",
     total:"Total",totalAreaLabel:"Total area",totalMassLabel:"Total mass",
@@ -517,6 +545,17 @@ const PRODUCT_TEXT={
   "tee-round-rect":{ru:"Тройник круг-прямоугольник",uk:"Трійник круг-прямокутник",en:"Round-rect tee"},
   "rect-tee-round":{ru:"Тройник прямоугольник-круг",uk:"Трійник прямокутник-круг",en:"Rect-round tee"},
   "grease-trap":{ru:"Жироуловитель",uk:"Жировловлювач",en:"Grease trap"}
+};
+const PRODUCT_ALIASES={
+  "round-duct":["круглый воздуховод","круглий повітропровід","повітропровод круглий"],
+  "round-elbow":["колено круглое","коліно кругле"],
+  "round-offset-transition":["смещенный круглый переход","перехід круглий зі зміщенням"],
+  "rectangular-duct":["прямоугольный воздуховод","прямокутний повітропровід","повітропровод прямокутний"],
+  "rectangular-elbow":["колено прямоугольное","коліно прямокутне"],
+  "rectangular-transition":["перехід прямокутній"],
+  "round-to-rectangular":["переход круг прямоугольник","перехід круг прямокутник"],
+  "tee-round-rect":["тройник круг прямоугольник","трійник круг прямокутник"],
+  "rect-tee-round":["тройник прямоугольник круг","трійник прямокутник круг"]
 };
 const MATERIAL_TEXT={
   galv:{ru:"Оцинкованная сталь",uk:"Оцинкована сталь",en:"Galvanized steel"},
@@ -666,6 +705,99 @@ function toggleSpecControls(){
   applySpecControlsState();
   setTimeout(()=>{applyColumnWidths();updateProjectOverflow()},240);
 }
+function currentFilters(){
+  const saved=readInterfaceState().filters||{};
+  return {
+    pos:String(saved.pos||""),
+    name:String(saved.name||""),
+    qty:String(saved.qty||""),
+    material:String(saved.material||""),
+    thickness:String(saved.thickness||"")
+  };
+}
+let activeFilterKey="";
+function filterLabel(key){
+  const map={pos:"filterNo",name:"filterName",qty:"filterQty",material:"filterMaterial",thickness:"filterThickness"};
+  return t(map[key]||key);
+}
+function setFilterValue(key,value){
+  const filters=currentFilters();
+  filters[key]=String(value||"");
+  saveInterfaceState({filters});
+  renderProject();
+}
+function filterOptions(key){
+  return [...new Set(project.map((item,index)=>rowText(item,key,index)).map((value)=>String(value||"").trim()).filter(Boolean))]
+    .sort((a,b)=>a.localeCompare(b,lang.value,{numeric:true,sensitivity:"base"}))
+}
+function renderFilterOptions(key){
+  filterMenuOptions.innerHTML=filterOptions(key).map((value)=>`<button type="button" data-filter-value="${escapeHtml(value)}">${escapeHtml(value)}</button>`).join("");
+}
+function openFilterMenu(key,anchor){
+  activeFilterKey=key;
+  filterMenuTitle.textContent=filterLabel(key);
+  filterMenuInput.value=currentFilters()[key]||"";
+  renderFilterOptions(key);
+  filterMenu.classList.add("open");
+  const rect=anchor.getBoundingClientRect();
+  const menuRect=filterMenu.getBoundingClientRect();
+  filterMenu.style.left=`${Math.min(window.innerWidth-menuRect.width-10,Math.max(10,rect.left))}px`;
+  filterMenu.style.top=`${Math.min(window.innerHeight-menuRect.height-10,rect.bottom+6)}px`;
+  setTimeout(()=>filterMenuInput.focus(),0);
+}
+function closeFilterMenu(){
+  filterMenu.classList.remove("open");
+  activeFilterKey="";
+}
+function rowText(item,key,index){
+  if(key==="pos")return String(index+1);
+  if(key==="name")return displayProductName(item);
+  if(key==="qty")return String(item.quantity||1);
+  if(key==="material")return displayMaterial(item);
+  if(key==="thickness")return String(item.thickness||"");
+  return "";
+}
+function filteredProjectEntries(){
+  const filters=currentFilters();
+  const sort=readInterfaceState().sort||{};
+  let entries=project.map((item,index)=>({item,index}));
+  entries=entries.filter(({item,index})=>Object.entries(filters).every(([key,value])=>{
+    const query=String(value||"").trim().toLowerCase();
+    return !query||rowText(item,key,index).toLowerCase().includes(query);
+  }));
+  if(sort.key){
+    const dir=sort.dir==="desc"?-1:1;
+    entries.sort((a,b)=>{
+      const av=rowText(a.item,sort.key,a.index);
+      const bv=rowText(b.item,sort.key,b.index);
+      const an=Number(String(av).replace(",","."));
+      const bn=Number(String(bv).replace(",","."));
+      if(Number.isFinite(an)&&Number.isFinite(bn))return (an-bn)*dir;
+      return av.localeCompare(bv,lang.value,{numeric:true,sensitivity:"base"})*dir;
+    });
+  }
+  return entries;
+}
+function applySortMarks(){
+  const sort=readInterfaceState().sort||{};
+  const filters=currentFilters();
+  document.querySelectorAll(".project-head-row .sortable").forEach((cell)=>{
+    const key=cell.dataset.sortKey;
+    const filterMark=filters[key]?"●":"";
+    const sortMark=key===sort.key?(sort.dir==="desc"?"▼":"▲"):"";
+    cell.dataset.sortMark=[filterMark,sortMark].filter(Boolean).join(" ");
+  });
+}
+function setSort(key){
+  const current=readInterfaceState().sort||{};
+  const next={key,dir:current.key===key&&current.dir!=="desc"?"desc":"asc"};
+  saveInterfaceState({sort:next});
+  renderProject();
+}
+function resetProjectOrder(){
+  saveInterfaceState({sort:null});
+  renderProject();
+}
 function autoFitAllColumns(){
   columnWidths=defaultColumnWidths.map((width,index)=>Math.max(width,measureHeaderWidth(index)));
   saveColumnWidths();
@@ -678,6 +810,8 @@ function resetProjectView(){
     dimsUnderName:false,
     summaryPinned:true,
     specControlsCollapsed:false,
+    sort:null,
+    filters:{pos:"",name:"",qty:"",material:"",thickness:""},
     projectScrollLeft:0,
     projectScrollTop:0,
     summaryScrollLeft:0,
@@ -835,17 +969,25 @@ function openUrl(url,options={}){
   if(options.countGuest!==false&&!consumeGuestCalculation(url))return;
   frame.src=urlWithState(url);
 }
-function normalizeProject(items){
-  return Array.isArray(items)?items.filter((item)=>item&&typeof item==="object").map((item)=>({
+function normalizeProjectItem(item){
+  const productType=item.productType||productKeyFromName(item.name||item.title||item.label);
+  const materialKey=item.materialKey||materialKeyFromLabel(item.material);
+  return {
     ...item,
+    name:item.name||item.title||item.label||"",
+    productType:productType||item.productType||"",
+    materialKey:materialKey||item.materialKey||"",
     dimensions:item.dimensions&&typeof item.dimensions==="object"?item.dimensions:{},
     quantity:Number(item.quantity||1)||1,
     area:Number(item.area||0)||0,
     mass:Number(item.mass||0)||0
-  })):[];
+  };
+}
+function normalizeProject(items){
+  return Array.isArray(items)?items.filter((item)=>item&&typeof item==="object").map(normalizeProjectItem):[];
 }
 function loadProject(){try{project=normalizeProject(JSON.parse(localStorage.getItem(storageKey)||"[]"))}catch(e){project=[]}renderProject()}
-function saveProject(){localStorage.setItem(storageKey,JSON.stringify(project));renderProject()}
+function saveProject(){project=normalizeProject(project);localStorage.setItem(storageKey,JSON.stringify(project));renderProject()}
 function csvEscape(value){return `"${String(value??"").replaceAll('"','""')}"`}
 function downloadFile(name,mime,content){
   const blob=new Blob([content],{type:mime});
@@ -1162,9 +1304,10 @@ function bindColumnResizers(){
 }
 function renderProject(){
   projectRows.innerHTML="";
-  if(!project.length){projectRows.innerHTML=`<div class="project-grid"><div class="project-empty">${t("empty")}</div></div>`}
+  const entries=filteredProjectEntries();
+  if(!entries.length){projectRows.innerHTML=`<div class="project-grid"><div class="project-empty">${t("empty")}</div></div>`}
   const showNameDims=showDimensionsUnderName();
-  project.forEach((item,index)=>{
+  entries.forEach(({item,index})=>{
     const el=document.createElement("div");
     el.className="project-grid project-row";
     const dimensions=formatDimensions(item);
@@ -1183,10 +1326,11 @@ function renderProject(){
     `;
     projectRows.appendChild(el);
   });
-  count.textContent=project.length;
-  const qty=project.reduce((sum,item)=>sum+Number(item.quantity||1),0);
-  const area=project.reduce((sum,item)=>sum+Number(item.area||0),0);
-  const mass=project.reduce((sum,item)=>sum+Number(item.mass||0),0);
+  count.textContent=entries.length===project.length?project.length:`${entries.length}/${project.length}`;
+  const visibleItems=entries.map(({item})=>item);
+  const qty=visibleItems.reduce((sum,item)=>sum+Number(item.quantity||1),0);
+  const area=visibleItems.reduce((sum,item)=>sum+Number(item.area||0),0);
+  const mass=visibleItems.reduce((sum,item)=>sum+Number(item.mass||0),0);
   projectTotal.innerHTML=`
     <span class="project-cell"></span>
     <span class="project-cell">${t("total")}</span>
@@ -1202,15 +1346,16 @@ function renderProject(){
   `;
   totalArea.textContent=area.toFixed(3)+" м²";
   totalMass.textContent=mass.toFixed(2)+" "+t("kg");
-  renderMaterialSummary();
+  renderMaterialSummary(visibleItems);
+  applySortMarks();
   applyColumnVisibility();
   applyDimsUnderName();
   updateProjectOverflow();
   restoreScrollPositions();
 }
-function renderMaterialSummary(){
+function renderMaterialSummary(items=project){
   const groups=new Map();
-  project.forEach((item)=>{
+  items.forEach((item)=>{
     const material=displayMaterial(item);
     const key=[material,item.thickness||""].join("|");
     const group=groups.get(key)||{material,thickness:item.thickness||"",quantity:0,area:0,mass:0};
@@ -1265,16 +1410,37 @@ function formatDimensions(item){
   }
   return Object.entries(dimensions).filter(([,value])=>value!==""&&value!==null&&value!==undefined).map(([key,value])=>`${key} ${value}`).join(" × ");
 }
+function normalizeLookupText(value){
+  return String(value||"")
+    .toLowerCase()
+    .replace(/[ё]/g,"е")
+    .replace(/[ії]/g,"и")
+    .replace(/[є]/g,"е")
+    .replace(/[ґ]/g,"г")
+    .replace(/[-–—_/.,;:()]+/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
 function materialKeyFromLabel(label){
-  const value=String(label||"").toLowerCase();
+  const value=normalizeLookupText(label);
   if(value.includes("304"))return "ss304";
   if(value.includes("430"))return "ss430";
-  if(value.includes("galvanized")||value.includes("оцинк")||value.includes("оцинк"))return "galv";
+  if(value.includes("galvanized")||value.includes("zinc")||value.includes("оцинк"))return "galv";
   return "";
 }
 function productKeyFromName(name){
-  const value=String(name||"").trim().toLowerCase();
-  return Object.entries(PRODUCT_TEXT).find(([,labels])=>Object.values(labels).some((label)=>String(label).toLowerCase()===value))?.[0]||"";
+  const value=normalizeLookupText(name);
+  if(!value)return "";
+  const dictionaries=Object.entries(PRODUCT_TEXT).map(([key,labels])=>[
+    key,
+    [...Object.values(labels),...(PRODUCT_ALIASES[key]||[])]
+  ]);
+  return dictionaries.find(([,labels])=>labels.some((label)=>normalizeLookupText(label)===value))?.[0]
+    ||dictionaries.find(([,labels])=>labels.some((label)=>{
+      const normalized=normalizeLookupText(label);
+      return normalized&&value.includes(normalized);
+    }))?.[0]
+    ||"";
 }
 function displayProductName(item){
   const key=item.productType||productKeyFromName(item.name);
@@ -1345,7 +1511,21 @@ summaryPinnedInput.addEventListener("change",()=>{saveInterfaceState({summaryPin
 colToggleInputs.forEach((input)=>input.addEventListener("change",()=>setColumnVisibility(Number(input.dataset.colToggle),input.checked)));
 document.getElementById("autoFitAll").addEventListener("click",autoFitAllColumns);
 document.getElementById("resetLayout").addEventListener("click",resetProjectView);
-document.getElementById("resetSorting").addEventListener("click",loadProject);
+document.getElementById("resetSorting").addEventListener("click",resetProjectOrder);
+let sortClickTimer=null;
+document.querySelector(".project-head-row").addEventListener("click",(event)=>{
+  const cell=event.target.closest(".sortable");
+  if(!cell?.dataset.sortKey)return;
+  clearTimeout(sortClickTimer);
+  sortClickTimer=setTimeout(()=>setSort(cell.dataset.sortKey),220);
+});
+document.querySelector(".project-head-row").addEventListener("dblclick",(event)=>{
+  const cell=event.target.closest(".sortable");
+  if(!cell?.dataset.sortKey)return;
+  event.preventDefault();
+  clearTimeout(sortClickTimer);
+  openFilterMenu(cell.dataset.sortKey,cell);
+});
 document.querySelector("[data-i='home']").addEventListener("click",()=>window.open(companySiteUrl,"_blank","noopener"));
 document.getElementById("openAtlas").addEventListener("click",showAtlasPane);
 document.getElementById("topAtlas").addEventListener("click",showAtlasPane);
@@ -1363,6 +1543,21 @@ document.addEventListener("pointerdown",(event)=>{
   closeClearMenu();
 });
 window.addEventListener("resize",closeClearMenu);
+filterMenuInput.addEventListener("input",()=>{if(activeFilterKey)setFilterValue(activeFilterKey,filterMenuInput.value)});
+filterMenuOptions.addEventListener("click",(event)=>{
+  const button=event.target.closest("[data-filter-value]");
+  if(!button||!activeFilterKey)return;
+  filterMenuInput.value=button.dataset.filterValue;
+  setFilterValue(activeFilterKey,button.dataset.filterValue);
+});
+filterMenuClear.addEventListener("click",()=>{if(activeFilterKey){setFilterValue(activeFilterKey,"");filterMenuInput.value=""}});
+filterMenuClose.addEventListener("click",closeFilterMenu);
+document.addEventListener("pointerdown",(event)=>{
+  if(!filterMenu.classList.contains("open"))return;
+  if(event.target.closest("#filterMenu")||event.target.closest(".project-head-row .sortable"))return;
+  closeFilterMenu();
+});
+window.addEventListener("resize",closeFilterMenu);
 document.getElementById("printSpec").addEventListener("click",()=>gatedProjectAction(t("print"),()=>window.print()));
 document.getElementById("exportSpec").addEventListener("click",()=>gatedProjectAction(t("export"),exportCsv));
 document.getElementById("excelSpec").addEventListener("click",()=>gatedProjectAction("Excel",exportExcel));
@@ -1381,7 +1576,7 @@ accessClose.addEventListener("click",closeAccessInvite);
 accessLater.addEventListener("click",closeAccessInvite);
 accessLogin.addEventListener("click",()=>{closeAccessInvite();openLogin()});
 accessModal.addEventListener("click",(event)=>{if(event.target===accessModal)closeAccessInvite()});
-document.addEventListener("keydown",(event)=>{if(event.key==="Escape"&&!loginModal.hidden)closeLogin();if(event.key==="Escape"&&!accessModal.hidden)closeAccessInvite()});
+document.addEventListener("keydown",(event)=>{if(event.key==="Escape"&&!loginModal.hidden)closeLogin();if(event.key==="Escape"&&!accessModal.hidden)closeAccessInvite();if(event.key==="Escape"&&filterMenu.classList.contains("open"))closeFilterMenu()});
 document.getElementById("roleGrid").addEventListener("click",(event)=>{
   const button=event.target.closest("[data-role]");
   if(!button)return;
