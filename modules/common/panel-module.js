@@ -23,10 +23,10 @@
   ];
   const modules={
     "round-duct":{category:"round",title:{ru:"Воздуховод круглый",uk:"Повітропровід круглий",en:"Round duct"},type:"formula",image:"../../assets/products/round_duct.svg",fields:[num("D","D",250),num("L","L",1000)],connections:["D"],formula:"roundDuct"},
-    "round-elbow":{category:"round",title:{ru:"Отвод круглый",uk:"Відвід круглий",en:"Round elbow"},type:"table",image:"../../assets/products/round_elbow.svg",fields:[num("D","D",250),select("Angle",{ru:"Угол",uk:"Кут",en:"Angle"},[15,30,45,60,90],90),num("R","R",250)],connections:["D"],formula:"roundElbow"},
-    "round-transition":{category:"round",title:{ru:"Переход круглый",uk:"Перехід круглий",en:"Round transition"},type:"table",image:"../../assets/products/round_transition.svg",fields:[num("D1","D1",315),num("D2","D2",250),num("L","L",300)],connections:["D1","D2"],formula:"roundTransition"},
-    "round-offset-transition":{category:"round",title:{ru:"Переход круглый со смещением",uk:"Перехід круглий зі зміщенням",en:"Offset round transition"},type:"table",image:"../../assets/products/round_offset.svg",fields:[num("D1","D1",315),num("D2","D2",250),num("L","L",300),num("Offset","Offset",100)],connections:["D1","D2"],formula:"roundTransition"},
-    "round-tee":{category:"round",title:{ru:"Тройник круглый",uk:"Трійник круглий",en:"Round tee"},type:"table",image:"../../assets/products/round_tee.svg",fields:[num("D","D",315),num("D1","D1",250),num("L","L",600),num("H","H",300)],connections:["D","D1"],formula:"roundTee"},
+    "round-elbow":{category:"round",title:{ru:"Отвод круглый",uk:"Відвід круглий",en:"Round elbow"},type:"formula",image:"../../assets/products/round_elbow.svg",fields:[num("D","D",250),select("Angle",{ru:"Угол",uk:"Кут",en:"Angle"},[15,30,45,60,90],90),num("R","R",250)],connections:["D"],formula:"roundElbow"},
+    "round-transition":{category:"round",title:{ru:"Переход круглый",uk:"Перехід круглий",en:"Round transition"},type:"formula",image:"../../assets/products/round_transition.svg",fields:[num("D1","D1",315),num("D2","D2",250),num("L","L",300)],connections:["D1","D2"],formula:"roundTransition"},
+    "round-offset-transition":{category:"round",title:{ru:"Переход круглый со смещением",uk:"Перехід круглий зі зміщенням",en:"Offset round transition"},type:"formula",image:"../../assets/products/round_offset.svg",fields:[num("D1","D1",315),num("D2","D2",250),num("L","L",300),num("Offset","Offset",100)],connections:["D1","D2"],formula:"roundTransition"},
+    "round-tee":{category:"round",title:{ru:"Тройник круглый",uk:"Трійник круглий",en:"Round tee"},type:"formula",image:"../../assets/products/round_tee.svg",fields:[num("D","D",315),num("D1","D1",250),num("L","L",600),num("H","H",300)],connections:["D","D1"],formula:"roundTee"},
     "round-tee-custom":{category:"round",title:{ru:"Тройник нестандартный круглый",uk:"Трійник нестандартний круглий",en:"Custom round tee"},type:"formula",image:"../../modules/common/stub-preview.svg",fields:[num("D","D",315),num("D1","D1",250),num("D2","D2",200),num("L","L",600),num("Angle","Angle",90)],connections:["D","D1","D2"],formula:"stub"},
     "round-cap":{category:"round",title:{ru:"Заглушка круглая",uk:"Заглушка кругла",en:"Round cap"},type:"formula",image:"../../modules/round/cap/preview.svg",fields:[num("D","D",250)],connections:["D"],formula:"roundCap"},
     "round-inset":{category:"round",title:{ru:"Врезка круглая",uk:"Врізка кругла",en:"Round inset"},type:"formula",image:"../../modules/common/stub-preview.svg",fields:[num("D","D",250),num("H","H",120)],connections:["D"],formula:"roundInset"},
@@ -42,7 +42,7 @@
     "round-deflector":{category:"round",title:{ru:"Дефлектор",uk:"Дефлектор",en:"Deflector"},type:"formula",image:"../../modules/round/deflector/preview.svg",fields:[num("D","D",250),num("H","H",300)],connections:["D"],formula:"stub"},
     "round-coupling":{category:"round",title:{ru:"Муфта",uk:"Муфта",en:"Coupling"},type:"formula",image:"../../modules/round/coupling/preview.svg",fields:[num("D","D",250),num("L","L",120)],connections:["D"],formula:"stub"},
     "rectangular-duct":{category:"rectangular",title:{ru:"Воздуховод прямоугольный",uk:"Повітропровід прямокутний",en:"Rectangular duct"},type:"formula",image:"../../assets/products/rectangular_duct.svg",fields:[num("A","A",400),num("B","B",300),num("L","L",1000)],formula:"rectDuct"},
-    "rectangular-elbow":{category:"rectangular",title:{ru:"Отвод прямоугольный",uk:"Відвід прямокутний",en:"Rectangular elbow"},type:"table",image:"../../assets/products/rectangular_elbow.svg",fields:[num("A","A",400),num("B","B",300),select("Angle",{ru:"Угол",uk:"Кут",en:"Angle"},[15,30,45,60,90],90),num("R","R",300)],formula:"rectElbow"},
+    "rectangular-elbow":{category:"rectangular",title:{ru:"Отвод прямоугольный",uk:"Відвід прямокутний",en:"Rectangular elbow"},type:"formula",image:"../../assets/products/rectangular_elbow.svg",fields:[num("A","A",400),num("B","B",300),select("Angle",{ru:"Угол",uk:"Кут",en:"Angle"},[15,30,45,60,90],90),num("R","R",300)],formula:"rectElbow"},
     "rectangular-elbow-transition":{category:"rectangular",title:{ru:"Колено прямоугольное переходное",uk:"Коліно прямокутне перехідне",en:"Rectangular transition elbow"},type:"formula",image:"../../modules/common/stub-preview.svg",fields:[num("A","A",400),num("B","B",300),num("C","C",300),num("D","D",200),select("Angle",{ru:"Угол",uk:"Кут",en:"Angle"},[15,30,45,60,90],90)],formula:"stub"},
     "rectangular-transition":{category:"rectangular",title:{ru:"Переход прямоугольный",uk:"Перехід прямокутний",en:"Rectangular transition"},type:"formula",image:"../../assets/products/rectangular_transition.svg",fields:[num("A","A",300),num("B","B",300),num("C","C",200),num("D","D",200),num("E","E",300),num("F","F",25),num("G","G",25),offset("H","H",["center","left","right"],"center"),offset("I","I",["center","top","bottom"],"center")],formula:"rectTransition"},
     "rectangular-tee":{category:"rectangular",title:{ru:"Тройник прямоугольный",uk:"Трійник прямокутний",en:"Rectangular tee"},type:"formula",image:"../../modules/common/stub-preview.svg",fields:[num("A","A",400),num("B","B",300),num("A1","A1",250),num("B1","B1",200),num("L","L",600),num("H","H",300)],formula:"rectTee"},
@@ -122,7 +122,8 @@
   function fieldsHtml(fields){return fields.map(field=>`<div class="field"><label for="f-${field.key}">${fieldLabel(field)}</label>${field.type==="select"?selectHtml(field):field.type==="offset"?offsetHtml(field):numberHtml(field)}</div>`).join("")}
   function numberHtml(field){return`<input id="f-${field.key}" data-key="${field.key}" type="number" inputmode="decimal" step="1" min="0" value="${field.default}" list="dl-${field.key}"><datalist id="dl-${field.key}">${standardSizes.map(v=>`<option value="${v}"></option>`).join("")}</datalist>`}
   function selectHtml(field){return`<select id="f-${field.key}" data-key="${field.key}">${field.options.map(v=>`<option value="${v}" ${v===field.default?"selected":""}>${optionText(v)}</option>`).join("")}</select>`}
-  function offsetHtml(field){return`<div class="offset-combo" data-offset-combo="${field.key}"><input id="f-${field.key}" data-key="${field.key}" data-offset-options="${field.options.join(",")}" type="text" inputmode="decimal" value="${optionText(field.default)}" placeholder="${optionText("value")}"><button class="offset-toggle" type="button" aria-label="${optionText("value")}">▼</button><div class="offset-menu" hidden>${field.options.map(v=>`<button type="button" data-offset-value="${v}">${optionText(v)}</button>`).join("")}</div></div>`}
+  function offsetOptions(field){return [...field.options,"value"].filter((value,index,array)=>array.indexOf(value)===index)}
+  function offsetHtml(field){const options=offsetOptions(field);return`<div class="offset-combo" data-offset-combo="${field.key}"><input id="f-${field.key}" data-key="${field.key}" data-offset-options="${options.join(",")}" type="text" inputmode="decimal" value="${optionText(field.default)}" placeholder="${optionText("value")}"><button class="offset-toggle" type="button" aria-label="${optionText("value")}">▼</button><div class="offset-menu" hidden>${options.map(v=>`<button type="button" data-offset-value="${v}">${optionText(v)}</button>`).join("")}</div></div>`}
   function optionText(value){const map={center:{ru:"Центральный",uk:"Центральний",en:"Centered"},left:{ru:"Левая плоскость",uk:"Ліва площина",en:"Left plane"},right:{ru:"Правая плоскость",uk:"Права площина",en:"Right plane"},top:{ru:"Верхняя плоскость",uk:"Верхня площина",en:"Top plane"},bottom:{ru:"Нижняя плоскость",uk:"Нижня площина",en:"Bottom plane"},value:{ru:"Значение",uk:"Значення",en:"Value"}};return pick(map[value])||value}
   function offsetCode(value){
     const raw=String(value??"").trim();
@@ -184,7 +185,12 @@
       menu.addEventListener("click",(event)=>{
         const button=event.target.closest("[data-offset-value]");
         if(!button)return;
-        input.value=optionText(button.dataset.offsetValue);
+        if(button.dataset.offsetValue==="value"){
+          input.value="";
+          input.focus();
+        }else{
+          input.value=optionText(button.dataset.offsetValue);
+        }
         state[input.dataset.key]=input.value;
         menu.hidden=true;
         update();
@@ -282,10 +288,10 @@
   function tableBadge(v){return isStandard(v)?t.standard:t.custom}
   function tableStatus(v){return isStandard(v)?"":t.notReady}
   function isStandard(v){return cfg.fields.filter(f=>f.type==="number").every(f=>standardSizes.includes(Number(v[f.key])))}
-  function description(v){
+  function description(v,{includeComment=true}={}){
     const dims=specDimensionParts(v).join(" × ");
     const conn=connectionDescription();
-    const comment=document.getElementById("comment")?.value.trim();
+    const comment=includeComment?document.getElementById("comment")?.value.trim():"";
     return [dims+" "+t.mm,conn,comment].filter(Boolean).join(" · ");
   }
   function specDimensionParts(v){
@@ -340,7 +346,7 @@
       productType:moduleKey,
       dimensions:specDimensions(v),
       rawDimensions:rawDimensions(v),
-      description:description({...v,Q:undefined}).replace(comment ? ` · ${comment}` : "", ""),
+      description:description({...v,Q:undefined},{includeComment:false}),
       comment,
       quantity:v.quantity,
       material:materials.find(m=>m.key===v.material)?.label||"",
