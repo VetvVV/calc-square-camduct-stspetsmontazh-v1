@@ -42,7 +42,7 @@ body[data-layout="atlas"] .resizer{left:0}
 body[data-role="guest"] .app{grid-template-columns:minmax(0,1fr)}
 body[data-role="guest"] .side,body[data-role="guest"] .resizer,body[data-role="guest"] .mobile-switch{display:none}
 body[data-role="guest"] .top-nav button:not(#topAtlas){display:none}
-body[data-role="user"] #clearProject,body[data-role="user"] .project-edit,body[data-role="user"] .project-remove{display:none}
+body[data-role="user"] .project-clear-all,body[data-role="user"] .project-edit,body[data-role="user"] .project-remove{display:none}
 body[data-role="user"] .project-comment{background:#f6f7f8;color:#6b7280;resize:none;pointer-events:none}
 .side,.work{background:transparent;border-radius:0;box-shadow:none}
 .side{padding:0 18px 0 0;display:flex;flex-direction:column;gap:10px;min-height:0}
@@ -87,6 +87,12 @@ body.dims-under-name:not(.dims-column-off) .name-dims:not(:empty){display:block}
 .project-edit,.project-remove{width:28px;height:28px;border:0;border-radius:8px;background:rgba(238,240,243,.62);backdrop-filter:blur(3px);cursor:pointer;opacity:.72}
 .project-edit:hover{background:rgba(255,243,223,.92);color:#b86205;opacity:1}
 .project-remove:hover{background:rgba(254,226,226,.92);color:#b91c1c;opacity:1}
+.project-clear-all{width:28px;height:28px;border:0;border-radius:8px;background:rgba(255,255,255,.18);color:#fff;font-weight:800;cursor:pointer}
+.project-clear-all:hover{background:rgba(255,255,255,.32)}
+.clear-menu{position:fixed;z-index:120;display:none;min-width:140px;border:1px solid #d1d5db;border-radius:9px;background:#fff;box-shadow:0 16px 38px rgba(0,0,0,.18);padding:6px}
+.clear-menu.open{display:block}
+.clear-menu button{display:block;width:100%;border:0;border-radius:7px;background:#fff;color:#24272d;padding:9px 11px;text-align:left;font-size:13px;font-weight:800;cursor:pointer}
+.clear-menu button:hover{background:#fff3df;color:#b86205}
 .project-tip{position:fixed;z-index:90;display:none;width:220px;border:1px solid #d1d5db;border-radius:8px;background:#fff;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:10px;pointer-events:none}
 .project-tip img{width:100%;height:110px;object-fit:contain;background:#f7f7f7;border-radius:6px}
 .project-tip strong{display:block;margin-top:8px;font-size:13px}
@@ -148,7 +154,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
 </style>
 </head>
 <body>
-<div class="build-marker" hidden>build 2026-06-20-130541</div>
+<div class="build-marker" hidden>build 2026-06-20-1329</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/calc_square_logo.png" alt="">
@@ -178,7 +184,6 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <aside class="side">
     <div class="nav-actions">
       <button class="primary" id="openAtlas" type="button" data-i="atlas">Атлас</button>
-      <button id="clearProject" type="button" data-i="clear">Очистить</button>
     </div>
     <section class="project">
       <div class="project-hero">
@@ -218,7 +223,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
           <span class="project-cell is-numeric" data-i="area">Площадь</span>
           <span class="project-cell is-numeric" data-i="mass">Масса</span>
           <span class="project-cell" data-i="comment">Комментарий</span>
-          <span class="project-cell is-numeric">×</span>
+          <span class="project-cell is-numeric"><button class="project-clear-all" id="clearProjectHeader" type="button" title="Очистить спецификацию">×</button></span>
         </div>
         <div id="projectRows"></div>
         <div class="project-grid project-total" id="projectTotal"></div>
@@ -261,6 +266,9 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   </main>
 </div>
 <div class="project-tip" id="projectTip"></div>
+<div class="clear-menu" id="clearMenu" role="menu">
+  <button type="button" data-clear-action="clear">Очистить</button>
+</div>
 <div class="mobile-switch" id="mobileSwitch">
   <button type="button" data-mobile-view="project" data-i="spec">Спецификация</button>
   <button type="button" data-mobile-view="atlas" data-i="atlas">Атлас</button>
@@ -303,6 +311,7 @@ const projectTotal=document.getElementById("projectTotal");
 const materialRows=document.getElementById("materialRows");
 const materialTotal=document.getElementById("materialTotal");
 const projectTip=document.getElementById("projectTip");
+const clearMenu=document.getElementById("clearMenu");
 const projectNameInput=document.getElementById("projectName");
 const projectCustomerInput=document.getElementById("projectCustomer");
 const projectObjectInput=document.getElementById("projectObject");
@@ -339,7 +348,7 @@ const UI_TEXT={
     cabinet:"Кабинет",loginName:"Логин",loginPassword:"Пароль",signIn:"Войти",or:"или",continueGuest:"Продолжить как гость",
     guestRole:"Гость",userRole:"Пользователь",clientRole:"Клиент",adminRole:"Админ",badLogin:"Логин или пароль не совпадают с выбранной ролью",
     guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь, клиент или админ.",
-    guestCounter:"Гость: {left}/5",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение"
+    guestCounter:"Гость: {left}/5",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?"
   },
   uk:{
     language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",clear:"Очистити",spec:"Специфікація",
@@ -353,7 +362,7 @@ const UI_TEXT={
     cabinet:"Кабінет",loginName:"Логін",loginPassword:"Пароль",signIn:"Увійти",or:"або",continueGuest:"Продовжити як гість",
     guestRole:"Гість",userRole:"Користувач",clientRole:"Клієнт",adminRole:"Адмін",badLogin:"Логін або пароль не збігаються з обраною роллю",
     guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач, клієнт або адмін.",
-    guestCounter:"Гість: {left}/5",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення"
+    guestCounter:"Гість: {left}/5",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?"
   },
   en:{
     language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",clear:"Clear",spec:"Specification",
@@ -367,7 +376,7 @@ const UI_TEXT={
     cabinet:"Cabinet",loginName:"Login",loginPassword:"Password",signIn:"Sign in",or:"or",continueGuest:"Continue as guest",
     guestRole:"Guest",userRole:"User",clientRole:"Client",adminRole:"Admin",badLogin:"Login or password does not match the selected role",
     guestLimit:"Guest limit: 5 calculations per day. Sign in as user, client, or admin.",
-    guestCounter:"Guest: {left}/5",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image"
+    guestCounter:"Guest: {left}/5",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?"
   }
 };
 const PRODUCT_TEXT={
@@ -552,7 +561,16 @@ function tryLogin(){
 function currentFrameUrl(){
   try{return frame.contentWindow?.location?.href||frame.src||"assets/atlas/atlas.html"}catch(e){return frame.src||"assets/atlas/atlas.html"}
 }
-function urlWithState(url){const next=new URL(url,location.href);next.searchParams.set("lang",lang.value);next.searchParams.set("role",currentRole());return next.href}
+function buildVersion(){
+  return document.querySelector(".build-marker")?.textContent?.replace(/\s+/g,"-")||"dev";
+}
+function urlWithState(url){
+  const next=new URL(url,location.href);
+  next.searchParams.set("lang",lang.value);
+  next.searchParams.set("role",currentRole());
+  if(next.pathname.replaceAll("\\","/").endsWith("/assets/atlas/atlas.html"))next.searchParams.set("v",buildVersion());
+  return next.href;
+}
 function localDateKey(){
   const date=new Date();
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
@@ -606,6 +624,24 @@ function downloadFile(name,mime,content){
   link.click();
   URL.revokeObjectURL(url);
 }
+async function saveTextFile(name,mime,content){
+  if(window.showSaveFilePicker){
+    try{
+      const handle=await window.showSaveFilePicker({
+        suggestedName:name,
+        types:[{description:"Calc Square specification",accept:{[mime.split(";")[0]]:[".json"]}}]
+      });
+      const writable=await handle.createWritable();
+      await writable.write(new Blob([content],{type:mime}));
+      await writable.close();
+      return;
+    }catch(error){
+      if(error&&error.name==="AbortError")return;
+      console.warn(error);
+    }
+  }
+  downloadFile(name,mime,content);
+}
 function projectExportRows(){
   return project.map((item,index)=>({
     no:index+1,
@@ -630,8 +666,8 @@ function exportExcel(){
   const html=`<table><thead><tr>${["No","Name","Dimensions","Description","Qty","Material","t","Area","Mass","Comment"].map((h)=>`<th>${escapeHtml(h)}</th>`).join("")}</tr></thead><tbody>${rows.map((row)=>`<tr><td>${row.no}</td><td>${escapeHtml(row.name)}</td><td>${escapeHtml(row.dimensions)}</td><td>${escapeHtml(row.description)}</td><td>${row.quantity}</td><td>${escapeHtml(row.material)}</td><td>${escapeHtml(row.thickness)}</td><td>${row.area}</td><td>${row.mass}</td><td>${escapeHtml(row.comment)}</td></tr>`).join("")}</tbody></table>`;
   downloadFile("calc-square-spec.xls","application/vnd.ms-excel;charset=utf-8","\ufeff"+html);
 }
-function saveSpecFile(){
-  downloadFile("calc-square-spec.json","application/json;charset=utf-8",JSON.stringify({version:1,savedAt:new Date().toISOString(),meta:readProjectMeta(),items:project},null,2));
+async function saveSpecFile(){
+  await saveTextFile("calc-square-spec.json","application/json;charset=utf-8",JSON.stringify({version:1,savedAt:new Date().toISOString(),meta:readProjectMeta(),items:project},null,2));
 }
 function openSpecFile(file){
   const reader=new FileReader();
@@ -802,6 +838,26 @@ function showProjectTip(index,event){
   positionProjectTip(event);
 }
 function hideProjectTip(){projectTip.style.display="none"}
+function openClearMenu(anchor){
+  if(!canModifyProject())return;
+  const rect=anchor.getBoundingClientRect();
+  clearMenu.classList.add("open");
+  const menuRect=clearMenu.getBoundingClientRect();
+  const left=Math.min(window.innerWidth-menuRect.width-10,Math.max(10,rect.right-menuRect.width));
+  const top=Math.min(window.innerHeight-menuRect.height-10,rect.bottom+6);
+  clearMenu.style.left=`${left}px`;
+  clearMenu.style.top=`${top}px`;
+}
+function closeClearMenu(){
+  clearMenu.classList.remove("open");
+}
+function clearProjectItems(){
+  if(!project.length)return;
+  if(confirm(t("clearConfirm"))) {
+    project=[];
+    saveProject();
+  }
+}
 function bindColumnResizers(){
   document.querySelectorAll(".project-head-row .project-cell").forEach((cell,index)=>{
     if(cell.querySelector(".col-resizer"))return;
@@ -1020,7 +1076,20 @@ document.getElementById("resetSorting").addEventListener("click",loadProject);
 document.querySelector("[data-i='home']").addEventListener("click",showProjectPane);
 document.getElementById("openAtlas").addEventListener("click",showAtlasPane);
 document.getElementById("topAtlas").addEventListener("click",showAtlasPane);
-document.getElementById("clearProject").addEventListener("click",()=>{if(!canModifyProject())return;project=[];saveProject()});
+document.getElementById("clearProjectHeader").addEventListener("click",(event)=>{event.stopPropagation();openClearMenu(event.currentTarget)});
+clearMenu.addEventListener("click",(event)=>{
+  const button=event.target.closest("[data-clear-action]");
+  if(!button)return;
+  const action=button.dataset.clearAction;
+  closeClearMenu();
+  if(action==="clear")clearProjectItems();
+});
+document.addEventListener("pointerdown",(event)=>{
+  if(!clearMenu.classList.contains("open"))return;
+  if(event.target.closest("#clearMenu")||event.target.closest("#clearProjectHeader"))return;
+  closeClearMenu();
+});
+window.addEventListener("resize",closeClearMenu);
 document.getElementById("printSpec").addEventListener("click",()=>{if(canModifyProject())window.print()});
 document.getElementById("exportSpec").addEventListener("click",()=>{if(canModifyProject())exportCsv()});
 document.getElementById("excelSpec").addEventListener("click",()=>{if(canModifyProject())exportExcel()});

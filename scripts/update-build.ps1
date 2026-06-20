@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-$Build = 'build ' + (Get-Date).ToString('yyyy-MM-dd-HHmmss')
+$Build = 'build ' + (Get-Date).ToString('yyyy-MM-dd-HHmm')
 $Root = Resolve-Path (Join-Path $PSScriptRoot '..')
 $HomePath = Join-Path $Root 'home.html'
 $VersionPath = Join-Path $Root 'VERSION.txt'
