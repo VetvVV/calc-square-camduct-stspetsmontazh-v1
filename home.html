@@ -97,6 +97,9 @@ body.summary-flow .project-table.has-x-overflow{overflow-x:auto}
 .project-head-row .project-cell:hover .col-resizer::after,.col-resizer:focus-visible::after{opacity:1}
 .resizing-cols{cursor:col-resize;user-select:none}
 .project-row:nth-child(even) .project-cell{background:#fafafa}
+.project-row.has-language-conflict .project-cell{background:#fffaf0}
+.project-row.has-language-conflict:nth-child(even) .project-cell{background:#fff7e8}
+.language-conflict{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:4px;border-radius:50%;background:#f5b15a;color:#7c3f00;font-size:11px;font-weight:900;font-style:normal;vertical-align:middle}
 .project-grid .project-cell:nth-child(11){position:sticky;right:0;z-index:4;background:transparent;border-left:0;box-shadow:none;padding-left:2px;padding-right:4px}
 .project-row:nth-child(even) .project-cell:nth-child(11){background:transparent}
 .project-head-row .project-cell:nth-child(11){z-index:9;background:#d97a1c;box-shadow:-1px 0 0 rgba(255,255,255,.25)}
@@ -222,7 +225,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
 </style>
 </head>
 <body>
-<div class="build-marker" hidden data-cache="build-2026-06-21-143338">build 2026-06-21-1433</div>
+<div class="build-marker" hidden data-cache="build-2026-06-21-151409">build 2026-06-21-1514</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/calc_square_logo.png" alt="">
@@ -492,6 +495,7 @@ const UI_TEXT={
     guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь, клиент или админ.",
     guestCounter:"Гость: {left}/5",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?",
     accessTitle:"Приглашение к сотрудничеству",accessLead:"Эта возможность доступна клиентам ST Spetsmontazh.",accessBody:"Если вы уже подбираете изделия для проекта, свяжитесь с нами любым удобным способом. Менеджер поможет с заказом и выдаст персональный QR-код, чтобы открыть сохранение, печать и другие рабочие функции.",accessQrCaption:"QR-код выдаёт менеджер после обращения",accessLogin:"Открыть кабинет",accessSite:"Сайт компании",accessLater:"Позже",accessHours:"Пн-пт 9:00 - 18:00"
+    ,languageConflictTitle:"Проверьте язык строки",languageConflictProduct:"Название изделия не распознано в каталоге",languageConflictMaterial:"Материал не распознан",languageConflictOpen:"Файл открыт, но часть строк требует проверки локализации:"
   },
   uk:{
     language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вихід",clear:"Очистити",spec:"Специфікація",
@@ -510,6 +514,7 @@ const UI_TEXT={
     guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач, клієнт або адмін.",
     guestCounter:"Гість: {left}/5",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?",
     accessTitle:"Запрошення до співпраці",accessLead:"Ця можливість доступна клієнтам ST Spetsmontazh.",accessBody:"Якщо ви вже підбираєте вироби для проєкту, зв'яжіться з нами будь-яким зручним способом. Менеджер допоможе із замовленням і видасть персональний QR-код, щоб відкрити збереження, друк та інші робочі функції.",accessQrCaption:"QR-код видає менеджер після звернення",accessLogin:"Відкрити кабінет",accessSite:"Сайт компанії",accessLater:"Пізніше",accessHours:"Пн-пт 9:00 - 18:00"
+    ,languageConflictTitle:"Перевірте мову рядка",languageConflictProduct:"Назву виробу не розпізнано в каталозі",languageConflictMaterial:"Матеріал не розпізнано",languageConflictOpen:"Файл відкрито, але частина рядків потребує перевірки локалізації:"
   },
   en:{
     language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Logout",clear:"Clear",spec:"Specification",
@@ -528,6 +533,7 @@ const UI_TEXT={
     guestLimit:"Guest limit: 5 calculations per day. Sign in as user, client, or admin.",
     guestCounter:"Guest: {left}/5",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?",
     accessTitle:"Invitation to cooperate",accessLead:"This option is available to ST Spetsmontazh clients.",accessBody:"If you are already selecting products for a project, contact us in whichever way is convenient. A manager will help with the order and provide a personal QR code to unlock saving, printing, and other working tools.",accessQrCaption:"A manager provides the QR code after contact",accessLogin:"Open cabinet",accessSite:"Company website",accessLater:"Later",accessHours:"Mon-Fri 9:00 - 18:00"
+    ,languageConflictTitle:"Check row language",languageConflictProduct:"Product name is not recognized in the catalog",languageConflictMaterial:"Material is not recognized",languageConflictOpen:"File opened, but some rows need localization review:"
   }
 };
 const PRODUCT_TEXT={
@@ -536,23 +542,47 @@ const PRODUCT_TEXT={
   "round-transition":{ru:"Переход круглый",uk:"Перехід круглий",en:"Round transition"},
   "round-offset-transition":{ru:"Переход круглый со смещением",uk:"Перехід круглий зі зміщенням",en:"Offset round transition"},
   "round-tee":{ru:"Тройник круглый",uk:"Трійник круглий",en:"Round tee"},
+  "round-tee-custom":{ru:"Тройник нестандартный круглый",uk:"Трійник нестандартний круглий",en:"Custom round tee"},
   "round-cap":{ru:"Заглушка круглая",uk:"Заглушка кругла",en:"Round cap"},
   "round-inset":{ru:"Врезка круглая",uk:"Врізка кругла",en:"Round inset"},
   "round-saddle":{ru:"Седло круглое",uk:"Сідло кругле",en:"Round saddle"},
+  "round-nipple":{ru:"Ниппель круглый",uk:"Ніпель круглий",en:"Round nipple"},
+  "round-silencer":{ru:"Шумоглушитель круглый",uk:"Шумоглушник круглий",en:"Round silencer"},
+  "round-umbrella":{ru:"Зонт круглый",uk:"Зонт круглий",en:"Round umbrella"},
+  "round-damper":{ru:"Дроссель круглый",uk:"Дросель круглий",en:"Round damper"},
+  "round-flange":{ru:"Фланец круглый",uk:"Фланець круглий",en:"Round flange"},
+  "round-cross":{ru:"Крестовина круглая",uk:"Хрестовина кругла",en:"Round cross"},
+  "round-duck":{ru:"Утка круглая",uk:"Качка кругла",en:"Round offset duct"},
+  "round-check-valve":{ru:"Обратный клапан круглый",uk:"Зворотний клапан круглий",en:"Round check valve"},
+  "round-deflector":{ru:"Дефлектор",uk:"Дефлектор",en:"Deflector"},
+  "round-coupling":{ru:"Муфта",uk:"Муфта",en:"Coupling"},
   "rectangular-duct":{ru:"Воздуховод прямоугольный",uk:"Повітропровід прямокутний",en:"Rectangular duct"},
   "rectangular-elbow":{ru:"Отвод прямоугольный",uk:"Відвід прямокутний",en:"Rectangular elbow"},
+  "rectangular-elbow-transition":{ru:"Колено прямоугольное переходное",uk:"Коліно прямокутне перехідне",en:"Rectangular transition elbow"},
   "rectangular-transition":{ru:"Переход прямоугольный",uk:"Перехід прямокутний",en:"Rectangular transition"},
   "rectangular-tee":{ru:"Тройник прямоугольный",uk:"Трійник прямокутний",en:"Rectangular tee"},
+  "rectangular-cross":{ru:"Крестовина прямоугольная",uk:"Хрестовина прямокутна",en:"Rectangular cross"},
+  "rectangular-duck":{ru:"Утка прямоугольная",uk:"Качка прямокутна",en:"Rectangular offset duct"},
   "rectangular-cap":{ru:"Заглушка прямоугольная",uk:"Заглушка прямокутна",en:"Rectangular cap"},
   "rectangular-inset":{ru:"Врезка прямоугольная",uk:"Врізка прямокутна",en:"Rectangular inset"},
+  "rectangular-saddle":{ru:"Врезка прямоугольная в плоскость",uk:"Врізка прямокутна в площину",en:"Rectangular saddle"},
+  "rectangular-silencer":{ru:"Шумоглушитель прямоугольный",uk:"Шумоглушник прямокутний",en:"Rectangular silencer"},
+  "rectangular-umbrella":{ru:"Зонт прямоугольный",uk:"Зонт прямокутний",en:"Rectangular umbrella"},
+  "rectangular-damper":{ru:"Дроссель прямой",uk:"Дросель прямий",en:"Rectangular damper"},
   "round-to-rectangular":{ru:"Переход круг-прямоугольник",uk:"Перехід круг-прямокутник",en:"Round to rectangular"},
+  "combined-seat-rect":{ru:"Седло с прямоугольной врезкой",uk:"Сідло з прямокутною врізкою",en:"Saddle with rectangular inset"},
   "tee-round-rect":{ru:"Тройник круг-прямоугольник",uk:"Трійник круг-прямокутник",en:"Round-rect tee"},
   "rect-tee-round":{ru:"Тройник прямоугольник-круг",uk:"Трійник прямокутник-круг",en:"Rect-round tee"},
+  "round-adapter":{ru:"Адаптер круглый",uk:"Адаптер круглий",en:"Round adapter"},
+  "rectangular-adapter":{ru:"Адаптер прямоугольный",uk:"Адаптер прямокутний",en:"Rectangular adapter"},
   "grease-trap":{ru:"Жироуловитель",uk:"Жировловлювач",en:"Grease trap"}
 };
 const PRODUCT_ALIASES={
   "round-duct":["круглый воздуховод","круглий повітропровід","повітропровод круглий"],
   "round-elbow":["колено круглое","коліно кругле"],
+  "round-saddle":["седло","сідло"],
+  "round-coupling":["муфта круглая","муфта кругла"],
+  "round-deflector":["дефлектор круглый","дефлектор круглий"],
   "round-offset-transition":["смещенный круглый переход","перехід круглий зі зміщенням"],
   "rectangular-duct":["прямоугольный воздуховод","прямокутний повітропровід","повітропровод прямокутний"],
   "rectangular-elbow":["колено прямоугольное","коліно прямокутне"],
@@ -1005,21 +1035,41 @@ function openUrl(url,options={}){
   frame.src=urlWithState(url);
 }
 function normalizeProjectItem(item){
-  const productType=item.productType||productKeyFromName(item.name||item.title||item.label);
+  const lookupName=item.name||item.title||item.label||item.description||item.size||"";
+  const productType=item.productType||productKeyFromName(lookupName);
   const materialKey=item.materialKey||materialKeyFromLabel(item.material);
+  const dimensions=typeof item.dimensions==="string"||item.dimensions&&typeof item.dimensions==="object"?item.dimensions:(item.size||{});
   return {
     ...item,
     name:item.name||item.title||item.label||"",
     productType:productType||item.productType||"",
     materialKey:materialKey||item.materialKey||"",
-    dimensions:item.dimensions&&typeof item.dimensions==="object"?item.dimensions:{},
-    quantity:Number(item.quantity||1)||1,
+    dimensions,
+    description:item.description||item.desc||item.size||"",
+    quantity:Number(item.quantity||item.qty||1)||1,
     area:Number(item.area||0)||0,
     mass:Number(item.mass||0)||0
   };
 }
 function normalizeProject(items){
   return Array.isArray(items)?items.filter((item)=>item&&typeof item==="object").map(normalizeProjectItem):[];
+}
+function localizationIssues(item){
+  const issues=[];
+  const hasProductText=Boolean(item.name||item.title||item.label||item.description||item.size);
+  const hasMaterialText=Boolean(item.material);
+  const knownProduct=Boolean(item.productType&&PRODUCT_TEXT[item.productType]);
+  const knownMaterial=Boolean(item.materialKey&&MATERIAL_TEXT[item.materialKey]);
+  if(hasProductText&&!(knownProduct||productKeyFromName(item.name||item.title||item.label||item.description||item.size)))issues.push(t("languageConflictProduct"));
+  if(hasMaterialText&&!(knownMaterial||materialKeyFromLabel(item.material)))issues.push(t("languageConflictMaterial"));
+  return issues;
+}
+function reportLocalizationIssues(items){
+  const lines=items.map((item,index)=>({index,issues:localizationIssues(item),name:item.name||item.title||item.label||item.description||item.size||t("product")}))
+    .filter((entry)=>entry.issues.length)
+    .slice(0,8)
+    .map((entry)=>`${entry.index+1}. ${entry.name}: ${entry.issues.join(", ")}`);
+  if(lines.length)alert(`${t("languageConflictOpen")}\n\n${lines.join("\n")}`);
 }
 function loadProject(){try{project=normalizeProject(JSON.parse(localStorage.getItem(storageKey)||"[]"))}catch(e){project=[]}renderProject()}
 function saveProject(){project=normalizeProject(project);localStorage.setItem(storageKey,JSON.stringify(project));renderProject()}
@@ -1085,6 +1135,7 @@ function openSpecFile(file){
       const data=JSON.parse(String(reader.result||"{}"));
       project=normalizeProject(Array.isArray(data)?data:Array.isArray(data.items)?data.items:[]);
       if(data.meta){saveInterfaceState({projectMeta:data.meta});restoreProjectMeta()}
+      reportLocalizationIssues(project);
       saveProject();
     }catch(e){alert("Не удалось открыть файл спецификации.")}
   };
@@ -1413,10 +1464,12 @@ function renderProject(){
   const showNameDims=showDimensionsUnderName();
   entries.forEach(({item,index})=>{
     const el=document.createElement("div");
-    el.className="project-grid project-row";
+    const issues=localizationIssues(item);
+    el.className=`project-grid project-row${issues.length?" has-language-conflict":""}`;
     const dimensions=formatDimensions(item);
+    const issueTitle=issues.length?escapeHtml(`${t("languageConflictTitle")}: ${issues.join(", ")}`):"";
     el.innerHTML=`
-      <span class="project-cell is-numeric project-pos" data-tip-index="${index}">${index+1}</span>
+      <span class="project-cell is-numeric project-pos" data-tip-index="${index}">${index+1}${issues.length?`<span class="language-conflict" title="${issueTitle}">!</span>`:""}</span>
       <span class="project-cell"><strong>${escapeHtml(displayProductName(item))}</strong>${showNameDims&&dimensions?`<small class="name-dims">${escapeHtml(dimensions)}</small>`:""}</span>
       <span class="project-cell">${escapeHtml(dimensions)}</span>
       <span class="project-cell">${escapeHtml(displayDescription(item))}</span>
@@ -1808,9 +1861,6 @@ openUrl("assets/atlas/atlas.html");
 </script>
 </body>
 </html>
-
-
-
 
 
 

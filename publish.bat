@@ -50,6 +50,14 @@ if exist "check-roles.bat" (
 
 git status --short
 echo.
+if exist "PUBLISH_CHECKLIST.md" (
+    echo Quick reminder before publishing:
+    echo  - Local home page opens
+    echo  - Guest/User/Client/Admin basics checked after major UI changes
+    echo  - Saved file and language switch checked after localization/import changes
+    echo  - GitHub page hard-refresh if an old build is still visible
+    echo.
+)
 set "COMMIT_MSG_FILE=%TEMP%\CALC_SQUARE_COMMIT_MESSAGE.txt"
 for /f "usebackq delims=" %%M in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\make-commit-message.ps1" -BuildLabel "%BUILD_LABEL%" -OutputPath "%COMMIT_MSG_FILE%"`) do set "DEFAULT_MSG=%%M"
 if errorlevel 1 (

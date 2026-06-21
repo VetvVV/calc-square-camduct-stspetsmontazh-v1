@@ -103,6 +103,8 @@ if ($Errors.Count -eq 0) {
     if ($Node) {
         $SyntaxCheck = @'
 const fs=require('fs');
+const path=require('path');
+const vm=require('vm');
 const files=['home.html','assets/atlas/atlas.html','modules/common/panel-module.js','modules/common/preview-axo.js','assets/atlas/catalog-map.js'];
 for (const file of files) {
   const source=fs.readFileSync(file,'utf8');
@@ -112,6 +114,91 @@ for (const file of files) {
   for (const code of scripts) new Function(code);
   console.log(file+' syntax ok');
 }
+function extractConst(source,name,nextName){
+  const start=source.indexOf('const '+name+'=');
+  if(start<0) throw new Error(name+' is missing in home.html');
+  const after=start+('const '+name+'=').length;
+  const end=nextName ? source.indexOf('\nconst '+nextName,after) : source.indexOf(';\n',after);
+  if(end<0) throw new Error(name+' ending was not found in home.html');
+  return Function('"use strict";return ('+source.slice(after,end).replace(/;\s*$/,'')+');')();
+}
+function extractRange(source,startNeedle,endNeedle,fileName){
+  const start=source.indexOf(startNeedle);
+  if(start<0) throw new Error(`${startNeedle} is missing in ${fileName}`);
+  const end=source.indexOf(endNeedle,start);
+  if(end<0) throw new Error(`${endNeedle} was not found in ${fileName}`);
+  return source.slice(start,end);
+}
+function checkDictionaryParity(name,dict){
+  const langs=['ru','uk','en'];
+  const reference=new Set(Object.keys(dict.ru||{}));
+  for (const lang of langs) {
+    if (!dict[lang]) throw new Error(`${name}.${lang} is missing`);
+    for (const key of reference) {
+      if (!(key in dict[lang])) throw new Error(`${name}.${lang} is missing key ${key}`);
+      if (dict[lang][key]===undefined || dict[lang][key]===null || String(dict[lang][key]).trim()==='') {
+        throw new Error(`${name}.${lang}.${key} is empty`);
+      }
+    }
+    for (const key of Object.keys(dict[lang])) {
+      if (!reference.has(key)) throw new Error(`${name}.${lang} has extra key ${key}`);
+    }
+  }
+}
+const home=fs.readFileSync('home.html','utf8');
+const panel=fs.readFileSync('modules/common/panel-module.js','utf8');
+const uiText=extractConst(home,'UI_TEXT','PRODUCT_TEXT');
+const productText=extractConst(home,'PRODUCT_TEXT','PRODUCT_ALIASES');
+const materialText=extractConst(home,'MATERIAL_TEXT','PRODUCT_IMAGES');
+const panelI18n=Function('"use strict";const lang="ru";'+extractRange(panel,'const i18n=','let UNIT','modules/common/panel-module.js')+';return i18n;')();
+checkDictionaryParity('UI_TEXT',uiText);
+checkDictionaryParity('panel i18n',panelI18n);
+const catalogSandbox={window:{}};
+vm.runInNewContext(fs.readFileSync('assets/atlas/catalog-map.js','utf8'),catalogSandbox,{filename:'catalog-map.js'});
+const catalog=catalogSandbox.window.CALC_CATALOG||[];
+const langs=['ru','uk','en'];
+const catalogKeys=[];
+const moduleKeys=new Set([...panel.matchAll(/"([^"]+)":\{category:/g)].map(m=>m[1]));
+function checkAsset(ref,context){
+  if (!ref) throw new Error(`${context} image is missing`);
+  if (/^(https?:)?\/\//.test(ref) || ref.startsWith('data:')) throw new Error(`${context} uses a non-local image: ${ref}`);
+  const resolved=path.resolve('assets/atlas',ref);
+  if (!fs.existsSync(resolved)) throw new Error(`${context} image file is missing: ${ref}`);
+}
+for (const category of catalog) {
+  for (const lang of langs) {
+    if (!category.title?.[lang]) throw new Error(`Catalog category ${category.key} is missing ${lang} title`);
+  }
+  for (const item of category.items||[]) {
+    catalogKeys.push(item.key);
+    checkAsset(item.image,`Catalog item ${item.key}`);
+    for (const lang of langs) {
+      if (!item.title?.[lang]) throw new Error(`Catalog item ${item.key} is missing ${lang} title`);
+    }
+    for (const [index,variant] of (item.variants||[]).entries()) {
+      checkAsset(variant.image,`Catalog item ${item.key} variant ${index+1}`);
+      for (const lang of langs) {
+        if (!variant.title?.[lang]) throw new Error(`Catalog item ${item.key} variant ${index+1} is missing ${lang} title`);
+      }
+    }
+  }
+}
+for (const key of catalogKeys) {
+  if (!moduleKeys.has(key)) throw new Error(`Calculator module is missing for catalog item ${key}`);
+  if (!productText[key]) throw new Error(`PRODUCT_TEXT is missing catalog item ${key}`);
+  for (const lang of langs) {
+    if (!productText[key][lang]) throw new Error(`PRODUCT_TEXT.${key} is missing ${lang}`);
+  }
+}
+for (const [key,labels] of Object.entries(materialText)) {
+  for (const lang of langs) {
+    if (!labels[lang]) throw new Error(`MATERIAL_TEXT.${key} is missing ${lang}`);
+  }
+}
+console.log('catalog localization ok');
+console.log('ui localization ok');
+console.log('catalog assets ok');
+console.log('catalog modules ok');
 '@
         $TempScript = Join-Path $env:TEMP 'calc-square-validate-syntax.js'
         [System.IO.File]::WriteAllText($TempScript, $SyntaxCheck, [System.Text.UTF8Encoding]::new($false))

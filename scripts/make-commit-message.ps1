@@ -78,6 +78,11 @@ $Message = @(
     'Changes:',
     ($Bullets | Select-Object -Unique | ForEach-Object { '- ' + $_ }),
     '',
+    'Validation:',
+    '- Publication checks passed before commit.',
+    '- JavaScript syntax checks passed.',
+    '- Catalog localization, local images, and calculator modules were checked.',
+    '',
     'Files:',
     $ChangedFiles
 ) | ForEach-Object { $_ }
