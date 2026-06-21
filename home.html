@@ -51,14 +51,14 @@ body[data-layout="project"] .nav-actions{display:flex}
 .project-hero h2{margin:0 0 22px;color:#5b6573;font-size:32px;line-height:1;font-weight:800;font-style:italic;letter-spacing:.04em;text-transform:uppercase}
 .project-meta{display:flex;justify-content:center;gap:18px;flex-wrap:wrap}
 .project-meta input{width:min(280px,100%);height:42px;border:1px solid #d1d5db;border-radius:8px;background:#fff;padding:0 14px;font-size:14px}
-.spec-panel{display:flex;flex-direction:column;align-items:center;gap:8px}
-.spec-panel-toggle{height:30px;border:1px solid #cfd3da;border-radius:999px;background:#fff;color:#4b5563;padding:0 12px;font-size:12px;font-weight:800;font-style:italic;display:inline-flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.spec-panel{display:flex;flex-direction:column;align-items:center;gap:6px}
+.spec-panel-toggle{height:26px;border:1px solid #cfd3da;border-radius:999px;background:#fff;color:#4b5563;padding:0 10px;font-size:11px;font-weight:800;font-style:italic;display:inline-flex;align-items:center;gap:7px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .spec-panel-toggle:hover{border-color:#e5b56e;color:#b86205;background:#fff8ec}
 .spec-panel-toggle::after{content:"⌃";font-size:13px;line-height:1;color:#df7a12}
 body.spec-controls-collapsed .spec-panel-toggle::after{content:"⌄"}
-.spec-controls{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;max-height:160px;overflow:hidden;transition:max-height .22s ease,opacity .18s ease,transform .18s ease}
-body.spec-controls-collapsed .spec-controls{max-height:0;opacity:0;transform:translateY(-4px);pointer-events:none}
-.spec-controls button,.spec-controls label{height:24px;border:1px solid #cfd3da;border-radius:6px;background:#fff;color:#4b5563;padding:4px 8px;font-size:11px;font-weight:600;font-style:italic;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.spec-controls{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;max-height:148px;overflow:hidden;padding:6px 10px;border:1px solid rgba(207,211,218,.75);border-radius:10px;background:rgba(255,255,255,.58);box-shadow:0 6px 18px rgba(31,35,40,.04);transition:max-height .22s ease,opacity .18s ease,transform .18s ease,padding .18s ease,border-color .18s ease}
+body.spec-controls-collapsed .spec-controls{max-height:0;opacity:0;transform:translateY(-4px);pointer-events:none;padding-top:0;padding-bottom:0;border-color:transparent}
+.spec-controls button,.spec-controls label{height:22px;border:1px solid #cfd3da;border-radius:6px;background:#fff;color:#4b5563;padding:3px 7px;font-size:10.5px;font-weight:600;font-style:italic;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .spec-controls button{cursor:pointer;font-style:normal}
 .spec-controls input{margin:0}
 .project-head-row .project-cell.sortable{cursor:pointer}
@@ -290,7 +290,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-21-180129">build 2026-06-21-1801</div>
+<div class="build-marker" hidden data-cache="build-2026-06-21-181036">build 2026-06-21-1810</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -330,10 +330,10 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
         </div>
       </div>
       <div class="spec-panel">
-        <button class="spec-panel-toggle" id="specPanelToggle" type="button" data-i="specSettings">Настройки спецификации</button>
+        <button class="spec-panel-toggle" id="specPanelToggle" type="button" data-i="specSettings" aria-controls="specControls">Настройки</button>
         <div class="spec-controls" id="specControls">
           <button type="button" id="autoFitAll" data-i="autoWidth">Автоширина</button>
-          <button type="button" id="resetLayout" data-i="resetView">Скинуть вид</button>
+          <button type="button" id="resetLayout" data-i="resetView">Сбросить вид</button>
           <button type="button" id="resetSorting" data-i="resetSort">Сбросить порядок</button>
           <label><input type="checkbox" id="dimsUnderName"> <span data-i="dimsUnderName">Размеры под названием</span></label>
           <label><input type="checkbox" id="summaryPinned" checked> <span data-i="summaryPinned">Фиксировать итог</span></label>
@@ -549,7 +549,7 @@ const UI_TEXT={
   ru:{
     language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",logout:"Выход",clear:"Очистить",spec:"Спецификация",showPassword:"Показать пароль",hidePassword:"Скрыть пароль",
     projectSpec:"Проект / Спецификация",projectName:"Название проекта",projectCustomer:"Заказчик",projectObject:"Объект",
-    autoWidth:"Автоширина",resetView:"Скинуть вид",resetSort:"Сбросить порядок",specSettings:"Настройки спецификации",filterNo:"№",filterName:"Наименование",filterQty:"К-во",filterMaterial:"Материал",filterThickness:"t",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
+    autoWidth:"Автоширина",resetView:"Сбросить вид",resetSort:"Сбросить порядок",specSettings:"Настройки",filterNo:"№",filterName:"Наименование",filterQty:"К-во",filterMaterial:"Материал",filterThickness:"t",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
     name:"Наименование",dimensions:"Размеры",description:"Описание",quantity:"К-во",
     material:"Материал",area:"Площадь",mass:"Масса",comment:"Комментарий",
     total:"Итого",totalAreaLabel:"Итого площадь",totalMassLabel:"Итого масса",
@@ -568,7 +568,7 @@ const UI_TEXT={
   uk:{
     language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вихід",clear:"Очистити",spec:"Специфікація",showPassword:"Показати пароль",hidePassword:"Сховати пароль",
     projectSpec:"Проєкт / Специфікація",projectName:"Назва проєкту",projectCustomer:"Замовник",projectObject:"Об'єкт",
-    autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути порядок",specSettings:"Налаштування специфікації",filterNo:"№",filterName:"Найменування",filterQty:"К-ть",filterMaterial:"Матеріал",filterThickness:"t",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
+    autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути порядок",specSettings:"Налаштування",filterNo:"№",filterName:"Найменування",filterQty:"К-ть",filterMaterial:"Матеріал",filterThickness:"t",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
     name:"Найменування",dimensions:"Розміри",description:"Опис",quantity:"К-ть",
     material:"Матеріал",area:"Площа",mass:"Маса",comment:"Коментар",
     total:"Підсумок",totalAreaLabel:"Підсумкова площа",totalMassLabel:"Підсумкова маса",
@@ -587,7 +587,7 @@ const UI_TEXT={
   en:{
     language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Logout",clear:"Clear",spec:"Specification",showPassword:"Show password",hidePassword:"Hide password",
     projectSpec:"Project / Specification",projectName:"Project name",projectCustomer:"Customer",projectObject:"Object",
-    autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset order",specSettings:"Specification settings",filterNo:"No.",filterName:"Item",filterQty:"Qty",filterMaterial:"Material",filterThickness:"t",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
+    autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset order",specSettings:"Settings",filterNo:"No.",filterName:"Item",filterQty:"Qty",filterMaterial:"Material",filterThickness:"t",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
     name:"Item",dimensions:"Dimensions",description:"Description",quantity:"Qty",
     material:"Material",area:"Area",mass:"Mass",comment:"Comment",
     total:"Total",totalAreaLabel:"Total area",totalMassLabel:"Total mass",
@@ -819,11 +819,12 @@ function applySummaryPin(){
   requestAnimationFrame(()=>{updateProjectOverflow();restoreScrollPositions()});
 }
 function specControlsCollapsed(){
-  return readInterfaceState().specControlsCollapsed===true;
+  return readInterfaceState().specControlsCollapsed!==false;
 }
 function applySpecControlsState(){
   document.body.classList.toggle("spec-controls-collapsed",specControlsCollapsed());
   specPanelToggle.setAttribute("aria-expanded",String(!specControlsCollapsed()));
+  specControls.setAttribute("aria-hidden",String(specControlsCollapsed()));
 }
 function toggleSpecControls(){
   saveInterfaceState({specControlsCollapsed:!specControlsCollapsed()});
@@ -936,7 +937,7 @@ function resetProjectView(){
     visibleColumns:[...defaultColumnWidths].map(()=>true),
     dimsUnderName:false,
     summaryPinned:true,
-    specControlsCollapsed:false,
+    specControlsCollapsed:true,
     columnOrder:defaultColumnOrder(),
     sort:null,
     filters:{pos:"",name:"",dimensions:"",qty:"",material:"",thickness:""},
@@ -1945,11 +1946,6 @@ openUrl("assets/atlas/atlas.html");
 </script>
 </body>
 </html>
-
-
-
-
-
 
 
 

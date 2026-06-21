@@ -13,6 +13,7 @@ Push-Location $Root
 try {
     $Status = git status --short
     $Diff = git diff --unified=0 --no-ext-diff
+    $SignalDiff = git diff --unified=0 --no-ext-diff -- . ':(exclude)scripts/make-commit-message.ps1'
 } finally {
     Pop-Location
 }
@@ -33,7 +34,7 @@ function Has-File([string]$Pattern) {
 }
 
 function Has-Diff([string]$Pattern) {
-    return [bool]($Diff | Select-String -Pattern $Pattern -Quiet)
+    return [bool]($SignalDiff | Select-String -Pattern $Pattern -Quiet)
 }
 
 function Add-Part([string]$Part) {
@@ -126,6 +127,11 @@ if (Has-Diff 'local fonts ok|exo2\.css|font-family:"Exo 2"|assets/fonts') {
 if (Has-Diff 'dev traces ok|debugger|console\.log|TODO|FIXME') {
     Add-Part 'publication flow'
     Add-Bullet 'Check for debugger statements and development traces before publishing.'
+}
+
+if (Has-Diff 'spec-panel|spec-controls|specControlsCollapsed|specSettings|resetView') {
+    Add-Part 'specification controls'
+    Add-Bullet 'Compact the specification settings panel and keep its collapsed state remembered.'
 }
 
 if ($Parts.Count -eq 0) {
