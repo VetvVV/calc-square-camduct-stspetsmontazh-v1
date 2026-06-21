@@ -246,20 +246,28 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   .project-meta input{height:26px!important;font-size:10px!important;border-color:#ddd!important}
   .project-head h2{font-size:14px!important;margin:0 0 4px!important}
   .project-table,.summary-table{overflow:visible!important;max-height:none!important;min-height:0!important;border-radius:0!important;box-shadow:none!important;border:1px solid #ddd!important;break-inside:auto!important;position:relative!important;z-index:1!important;background:rgba(255,255,255,.88)!important}
-  .project-grid{min-width:100%!important;grid-template-columns:8mm 48mm 42mm 62mm 10mm 50mm 8mm 22mm 23mm 0 0!important}
+  .project-grid{min-width:100%!important;grid-template-columns:8mm 42mm 34mm 44mm 10mm 42mm 8mm 20mm 20mm 49mm 0!important}
   .summary-table .project-grid{grid-template-columns:8mm 12mm 72mm 8mm 24mm 24mm!important}
-  .project-cell{padding:4px 5px!important;font-size:8px!important;line-height:1.16!important;overflow:visible!important}
-  .project-cell:nth-child(-n+9){display:block!important}
-  .project-head-row .project-cell:nth-child(-n+9){display:flex!important}
+  .project-cell{padding:4px 5px!important;font-size:8px!important;line-height:1.16!important;overflow:visible!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important}
+  .project-cell:nth-child(-n+10){display:block!important}
+  .project-head-row .project-cell:nth-child(-n+10){display:flex!important}
   .project-cell:nth-child(1){order:1!important;grid-column:1!important}.project-cell:nth-child(2){order:2!important;grid-column:2!important}.project-cell:nth-child(3){order:3!important;grid-column:3!important}.project-cell:nth-child(4){order:4!important;grid-column:4!important}.project-cell:nth-child(5){order:5!important;grid-column:5!important}.project-cell:nth-child(6){order:6!important;grid-column:6!important}.project-cell:nth-child(7){order:7!important;grid-column:7!important}.project-cell:nth-child(8){order:8!important;grid-column:8!important}.project-cell:nth-child(9){order:9!important;grid-column:9!important}.project-cell:nth-child(10){order:10!important;grid-column:10!important}.project-cell:nth-child(11){order:11!important;grid-column:11!important}
   .project-head-row{position:static!important}
   .project-head-row .project-cell{height:auto!important;min-height:24px!important;max-height:none!important;padding:5px 6px!important;background:#df7a12!important;color:#fff!important}
   .project-cell strong{font-size:9px!important;line-height:1.1!important}
   .project-cell small{font-size:7px!important}
-  .project-grid .project-cell:nth-child(10),.project-grid .project-cell:nth-child(11){display:none!important}
-  .project-comment{border:0!important;background:transparent!important;min-height:0!important;padding:0!important;resize:none!important}
+  .project-grid .project-cell:nth-child(11){display:none!important}
+  .project-comment{border:0!important;background:transparent!important;min-height:0!important;padding:0!important;resize:none!important;white-space:pre-wrap!important;overflow:visible!important}
   .material-summary{display:block!important;margin-top:10px!important;max-height:none!important;min-height:0!important;border-radius:0!important;overflow:visible!important}
   .summary-title{padding:7px 10px!important}
+  .summary-table .project-cell:nth-child(1){display:block!important;grid-column:1!important;order:1!important}
+  .summary-table .project-cell:nth-child(5){display:block!important;grid-column:2!important;order:2!important}
+  .summary-table .project-cell:nth-child(6){display:block!important;grid-column:3!important;order:3!important}
+  .summary-table .project-cell:nth-child(7){display:block!important;grid-column:4!important;order:4!important}
+  .summary-table .project-cell:nth-child(8){display:block!important;grid-column:5!important;order:5!important}
+  .summary-table .project-cell:nth-child(9){display:block!important;grid-column:6!important;order:6!important}
+  .summary-table .project-cell:nth-child(2),.summary-table .project-cell:nth-child(3),.summary-table .project-cell:nth-child(4),.summary-table .project-cell:nth-child(10),.summary-table .project-cell:nth-child(11){display:none!important}
+  .summary-table .project-head-row .project-cell:nth-child(1),.summary-table .project-head-row .project-cell:nth-child(5),.summary-table .project-head-row .project-cell:nth-child(6),.summary-table .project-head-row .project-cell:nth-child(7),.summary-table .project-head-row .project-cell:nth-child(8),.summary-table .project-head-row .project-cell:nth-child(9){display:flex!important}
 }
 </style>
 </head>
@@ -282,7 +290,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-21-174811">build 2026-06-21-1748</div>
+<div class="build-marker" hidden data-cache="build-2026-06-21-180129">build 2026-06-21-1801</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -1937,7 +1945,6 @@ openUrl("assets/atlas/atlas.html");
 </script>
 </body>
 </html>
-
 
 
 

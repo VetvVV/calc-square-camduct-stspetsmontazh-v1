@@ -98,9 +98,9 @@ if (Has-Diff 'displayProductName|normalizeProjectItem|productKeyFromName') {
     Add-Bullet 'Fix saved specification product names so they follow the selected interface language.'
 }
 
-if (Has-Diff '@media print|window\.print|project-actions|mobile-switch') {
+if (Has-Diff '@media print|window\.print|project-actions|mobile-switch|project-comment|summary-table|grid-template-columns') {
     Add-Part 'print layout'
-    Add-Bullet 'Clean up print layout and hide screen-only controls from printed specifications.'
+    Add-Bullet 'Refine printed specification columns, comments, wrapping, and material summary layout.'
 }
 
 if (Has-Diff 'logo-circle|watermark|ST SPETSMONTAZH') {
