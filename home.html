@@ -28,7 +28,7 @@ button,input,select,textarea{font:inherit}
 .guest-counter{border:1px solid #ead4b5;border-radius:7px;background:#fff7ed;color:#9a5800;padding:8px 11px;font-size:12px;line-height:1;font-weight:800}
 body:not([data-role="guest"]) .guest-counter{display:none}
 body[data-role="guest"] .role-chip{display:none}
-.app{--project-width:78vw;height:calc(100vh - 72px);display:grid;grid-template-columns:minmax(520px,min(var(--project-width),calc(100vw - 360px))) 10px minmax(300px,1fr);gap:10px;padding:0}
+.app{--project-width:78vw;height:calc(100vh - 72px);display:grid;grid-template-columns:minmax(300px,1fr) 10px minmax(520px,min(var(--project-width),calc(100vw - 360px)));gap:10px;padding:0}
 body[data-layout="project"] .app{grid-template-columns:minmax(0,1fr)}
 body[data-layout="atlas"] .app{grid-template-columns:minmax(0,1fr)}
 body[data-layout="project"] .work{display:none}
@@ -41,7 +41,12 @@ body[data-role="guest"] .side,body[data-role="guest"] .resizer,body[data-role="g
 body[data-role="guest"] .top-nav button:not(#topAtlas){display:none}
 body[data-role="user"] .project-comment{background:#f6f7f8;color:#6b7280;resize:none;pointer-events:none}
 .side,.work{background:transparent;border-radius:0;box-shadow:none}
-.side{padding:0 18px 0 0;display:flex;flex-direction:column;gap:10px;min-height:0}
+.work{order:1}
+.resizer{order:2}
+.side{order:3;padding:0 0 0 18px;display:flex;flex-direction:column;gap:10px;min-height:0}
+body[data-panel-layout="project-left"] .app{grid-template-columns:minmax(520px,min(var(--project-width),calc(100vw - 360px))) 10px minmax(300px,1fr)}
+body[data-panel-layout="project-left"] .work{order:3}
+body[data-panel-layout="project-left"] .side{order:1;padding:0 18px 0 0}
 body.summary-flow .side{overflow-y:auto;overflow-x:hidden;padding-bottom:16px}
 .nav-actions{display:none;justify-content:flex-start;gap:6px}
 body[data-layout="project"] .nav-actions{display:flex}
@@ -61,6 +66,7 @@ body.spec-controls-collapsed .spec-controls{max-height:0;opacity:0;transform:tra
 .spec-controls button,.spec-controls label{height:22px;border:1px solid #cfd3da;border-radius:6px;background:#fff;color:#4b5563;padding:3px 7px;font-size:10.5px;font-weight:600;font-style:italic;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
 .spec-controls button{cursor:pointer;font-style:normal}
 .spec-controls input{margin:0}
+.spec-controls select{height:18px;min-width:106px;border:0;background:transparent;color:#4b5563;font-size:10.5px;font-weight:700}
 .project-head-row .project-cell.sortable{cursor:pointer}
 .project-head-row .project-cell.sortable:hover{background:#c96d0b}
 .project-head-row .project-cell.sortable::after{content:attr(data-sort-mark);margin-left:auto;color:#fff;font-size:11px}
@@ -71,7 +77,8 @@ body.reordering-cols{cursor:grabbing;user-select:none}
 .name-dims{display:none;color:#6b7280;margin-top:4px;font-size:12px;font-weight:600;white-space:normal;overflow-wrap:anywhere;max-width:100%}
 body.dims-under-name:not(.dims-column-off) .name-dims:not(:empty){display:block}
 .name-dims:empty{display:none}
-.project-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.project-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.project-head .spec-panel{flex:1 1 260px}
 .project-head h2{font-size:18px;margin:0}
 .project-head-tools{display:flex;align-items:center;gap:8px}
 .project-table{overflow-y:auto;overflow-x:hidden;border:0;border-radius:16px;background:#fff;min-height:120px;width:100%;max-width:100%;margin:0;flex:1 1 auto;box-shadow:0 4px 18px rgba(0,0,0,.06)}
@@ -290,7 +297,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-21-181036">build 2026-06-21-1810</div>
+<div class="build-marker" hidden data-cache="build-2026-06-22-023128">build 2026-06-22-0231</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -329,28 +336,34 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
           <input id="projectObject" data-i-ph="projectObject" placeholder="Объект">
         </div>
       </div>
-      <div class="spec-panel">
-        <button class="spec-panel-toggle" id="specPanelToggle" type="button" data-i="specSettings" aria-controls="specControls">Настройки</button>
-        <div class="spec-controls" id="specControls">
-          <button type="button" id="autoFitAll" data-i="autoWidth">Автоширина</button>
-          <button type="button" id="resetLayout" data-i="resetView">Сбросить вид</button>
-          <button type="button" id="resetSorting" data-i="resetSort">Сбросить порядок</button>
-          <label><input type="checkbox" id="dimsUnderName"> <span data-i="dimsUnderName">Размеры под названием</span></label>
-          <label><input type="checkbox" id="summaryPinned" checked> <span data-i="summaryPinned">Фиксировать итог</span></label>
-          <label><input type="checkbox" data-col-toggle="0" checked> №</label>
-          <label><input type="checkbox" data-col-toggle="1" checked> <span data-i="name">Наименование</span></label>
-          <label><input type="checkbox" data-col-toggle="2" checked> <span data-i="dimensions">Размеры</span></label>
-          <label><input type="checkbox" data-col-toggle="3" checked> <span data-i="description">Описание</span></label>
-          <label><input type="checkbox" data-col-toggle="4" checked> <span data-i="quantity">К-во</span></label>
-          <label><input type="checkbox" data-col-toggle="5" checked> <span data-i="material">Материал</span></label>
-          <label><input type="checkbox" data-col-toggle="6" checked> t</label>
-          <label><input type="checkbox" data-col-toggle="7" checked> <span data-i="area">Площадь</span></label>
-          <label><input type="checkbox" data-col-toggle="8" checked> <span data-i="mass">Масса</span></label>
-          <label><input type="checkbox" data-col-toggle="9" checked> <span data-i="comment">Комментарий</span></label>
-        </div>
-      </div>
       <div class="project-head">
         <h2 data-i="spec">Спецификация</h2>
+        <div class="spec-panel">
+          <button class="spec-panel-toggle" id="specPanelToggle" type="button" data-i="specSettings" aria-controls="specControls">Настройки</button>
+          <div class="spec-controls" id="specControls">
+            <label><span data-i="panelLayout">Панели</span>
+              <select id="panelLayout">
+                <option value="atlas-left" data-i="atlasLeft">Атлас слева</option>
+                <option value="project-left" data-i="projectLeft">Проект слева</option>
+              </select>
+            </label>
+            <button type="button" id="autoFitAll" data-i="autoWidth">Автоширина</button>
+            <button type="button" id="resetLayout" data-i="resetView">Сбросить вид</button>
+            <button type="button" id="resetSorting" data-i="resetSort">Сбросить порядок</button>
+            <label><input type="checkbox" id="dimsUnderName"> <span data-i="dimsUnderName">Размеры под названием</span></label>
+            <label><input type="checkbox" id="summaryPinned" checked> <span data-i="summaryPinned">Фиксировать итог</span></label>
+            <label><input type="checkbox" data-col-toggle="0" checked> №</label>
+            <label><input type="checkbox" data-col-toggle="1" checked> <span data-i="name">Наименование</span></label>
+            <label><input type="checkbox" data-col-toggle="2" checked> <span data-i="dimensions">Размеры</span></label>
+            <label><input type="checkbox" data-col-toggle="3" checked> <span data-i="description">Описание</span></label>
+            <label><input type="checkbox" data-col-toggle="4" checked> <span data-i="quantity">К-во</span></label>
+            <label><input type="checkbox" data-col-toggle="5" checked> <span data-i="material">Материал</span></label>
+            <label><input type="checkbox" data-col-toggle="6" checked> t</label>
+            <label><input type="checkbox" data-col-toggle="7" checked> <span data-i="area">Площадь</span></label>
+            <label><input type="checkbox" data-col-toggle="8" checked> <span data-i="mass">Масса</span></label>
+            <label><input type="checkbox" data-col-toggle="9" checked> <span data-i="comment">Комментарий</span></label>
+          </div>
+        </div>
         <div class="project-head-tools">
           <span id="count">0</span>
           <button class="project-clear-all" id="clearProjectHeader" type="button" title="Очистить спецификацию">×</button>
@@ -513,6 +526,7 @@ const projectNameInput=document.getElementById("projectName");
 const projectCustomerInput=document.getElementById("projectCustomer");
 const projectObjectInput=document.getElementById("projectObject");
 const specPanelToggle=document.getElementById("specPanelToggle");
+const panelLayoutSelect=document.getElementById("panelLayout");
 const dimsUnderNameInput=document.getElementById("dimsUnderName");
 const summaryPinnedInput=document.getElementById("summaryPinned");
 const filterMenu=document.getElementById("filterMenu");
@@ -549,7 +563,7 @@ const UI_TEXT={
   ru:{
     language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",logout:"Выход",clear:"Очистить",spec:"Спецификация",showPassword:"Показать пароль",hidePassword:"Скрыть пароль",
     projectSpec:"Проект / Спецификация",projectName:"Название проекта",projectCustomer:"Заказчик",projectObject:"Объект",
-    autoWidth:"Автоширина",resetView:"Сбросить вид",resetSort:"Сбросить порядок",specSettings:"Настройки",filterNo:"№",filterName:"Наименование",filterQty:"К-во",filterMaterial:"Материал",filterThickness:"t",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
+    autoWidth:"Автоширина",resetView:"Сбросить вид",resetSort:"Сбросить порядок",specSettings:"Настройки",panelLayout:"Панели",atlasLeft:"Атлас слева",projectLeft:"Проект слева",filterNo:"№",filterName:"Наименование",filterQty:"К-во",filterMaterial:"Материал",filterThickness:"t",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
     name:"Наименование",dimensions:"Размеры",description:"Описание",quantity:"К-во",
     material:"Материал",area:"Площадь",mass:"Масса",comment:"Комментарий",
     total:"Итого",totalAreaLabel:"Итого площадь",totalMassLabel:"Итого масса",
@@ -568,7 +582,7 @@ const UI_TEXT={
   uk:{
     language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вихід",clear:"Очистити",spec:"Специфікація",showPassword:"Показати пароль",hidePassword:"Сховати пароль",
     projectSpec:"Проєкт / Специфікація",projectName:"Назва проєкту",projectCustomer:"Замовник",projectObject:"Об'єкт",
-    autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути порядок",specSettings:"Налаштування",filterNo:"№",filterName:"Найменування",filterQty:"К-ть",filterMaterial:"Матеріал",filterThickness:"t",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
+    autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути порядок",specSettings:"Налаштування",panelLayout:"Панелі",atlasLeft:"Атлас ліворуч",projectLeft:"Проєкт ліворуч",filterNo:"№",filterName:"Найменування",filterQty:"К-ть",filterMaterial:"Матеріал",filterThickness:"t",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
     name:"Найменування",dimensions:"Розміри",description:"Опис",quantity:"К-ть",
     material:"Матеріал",area:"Площа",mass:"Маса",comment:"Коментар",
     total:"Підсумок",totalAreaLabel:"Підсумкова площа",totalMassLabel:"Підсумкова маса",
@@ -587,7 +601,7 @@ const UI_TEXT={
   en:{
     language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Logout",clear:"Clear",spec:"Specification",showPassword:"Show password",hidePassword:"Hide password",
     projectSpec:"Project / Specification",projectName:"Project name",projectCustomer:"Customer",projectObject:"Object",
-    autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset order",specSettings:"Settings",filterNo:"No.",filterName:"Item",filterQty:"Qty",filterMaterial:"Material",filterThickness:"t",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
+    autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset order",specSettings:"Settings",panelLayout:"Panels",atlasLeft:"Atlas left",projectLeft:"Project left",filterNo:"No.",filterName:"Item",filterQty:"Qty",filterMaterial:"Material",filterThickness:"t",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
     name:"Item",dimensions:"Dimensions",description:"Description",quantity:"Qty",
     material:"Material",area:"Area",mass:"Mass",comment:"Comment",
     total:"Total",totalAreaLabel:"Total area",totalMassLabel:"Total mass",
@@ -830,6 +844,19 @@ function toggleSpecControls(){
   saveInterfaceState({specControlsCollapsed:!specControlsCollapsed()});
   applySpecControlsState();
   setTimeout(()=>{applyColumnWidths();updateProjectOverflow()},240);
+}
+function currentPanelLayout(){
+  return readInterfaceState().panelLayout==="project-left"?"project-left":"atlas-left";
+}
+function applyPanelLayout(){
+  const panelLayout=currentPanelLayout();
+  document.body.dataset.panelLayout=panelLayout;
+  panelLayoutSelect.value=panelLayout;
+  requestAnimationFrame(()=>{applyColumnWidths();updateProjectOverflow()});
+}
+function setPanelLayout(panelLayout){
+  saveInterfaceState({panelLayout:panelLayout==="project-left"?"project-left":"atlas-left"});
+  applyPanelLayout();
 }
 function currentFilters(){
   const saved=readInterfaceState().filters||{};
@@ -1762,6 +1789,7 @@ projectNameInput.addEventListener("input",saveProjectMeta);
 projectCustomerInput.addEventListener("input",saveProjectMeta);
 projectObjectInput.addEventListener("input",saveProjectMeta);
 specPanelToggle.addEventListener("click",toggleSpecControls);
+panelLayoutSelect.addEventListener("change",()=>setPanelLayout(panelLayoutSelect.value));
 dimsUnderNameInput.addEventListener("change",()=>{
   const visible=currentColumnVisibility();
   visible[2]=!dimsUnderNameInput.checked;
@@ -1900,7 +1928,10 @@ function restoreProjectWidth(){
 }
 function bindResizer(){
   let startX=0,startWidth=0;
-  const move=(event)=>setProjectWidth(startWidth+event.clientX-startX);
+  const move=(event)=>{
+    const delta=event.clientX-startX;
+    setProjectWidth(currentPanelLayout()==="project-left"?startWidth+delta:startWidth-delta);
+  };
   const up=()=>{
     document.body.style.userSelect="";
     window.removeEventListener("pointermove",move);
@@ -1936,6 +1967,7 @@ mobileSwitch.addEventListener("click",(event)=>{
   if(button)setMobileView(button.dataset.mobileView);
 });
 window.addEventListener("resize",()=>{clampProjectWidth();applyColumnWidths();updateProjectOverflow();setMobileView(localStorage.getItem(mobileViewKey)||"atlas")});
+applyPanelLayout();
 restoreProjectWidth();
 setLayoutMode(localStorage.getItem(layoutModeKey)||"split");
 bindResizer();
@@ -1946,16 +1978,6 @@ openUrl("assets/atlas/atlas.html");
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
 
 
 

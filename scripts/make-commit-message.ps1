@@ -134,6 +134,11 @@ if (Has-Diff 'spec-panel|spec-controls|specControlsCollapsed|specSettings|resetV
     Add-Bullet 'Compact the specification settings panel and keep its collapsed state remembered.'
 }
 
+if (Has-Diff 'panelLayout|currentPanelLayout|data-panel-layout|project-left|grid-template-columns:minmax\(300px,1fr\) 10px|minmax\(520px,min\(var\(--project-width\)|\.work\{order:1\}|\.side\{order:3') {
+    Add-Part 'workspace layout'
+    Add-Bullet 'Add a saved left/right panel layout switch for the atlas and project workspace.'
+}
+
 if ($Parts.Count -eq 0) {
     Add-Part 'Calc Square'
 }
