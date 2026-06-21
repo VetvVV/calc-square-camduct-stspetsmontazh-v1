@@ -168,6 +168,10 @@ body[data-role="user"] .project-actions button:hover{background:#fff3df;color:#b
 .login-card h2{margin:0 0 22px;text-align:center;color:#5b6573;font-size:20px;font-weight:800;font-style:italic;text-transform:uppercase}
 .login-close{position:absolute;right:12px;top:10px;width:30px;height:30px;border:0;background:transparent;color:#6b7280;font-size:26px;line-height:1;cursor:pointer}
 .login-field{width:100%;height:38px;margin-bottom:12px;border:1px solid #d1d5db;border-radius:7px;background:#fff;padding:0 12px;font-size:13px}
+.password-wrap{position:relative;margin-bottom:12px}
+.password-wrap .login-field{margin-bottom:0;padding-right:42px}
+.password-toggle{position:absolute;right:5px;top:5px;width:28px;height:28px;border:0;border-radius:6px;background:#f3f4f6;color:#4b5563;font-size:14px;line-height:1;cursor:pointer}
+.password-toggle:hover{background:#fff3df;color:#b86205}
 .login-submit,.register-submit,.guest-submit{width:100%;height:38px;border:0;border-radius:7px;font-weight:800;text-transform:uppercase;cursor:pointer}
 .login-submit{background:var(--accent);color:#fff}
 .register-submit{margin-top:8px;background:#fff;color:var(--accent);border:1px solid var(--accent)}
@@ -222,10 +226,34 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   .mobile-switch{display:flex}
   .project-table{max-height:calc(100vh - 260px)}
 }
+@media print{
+  @page{margin:10mm}
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important}
+  body{font-size:10px!important;color:#111!important}
+  .topbar,.work,.resizer,.mobile-switch,.nav-actions,.spec-panel,.project-actions,.project-row-actions,.project-clear-all,.project-edit,.project-remove,.filter-menu,.clear-menu,.project-tip,.login-modal{display:none!important}
+  .app{display:block!important;height:auto!important;min-height:0!important;padding:0!important}
+  .side{display:block!important;padding:0!important;overflow:visible!important;min-height:0!important}
+  .project{display:block!important;min-height:0!important}
+  .project-hero{padding:0 0 8px!important}
+  .project-hero h2{font-size:22px!important;margin:0 0 10px!important}
+  .project-meta{gap:6px!important}
+  .project-meta input{height:26px!important;font-size:10px!important;border-color:#ddd!important}
+  .project-head h2{font-size:14px!important;margin:0 0 4px!important}
+  .project-table,.summary-table{overflow:visible!important;max-height:none!important;min-height:0!important;border-radius:0!important;box-shadow:none!important;border:1px solid #ddd!important}
+  .project-grid{min-width:100%!important;grid-template-columns:34px 1.6fr 1.15fr 1.5fr 42px 1.35fr 34px 58px 58px 1.15fr 0!important}
+  .summary-table .project-grid{grid-template-columns:34px 42px 1.6fr 34px 58px 58px!important}
+  .project-cell{padding:5px 6px!important;font-size:9px!important;line-height:1.18!important}
+  .project-head-row{position:static!important}
+  .project-head-row .project-cell{height:auto!important;min-height:24px!important;max-height:none!important;padding:5px 6px!important;background:#df7a12!important;color:#fff!important}
+  .project-grid .project-cell:nth-child(11){display:none!important}
+  .project-comment{border:0!important;background:transparent!important;min-height:0!important;padding:0!important;resize:none!important}
+  .material-summary{display:block!important;margin-top:10px!important;max-height:none!important;min-height:0!important;border-radius:0!important;overflow:visible!important}
+  .summary-title{padding:7px 10px!important}
+}
 </style>
 </head>
 <body>
-<div class="build-marker" hidden data-cache="build-2026-06-21-162652">build 2026-06-21-1626</div>
+<div class="build-marker" hidden data-cache="build-2026-06-21-164534">build 2026-06-21-1645</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/calc_square_logo.png" alt="">
@@ -369,7 +397,10 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
     <h2 data-i="cabinet">Кабинет</h2>
     <div class="login-help" id="loginHelp"></div>
     <input class="login-field" id="loginName" autocomplete="username" data-i-ph="loginName" placeholder="Логин">
-    <input class="login-field" id="loginPassword" type="password" autocomplete="current-password" data-i-ph="loginPassword" placeholder="Пароль">
+    <div class="password-wrap">
+      <input class="login-field" id="loginPassword" type="password" autocomplete="current-password" data-i-ph="loginPassword" placeholder="Пароль">
+      <button class="password-toggle" id="passwordToggle" type="button" aria-label="Показать пароль" title="Показать пароль">◐</button>
+    </div>
     <button class="login-submit" type="submit" data-i="signIn">Войти</button>
     <button class="register-submit" id="registerBtn" type="button" data-i="registerDemo">Зарегистрировать демо</button>
     <div class="role-grid" id="roleGrid">
@@ -430,6 +461,7 @@ const accessLater=document.getElementById("accessLater");
 const loginForm=document.getElementById("loginForm");
 const loginName=document.getElementById("loginName");
 const loginPassword=document.getElementById("loginPassword");
+const passwordToggle=document.getElementById("passwordToggle");
 const loginError=document.getElementById("loginError");
 const registerBtn=document.getElementById("registerBtn");
 const loginHelp=document.getElementById("loginHelp");
@@ -479,7 +511,7 @@ let selectedLoginRole="guest";
 let layoutMode="split";
 const UI_TEXT={
   ru:{
-    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",logout:"Выход",clear:"Очистить",spec:"Спецификация",
+    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",logout:"Выход",clear:"Очистить",spec:"Спецификация",showPassword:"Показать пароль",hidePassword:"Скрыть пароль",
     projectSpec:"Проект / Спецификация",projectName:"Название проекта",projectCustomer:"Заказчик",projectObject:"Объект",
     autoWidth:"Автоширина",resetView:"Скинуть вид",resetSort:"Сбросить порядок",specSettings:"Настройки спецификации",filterNo:"№",filterName:"Наименование",filterQty:"К-во",filterMaterial:"Материал",filterThickness:"t",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
     name:"Наименование",dimensions:"Размеры",description:"Описание",quantity:"К-во",
@@ -498,7 +530,7 @@ const UI_TEXT={
     ,languageConflictTitle:"Проверьте язык строки",languageConflictProduct:"Название изделия не распознано в каталоге",languageConflictMaterial:"Материал не распознан",languageConflictOpen:"Файл открыт, но часть строк требует проверки локализации:"
   },
   uk:{
-    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вихід",clear:"Очистити",spec:"Специфікація",
+    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вихід",clear:"Очистити",spec:"Специфікація",showPassword:"Показати пароль",hidePassword:"Сховати пароль",
     projectSpec:"Проєкт / Специфікація",projectName:"Назва проєкту",projectCustomer:"Замовник",projectObject:"Об'єкт",
     autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути порядок",specSettings:"Налаштування специфікації",filterNo:"№",filterName:"Найменування",filterQty:"К-ть",filterMaterial:"Матеріал",filterThickness:"t",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
     name:"Найменування",dimensions:"Розміри",description:"Опис",quantity:"К-ть",
@@ -517,7 +549,7 @@ const UI_TEXT={
     ,languageConflictTitle:"Перевірте мову рядка",languageConflictProduct:"Назву виробу не розпізнано в каталозі",languageConflictMaterial:"Матеріал не розпізнано",languageConflictOpen:"Файл відкрито, але частина рядків потребує перевірки локалізації:"
   },
   en:{
-    language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Logout",clear:"Clear",spec:"Specification",
+    language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Logout",clear:"Clear",spec:"Specification",showPassword:"Show password",hidePassword:"Hide password",
     projectSpec:"Project / Specification",projectName:"Project name",projectCustomer:"Customer",projectObject:"Object",
     autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset order",specSettings:"Specification settings",filterNo:"No.",filterName:"Item",filterQty:"Qty",filterMaterial:"Material",filterThickness:"t",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
     name:"Item",dimensions:"Dimensions",description:"Description",quantity:"Qty",
@@ -626,6 +658,7 @@ function applyLanguage(){
   resizer.setAttribute("aria-label",t("resize"));
   document.querySelectorAll("[data-i]").forEach((node)=>{node.textContent=t(node.dataset.i)});
   document.querySelectorAll("[data-i-ph]").forEach((node)=>{node.placeholder=t(node.dataset.iPh)});
+  updatePasswordToggle();
   renderRole();
   bindColumnResizers();
   renderProject();
@@ -911,6 +944,14 @@ function updateLoginInfo(){
   const adminUnlocked=selectedLoginRole==="admin"||(selectedLoginRole==="client"&&loginPassword.value===adminUnlockPassword);
   adminButton?.classList.toggle("admin-unlocked",adminUnlocked);
 }
+function updatePasswordToggle(){
+  if(!passwordToggle)return;
+  const visible=loginPassword.type==="text";
+  const label=t(visible?"hidePassword":"showPassword");
+  passwordToggle.textContent=visible?"◑":"◐";
+  passwordToggle.setAttribute("aria-label",label);
+  passwordToggle.title=label;
+}
 function renderRole(){
   const role=currentRole();
   document.body.dataset.role=role;
@@ -1037,7 +1078,7 @@ function openUrl(url,options={}){
 }
 function normalizeProjectItem(item){
   const lookupName=item.name||item.title||item.label||item.description||item.size||"";
-  const productType=item.productType||productKeyFromName(lookupName);
+  const productType=PRODUCT_TEXT[item.productType]?item.productType:productKeyFromName(lookupName);
   const materialKey=item.materialKey||materialKeyFromLabel(item.material);
   const dimensions=typeof item.dimensions==="string"||item.dimensions&&typeof item.dimensions==="object"?item.dimensions:(item.size||{});
   return {
@@ -1602,7 +1643,7 @@ function productKeyFromName(name){
     ||"";
 }
 function displayProductName(item){
-  const key=item.productType||productKeyFromName(item.name);
+  const key=PRODUCT_TEXT[item.productType]?item.productType:productKeyFromName(item.name||item.title||item.label||item.description||item.size);
   return pickText(PRODUCT_TEXT[key],item.name||t("product"));
 }
 function displayMaterial(item){
@@ -1756,6 +1797,11 @@ document.getElementById("loginClose").addEventListener("click",closeLogin);
 loginForm.addEventListener("submit",(event)=>{event.preventDefault();tryLogin()});
 registerBtn.addEventListener("click",registerDemoAccount);
 loginPassword.addEventListener("input",updateLoginInfo);
+passwordToggle.addEventListener("click",()=>{
+  loginPassword.type=loginPassword.type==="password"?"text":"password";
+  updatePasswordToggle();
+  loginPassword.focus();
+});
 loginModal.addEventListener("click",(event)=>{if(event.target===loginModal)closeLogin()});
 accessClose.addEventListener("click",closeAccessInvite);
 accessLater.addEventListener("click",closeAccessInvite);
@@ -1863,10 +1909,6 @@ openUrl("assets/atlas/atlas.html");
 </script>
 </body>
 </html>
-
-
-
-
 
 
 

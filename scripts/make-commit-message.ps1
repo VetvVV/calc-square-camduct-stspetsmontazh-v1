@@ -93,6 +93,21 @@ if (Has-Diff 'catalog localization ok|ui localization ok|checkDictionaryParity|c
     Add-Bullet 'Strengthen RU/UK/EN localization checks and saved-spec normalization.'
 }
 
+if (Has-Diff 'displayProductName|normalizeProjectItem|productKeyFromName') {
+    Add-Part 'specification localization'
+    Add-Bullet 'Fix saved specification product names so they follow the selected interface language.'
+}
+
+if (Has-Diff '@media print|window\.print|project-actions|mobile-switch') {
+    Add-Part 'print layout'
+    Add-Bullet 'Clean up print layout and hide screen-only controls from printed specifications.'
+}
+
+if (Has-Diff 'passwordToggle|showPassword|hidePassword|password-wrap|password-toggle') {
+    Add-Part 'login UI'
+    Add-Bullet 'Add password visibility control to the login form.'
+}
+
 if (Has-Diff 'catalog assets ok|catalog modules ok|catalog keys ok|checkAsset|checkUnique|CALC_CATALOG') {
     Add-Part 'atlas validation'
     Add-Bullet 'Validate atlas assets, catalog keys, and calculator module coverage before publishing.'
