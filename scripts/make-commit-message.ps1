@@ -12,6 +12,7 @@ $Root = Resolve-Path (Join-Path $PSScriptRoot '..')
 Push-Location $Root
 try {
     $Status = git status --short
+    $Diff = git diff --unified=0 --no-ext-diff
 } finally {
     Pop-Location
 }
@@ -31,45 +32,97 @@ function Has-File([string]$Pattern) {
     return [bool]($Files | Where-Object { $_ -match $Pattern } | Select-Object -First 1)
 }
 
+function Has-Diff([string]$Pattern) {
+    return [bool]($Diff | Select-String -Pattern $Pattern -Quiet)
+}
+
+function Add-Part([string]$Part) {
+    if (-not $Parts.Contains($Part)) {
+        $Parts.Add($Part) | Out-Null
+    }
+}
+
+function Add-Bullet([string]$Text) {
+    if (-not $Bullets.Contains($Text)) {
+        $Bullets.Add($Text) | Out-Null
+    }
+}
+
 if (Has-File '(^|/)publish\.bat$|(^|/)scripts/') {
-    $Parts.Add('publication flow') | Out-Null
-    $Bullets.Add('Update PublishBot checks and publication scripts.') | Out-Null
+    Add-Part 'publication flow'
+    Add-Bullet 'Update PublishBot checks and publication scripts.'
 }
 
 if (Has-File '(^|/)VERSION\.txt$|(^|/)home\.html$') {
-    $Parts.Add('build marker') | Out-Null
-    $Bullets.Add("Update build marker to $BuildLabel.") | Out-Null
+    Add-Part 'build marker'
+    Add-Bullet "Update build marker to $BuildLabel."
 }
 
 if (Has-File '(^|/)assets/atlas/|(^|/)assets\\atlas\\') {
-    $Parts.Add('atlas') | Out-Null
-    $Bullets.Add('Update atlas catalog behavior or assets.') | Out-Null
+    Add-Part 'atlas'
+    Add-Bullet 'Update atlas catalog behavior or assets.'
 }
 
 if (Has-File '(^|/)modules/|(^|/)modules\\') {
-    $Parts.Add('calculators') | Out-Null
-    $Bullets.Add('Update calculator modules or shared calculator panel.') | Out-Null
+    Add-Part 'calculators'
+    Add-Bullet 'Update calculator modules or shared calculator panel.'
 }
 
 if (Has-File '(^|/)assets/fonts/|(^|/)assets\\fonts\\') {
-    $Parts.Add('fonts') | Out-Null
-    $Bullets.Add('Update local font assets.') | Out-Null
+    Add-Part 'fonts'
+    Add-Bullet 'Update local font assets.'
 }
 
 if (Has-File '(^|/)README\.md$|(^|/)PUBLISH_CHECKLIST\.md$|(^|/)docs/') {
-    $Parts.Add('docs') | Out-Null
-    $Bullets.Add('Update project documentation.') | Out-Null
+    Add-Part 'docs'
+    Add-Bullet 'Update project documentation.'
+}
+
+if (Has-Diff 'MATERIAL_TEXT|materialKeyFromLabel|const materials=|materials ok|aluminum|Алюминий|Алюміній') {
+    Add-Part 'materials'
+    Add-Bullet 'Synchronize material dictionaries, calculator materials, and material validation.'
+}
+
+if (Has-Diff 'role matrix ok|canModifyProject|canAddProject|gatedProjectAction|guestDailyLimit|data-role="user"') {
+    Add-Part 'roles'
+    Add-Bullet 'Keep role permissions guarded for guest, user, client, and admin workflows.'
+}
+
+if (Has-Diff 'catalog localization ok|ui localization ok|checkDictionaryParity|checkTranslationUsage|PRODUCT_TEXT|PRODUCT_ALIASES') {
+    Add-Part 'localization'
+    Add-Bullet 'Strengthen RU/UK/EN localization checks and saved-spec normalization.'
+}
+
+if (Has-Diff 'catalog assets ok|catalog modules ok|catalog keys ok|checkAsset|checkUnique|CALC_CATALOG') {
+    Add-Part 'atlas validation'
+    Add-Bullet 'Validate atlas assets, catalog keys, and calculator module coverage before publishing.'
+}
+
+if (Has-Diff 'local fonts ok|exo2\.css|font-family:"Exo 2"|assets/fonts') {
+    Add-Part 'fonts'
+    Add-Bullet 'Verify bundled Exo 2 font files and prevent external font dependencies.'
+}
+
+if (Has-Diff 'dev traces ok|debugger|console\.log|TODO|FIXME') {
+    Add-Part 'publication flow'
+    Add-Bullet 'Check for debugger statements and development traces before publishing.'
 }
 
 if ($Parts.Count -eq 0) {
-    $Parts.Add('Calc Square') | Out-Null
+    Add-Part 'Calc Square'
 }
 
 if ($Bullets.Count -eq 0) {
-    $Bullets.Add('Publish current Calc Square changes.') | Out-Null
+    Add-Bullet 'Publish current Calc Square changes.'
 }
 
-$Subject = 'Publish ' + (($Parts | Select-Object -Unique) -join ', ') + ' - ' + $BuildLabel
+$UniqueParts = @($Parts | Select-Object -Unique)
+$SubjectScope = if ($UniqueParts.Count -gt 4) {
+    'Calc Square safeguards'
+} else {
+    $UniqueParts -join ', '
+}
+$Subject = 'Publish ' + $SubjectScope + ' - ' + $BuildLabel
 $ChangedFiles = $Files | Sort-Object -Unique | ForEach-Object { '- ' + $_ }
 
 $Message = @(
@@ -81,7 +134,7 @@ $Message = @(
     'Validation:',
     '- Publication checks passed before commit.',
     '- JavaScript syntax checks passed.',
-    '- Catalog localization, local images, and calculator modules were checked.',
+    '- UI and catalog localization, materials, role matrix, local images, calculator modules, catalog keys, local fonts, and development traces were checked.',
     '',
     'Files:',
     $ChangedFiles

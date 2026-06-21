@@ -8,8 +8,13 @@ Use this checklist before publishing changes to GitHub Pages. A full pass is nee
 - Confirm `Publication checks passed.`
 - Confirm `catalog localization ok` is printed.
 - Confirm `ui localization ok` is printed.
+- Confirm `materials ok` is printed.
 - Confirm `catalog assets ok` is printed.
 - Confirm `catalog modules ok` is printed.
+- Confirm `catalog keys ok` is printed.
+- Confirm `role matrix ok` is printed.
+- Confirm `local fonts ok` is printed.
+- Confirm `dev traces ok` is printed, or review any development trace warnings.
 - Confirm the build label changed in the console.
 - Confirm the automatic commit message lists the expected files.
 

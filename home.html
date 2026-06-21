@@ -225,7 +225,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
 </style>
 </head>
 <body>
-<div class="build-marker" hidden data-cache="build-2026-06-21-151409">build 2026-06-21-1514</div>
+<div class="build-marker" hidden data-cache="build-2026-06-21-162652">build 2026-06-21-1626</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/calc_square_logo.png" alt="">
@@ -594,7 +594,8 @@ const PRODUCT_ALIASES={
 const MATERIAL_TEXT={
   galv:{ru:"Оцинкованная сталь",uk:"Оцинкована сталь",en:"Galvanized steel"},
   ss430:{ru:"Нержавеющая 430 техническая",uk:"Нержавіюча 430 технічна",en:"Stainless 430 technical"},
-  ss304:{ru:"Нержавеющая 304 пищевая",uk:"Нержавіюча 304 харчова",en:"Stainless 304 food"}
+  ss304:{ru:"Нержавеющая 304 пищевая",uk:"Нержавіюча 304 харчова",en:"Stainless 304 food"},
+  aluminum:{ru:"Алюминий",uk:"Алюміній",en:"Aluminum"}
 };
 const PRODUCT_IMAGES={
   "round-duct":"assets/catalog-images/round-duct-dalap.jpg",
@@ -1582,6 +1583,7 @@ function materialKeyFromLabel(label){
   const value=normalizeLookupText(label);
   if(value.includes("304"))return "ss304";
   if(value.includes("430"))return "ss430";
+  if(value.includes("алюм")||value.includes("alum"))return "aluminum";
   if(value.includes("galvanized")||value.includes("zinc")||value.includes("оцинк"))return "galv";
   return "";
 }
@@ -1861,7 +1863,6 @@ openUrl("assets/atlas/atlas.html");
 </script>
 </body>
 </html>
-
 
 
 
