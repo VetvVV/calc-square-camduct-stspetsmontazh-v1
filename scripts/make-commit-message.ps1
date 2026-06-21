@@ -103,6 +103,11 @@ if (Has-Diff '@media print|window\.print|project-actions|mobile-switch') {
     Add-Bullet 'Clean up print layout and hide screen-only controls from printed specifications.'
 }
 
+if (Has-Diff 'logo-circle|watermark|ST SPETSMONTAZH') {
+    Add-Part 'print protection'
+    Add-Bullet 'Add subtle ST Spetsmontazh watermark protection to printed specifications.'
+}
+
 if (Has-Diff 'passwordToggle|showPassword|hidePassword|password-wrap|password-toggle') {
     Add-Part 'login UI'
     Add-Bullet 'Add password visibility control to the login form.'
