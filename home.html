@@ -275,6 +275,15 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   .summary-table .project-cell:nth-child(9){display:block!important;grid-column:6!important;order:6!important}
   .summary-table .project-cell:nth-child(2),.summary-table .project-cell:nth-child(3),.summary-table .project-cell:nth-child(4),.summary-table .project-cell:nth-child(10),.summary-table .project-cell:nth-child(11){display:none!important}
   .summary-table .project-head-row .project-cell:nth-child(1),.summary-table .project-head-row .project-cell:nth-child(5),.summary-table .project-head-row .project-cell:nth-child(6),.summary-table .project-head-row .project-cell:nth-child(7),.summary-table .project-head-row .project-cell:nth-child(8),.summary-table .project-head-row .project-cell:nth-child(9){display:flex!important}
+  .project-table,.summary-table{display:table!important;width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
+  .project-table>.project-head-row,.summary-table .project-head-row{display:table-header-group!important}
+  #projectRows,#projectTotal,#materialRows,#materialTotal{display:table-row-group!important}
+  .project-grid{display:table-row!important;min-width:0!important}
+  .project-cell,.project-cell:nth-child(-n+10),.project-head-row .project-cell,.project-head-row .project-cell:nth-child(-n+10){display:table-cell!important;vertical-align:top!important}
+  .summary-table .project-head-row .project-cell,.summary-table .project-head-row .project-cell:nth-child(1),.summary-table .project-head-row .project-cell:nth-child(5),.summary-table .project-head-row .project-cell:nth-child(6),.summary-table .project-head-row .project-cell:nth-child(7),.summary-table .project-head-row .project-cell:nth-child(8),.summary-table .project-head-row .project-cell:nth-child(9){display:table-cell!important}
+  .project-head-row .project-cell{position:static!important;height:auto!important;min-height:0!important;padding:5px 6px!important}
+  .project-table .project-cell:nth-child(1){width:8mm!important}.project-table .project-cell:nth-child(2){width:48mm!important}.project-table .project-cell:nth-child(3){width:34mm!important}.project-table .project-cell:nth-child(4){width:42mm!important}.project-table .project-cell:nth-child(5){width:12mm!important}.project-table .project-cell:nth-child(6){width:38mm!important}.project-table .project-cell:nth-child(7){width:10mm!important}.project-table .project-cell:nth-child(8){width:24mm!important}.project-table .project-cell:nth-child(9){width:22mm!important}.project-table .project-cell:nth-child(10){width:39mm!important}
+  .summary-table .project-cell:nth-child(1){width:8mm!important}.summary-table .project-cell:nth-child(5){width:16mm!important}.summary-table .project-cell:nth-child(6){width:80mm!important}.summary-table .project-cell:nth-child(7){width:10mm!important}.summary-table .project-cell:nth-child(8){width:35mm!important}.summary-table .project-cell:nth-child(9){width:35mm!important}
 }
 </style>
 </head>
@@ -297,7 +306,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-22-023128">build 2026-06-22-0231</div>
+<div class="build-marker" hidden data-cache="build-2026-06-22-192302">build 2026-06-22-1923</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -1978,8 +1987,6 @@ openUrl("assets/atlas/atlas.html");
 </script>
 </body>
 </html>
-
-
 
 
 

@@ -101,7 +101,7 @@ if (Has-Diff 'displayProductName|normalizeProjectItem|productKeyFromName') {
 
 if (Has-Diff '@media print|window\.print|project-actions|mobile-switch|project-comment|summary-table|grid-template-columns') {
     Add-Part 'print layout'
-    Add-Bullet 'Refine printed specification columns, comments, wrapping, and material summary layout.'
+    Add-Bullet 'Refine printed specification columns, comments, wrapping, material summary layout, and repeated page headers.'
 }
 
 if (Has-Diff 'logo-circle|watermark|ST SPETSMONTAZH') {
