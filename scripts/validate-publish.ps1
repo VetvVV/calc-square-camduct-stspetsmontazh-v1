@@ -281,7 +281,9 @@ requireSource(home,'document.getElementById("saveSpec").addEventListener("click"
 requireSource(home,'document.getElementById("openSpec").addEventListener("click",()=>gatedProjectAction(t("openFile"),()=>document.getElementById("openSpecFile").click()));','open saved specification action is not gated');
 requireSource(home,'document.getElementById("openSpecFile").addEventListener("change",(event)=>{const file=event.target.files?.[0];if(file&&canModifyProject())openSpecFile(file);event.target.value=""});','open saved specification file input is not guarded');
 requireSource(home,'body[data-role="guest"] .side,body[data-role="guest"] .resizer,body[data-role="guest"] .mobile-switch{display:none}','guest atlas-only layout guard changed unexpectedly');
+requireSource(home,'body[data-role="user"] .project-comment{background:#f6f7f8;color:#6b7280;resize:none;cursor:not-allowed}','user blocked comment style changed unexpectedly');
 requireSource(home,'<textarea class="project-comment" data-comment-index="${index}" rows="1" ${canModifyProject()?"":"readonly"}>','user comment read-only guard changed unexpectedly');
+requireSource(home,'if(comment){openAccessInvite(t("comment"));comment.blur();return}','user comment click invite guard changed unexpectedly');
 requireSource(home,'if(!canModifyProject()){openAccessInvite(t("comment"));return}','project comment invite guard changed unexpectedly');
 requireSource(home,'body[data-role="user"] .project-actions button{background:#eef0f3;color:#5b6573;border:1px solid #d1d5db}','user blocked action style changed unexpectedly');
 requireSource(home,'body[data-role="client"] .material-summary,body[data-role="admin"] .material-summary{display:flex;flex-direction:column}','material summary visibility guard changed unexpectedly');

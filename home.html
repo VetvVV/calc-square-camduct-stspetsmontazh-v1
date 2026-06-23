@@ -42,6 +42,7 @@ body[data-layout="atlas"] .resizer{left:0}
 body[data-role="guest"] .app{grid-template-columns:minmax(0,1fr)}
 body[data-role="guest"] .side,body[data-role="guest"] .resizer,body[data-role="guest"] .mobile-switch{display:none}
 body[data-role="guest"] .top-nav button:not(#topAtlas){display:none}
+body[data-role="user"] .project-comment{background:#f6f7f8;color:#6b7280;resize:none;cursor:not-allowed}
 .side,.work{background:transparent;border-radius:0;box-shadow:none}
 .work{order:1}
 .resizer{order:2}
@@ -317,7 +318,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-24-014121">build 2026-06-24-0141</div>
+<div class="build-marker" hidden data-cache="build-2026-06-24-015427">build 2026-06-24-0154</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -1937,7 +1938,9 @@ function openProjectItem(index){
 projectRows.addEventListener("click",(event)=>{
   const edit=event.target.closest(".project-edit");
   const button=event.target.closest(".project-remove");
+  const comment=event.target.closest(".project-comment");
   if(!canModifyProject()){
+    if(comment){openAccessInvite(t("comment"));comment.blur();return}
     if(edit){openAccessInvite(t("edit"));return}
     if(button){openAccessInvite(t("delete"));return}
     return;
