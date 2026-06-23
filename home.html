@@ -312,7 +312,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-23-201337">build 2026-06-23-2013</div>
+<div class="build-marker" hidden data-cache="build-2026-06-23-202906">build 2026-06-23-2029</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -816,6 +816,7 @@ function setColumnVisibility(index,checked){
   saveInterfaceState(patch);
   if(index===2){renderProject();return}
   applyColumnVisibility();
+  renderPrintSpecReport();
 }
 function applyDimsUnderName(){
   const enabled=!!readInterfaceState().dimsUnderName;
@@ -1697,17 +1698,40 @@ function printSpecColumns(){
     9:t("comment")
   };
   const classes={0:"num",4:"num",6:"num",7:"num",8:"num"};
-  const minMm={0:7,1:32,2:24,3:28,4:9,5:30,6:8,7:18,8:18,9:26};
+  const minMm={0:7,1:30,2:22,3:24,4:9,5:34,6:8,7:18,8:18,9:30};
+  const maxMm={0:9,1:54,2:42,3:62,4:12,5:52,6:10,7:24,8:24,9:58};
+  const preferredMm={0:8,1:42,2:34,3:46,4:10,5:42,6:8,7:20,8:20,9:44};
   const raw=effectiveColumnWidths();
   const available=277;
   const minSum=active.reduce((sum,index)=>sum+(minMm[index]||12),0);
-  const flex=Math.max(0,available-minSum);
-  const rawSum=active.reduce((sum,index)=>sum+Math.max(1,raw[index]||columnWidths[index]||defaultColumnWidths[index]||1),0)||1;
-  return active.map((index)=>({
+  const preferredSum=active.reduce((sum,index)=>sum+(preferredMm[index]||minMm[index]||12),0);
+  const source=raw.some((value)=>value>0)?raw:columnWidths;
+  const weightSum=active.reduce((sum,index)=>sum+Math.max(1,source[index]||preferredMm[index]||1),0)||1;
+  let widths=active.map((index)=>{
+    if(preferredSum<=available){
+      return preferredMm[index]||minMm[index]||12;
+    }
+    const min=minMm[index]||12;
+    const extra=Math.max(0,available-minSum);
+    return min+(extra*(Math.max(1,source[index]||preferredMm[index]||1)/weightSum));
+  });
+  let spare=available-widths.reduce((sum,width)=>sum+width,0);
+  let guard=0;
+  while(spare>0.1&&guard++<20){
+    const growable=active.map((index,i)=>({index,i,room:(maxMm[index]||80)-widths[i]})).filter((item)=>item.room>0.1);
+    if(!growable.length)break;
+    const roomSum=growable.reduce((sum,item)=>sum+item.room,0);
+    growable.forEach((item)=>{
+      const add=Math.min(item.room,spare*(item.room/roomSum));
+      widths[item.i]+=add;
+    });
+    spare=available-widths.reduce((sum,width)=>sum+width,0);
+  }
+  return active.map((index,i)=>({
     index,
     key:["no","name","dimensions","description","quantity","material","thickness","area","mass","comment"][index],
     label:labels[index]||"",
-    width:`${((minMm[index]||12)+(flex*(Math.max(1,raw[index]||columnWidths[index]||defaultColumnWidths[index]||1)/rawSum))).toFixed(2)}mm`,
+    width:`${Math.max(minMm[index]||12,widths[i]).toFixed(2)}mm`,
     cls:classes[index]||""
   }));
 }
@@ -1781,6 +1805,9 @@ function renderPrintSpecReport(entries=filteredProjectEntries(),visibleItems=ent
       <div class="print-spec-title"><span>${t("materialSummary")}</span></div>
       <table class="print-spec-table print-summary-table">${colgroup(summaryColumns)}${head(summaryColumns)}<tbody>${summaryBody}${summaryTotal}</tbody></table>
     </section>`;
+}
+function preparePrintSpecReport(){
+  renderPrintSpecReport();
 }
 function escapeHtml(value){
   return String(value??"").replace(/[&<>"']/g,(char)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char]));
@@ -1974,6 +2001,7 @@ document.addEventListener("pointerdown",(event)=>{
   closeFilterMenu();
 });
 window.addEventListener("resize",closeFilterMenu);
+window.addEventListener("beforeprint",preparePrintSpecReport);
 document.getElementById("printSpec").addEventListener("click",()=>gatedProjectAction(t("print"),()=>window.print()));
 document.getElementById("exportSpec").addEventListener("click",()=>gatedProjectAction(t("export"),exportCsv));
 document.getElementById("excelSpec").addEventListener("click",()=>gatedProjectAction("Excel",exportExcel));
