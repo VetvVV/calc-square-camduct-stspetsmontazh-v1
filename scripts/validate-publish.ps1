@@ -210,6 +210,31 @@ function checkPanelTranslationUsage(source,dict){
 function requireSource(source,needle,context){
   if (!source.includes(needle)) throw new Error(context);
 }
+function approxEqual(actual,expected,context,tolerance=1e-9){
+  if (Math.abs(actual-expected)>tolerance) {
+    throw new Error(`${context}: expected ${expected}, got ${actual}`);
+  }
+}
+function checkCoreFormulaSmoke(source){
+  requireSource(source,'case"roundDuct":area=Math.PI*v.D*v.L*q/1e6;','round duct formula changed unexpectedly');
+  requireSource(source,'case"roundElbow":{const arc=Math.PI*v.R*v.Angle/180;area=Math.PI*v.D*arc*q/1e6;','round elbow formula changed unexpectedly');
+  requireSource(source,'case"roundTransition":area=Math.PI*((v.D1+v.D2)/2)*Math.sqrt((v.L||0)**2+(v.Offset||0)**2)*q/1e6;','round transition formula changed unexpectedly');
+  requireSource(source,'case"rectDuct":{const r=rectDuct(v);area=r.area;','rectangular duct formula call changed unexpectedly');
+  requireSource(source,'const clean=P*L*Q/1e6;','rectangular duct clean area changed unexpectedly');
+  requireSource(source,'const mainArea=parts*(Z1+Z2)*L*Q/1e6;','rectangular duct lock area changed unexpectedly');
+  requireSource(source,'case"rectElbow":{const arc=Math.PI*v.R*v.Angle/180;area=2*(v.A+v.B)*arc*q/1e6;','rectangular elbow formula changed unexpectedly');
+  requireSource(source,'case"rectTransition":{const r=rectTransition(v);area=r.area*q;','rectangular transition formula call changed unexpectedly');
+  requireSource(source,'const L=Math.max(0,v.E-F-G);','rectangular transition effective length changed unexpectedly');
+  requireSource(source,'area:(St+Sb+Sl+Sr)/1e6','rectangular transition area total changed unexpectedly');
+
+  approxEqual(Math.PI*250*1000/1e6,0.7853981633974483,'round duct smoke');
+  approxEqual(Math.PI*250*(Math.PI*250*90/180)/1e6,0.30842513753404244,'round elbow smoke');
+  approxEqual(Math.PI*((315+250)/2)*300/1e6,0.26624997739173495,'round transition smoke');
+  approxEqual(2*(400+300)*1000/1e6+(6+30)*1000/1e6,1.436,'rectangular duct smoke');
+  approxEqual(2*(400+300)*(Math.PI*300*90/180)/1e6,0.6597344572538565,'rectangular elbow smoke');
+  const transitionSlope=Math.sqrt(250*250+50*50);
+  approxEqual((transitionSlope*250+25*300+25*200)*4/1e6,0.30495097567963926,'rectangular transition smoke');
+}
 function extractStatementRange(source,startNeedle,endNeedle,fileName){
   const start=source.indexOf(startNeedle);
   if(start<0) throw new Error(`${startNeedle} is missing in ${fileName}`);
@@ -237,6 +262,7 @@ checkDictionaryParity('UI_TEXT',uiText);
 checkDictionaryParity('panel i18n',panelI18n);
 checkTranslationUsage(home,uiText,'UI_TEXT','home.html');
 checkPanelTranslationUsage(panel,panelI18n);
+checkCoreFormulaSmoke(panel);
 requireSource(home,'const guestDailyLimit=5;','home.html guest daily limit is not 5');
 requireSource(panel,'const guestDailyLimit=5;','panel-module.js guest daily limit is not 5');
 requireSource(home,'const roles=["guest","user","client","admin"];','home.html role list changed unexpectedly');
@@ -255,7 +281,8 @@ requireSource(home,'document.getElementById("saveSpec").addEventListener("click"
 requireSource(home,'document.getElementById("openSpec").addEventListener("click",()=>gatedProjectAction(t("openFile"),()=>document.getElementById("openSpecFile").click()));','open saved specification action is not gated');
 requireSource(home,'document.getElementById("openSpecFile").addEventListener("change",(event)=>{const file=event.target.files?.[0];if(file&&canModifyProject())openSpecFile(file);event.target.value=""});','open saved specification file input is not guarded');
 requireSource(home,'body[data-role="guest"] .side,body[data-role="guest"] .resizer,body[data-role="guest"] .mobile-switch{display:none}','guest atlas-only layout guard changed unexpectedly');
-requireSource(home,'body[data-role="user"] .project-comment{background:#f6f7f8;color:#6b7280;resize:none;pointer-events:none}','user read-only comment guard changed unexpectedly');
+requireSource(home,'<textarea class="project-comment" data-comment-index="${index}" rows="1" ${canModifyProject()?"":"readonly"}>','user comment read-only guard changed unexpectedly');
+requireSource(home,'if(!canModifyProject()){openAccessInvite(t("comment"));return}','project comment invite guard changed unexpectedly');
 requireSource(home,'body[data-role="user"] .project-actions button{background:#eef0f3;color:#5b6573;border:1px solid #d1d5db}','user blocked action style changed unexpectedly');
 requireSource(home,'body[data-role="client"] .material-summary,body[data-role="admin"] .material-summary{display:flex;flex-direction:column}','material summary visibility guard changed unexpectedly');
 const catalogSandbox={window:{}};

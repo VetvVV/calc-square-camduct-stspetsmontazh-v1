@@ -42,7 +42,6 @@ body[data-layout="atlas"] .resizer{left:0}
 body[data-role="guest"] .app{grid-template-columns:minmax(0,1fr)}
 body[data-role="guest"] .side,body[data-role="guest"] .resizer,body[data-role="guest"] .mobile-switch{display:none}
 body[data-role="guest"] .top-nav button:not(#topAtlas){display:none}
-body[data-role="user"] .project-comment{background:#f6f7f8;color:#6b7280;resize:none;pointer-events:none}
 .side,.work{background:transparent;border-radius:0;box-shadow:none}
 .work{order:1}
 .resizer{order:2}
@@ -318,7 +317,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-24-000116">build 2026-06-24-0001</div>
+<div class="build-marker" hidden data-cache="build-2026-06-24-014121">build 2026-06-24-0141</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -1013,7 +1012,17 @@ function saveRole(role,loginValue=""){
   localStorage.setItem(settingsKey,JSON.stringify(settings));
   selectedLoginRole=role;
   renderRole();
-  openUrl(role==="guest"?"assets/atlas/atlas.html":currentFrameUrl(),{countGuest:false});
+  if(role==="guest"){
+    openUrl("assets/atlas/atlas.html",{countGuest:false});
+    return;
+  }
+  setLayoutMode("split");
+  openUrl(currentFrameUrl()||"assets/atlas/atlas.html",{countGuest:false});
+  requestAnimationFrame(()=>{
+    renderProject();
+    applyColumnWidths();
+    updateProjectOverflow();
+  });
 }
 function roleLabel(role){
   const map={guest:"guestRole",user:"userRole",client:"clientRole",admin:"adminRole"};
@@ -1941,7 +1950,7 @@ projectRows.addEventListener("click",(event)=>{
 projectRows.addEventListener("input",(event)=>{
   const textarea=event.target.closest(".project-comment");
   if(!textarea)return;
-  if(!canModifyProject())return;
+  if(!canModifyProject()){openAccessInvite(t("comment"));return}
   const index=Number(textarea.dataset.commentIndex);
   if(!project[index])return;
   project[index].comment=textarea.value;
