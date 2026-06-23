@@ -154,7 +154,7 @@
     return typeof code==="number"?String(code):optionText(code);
   }
   function qtyHtml(){return`<div class="field"><label for="f-Q">${t.qty}</label><input id="f-Q" data-key="Q" type="number" min="1" step="1" value="1"></div>`}
-  function optionsHtml(){return cfg.type==="table"?`<p class="tab-empty">${t.notReady}</p>`:(canViewFormulas?`<p class="tab-empty" id="optionCalcNote">${t.formula}</p>`:`<p class="tab-empty">${t.calcHidden}</p>`)}
+  function optionsHtml(){return cfg.type==="table"?`<p class="tab-empty">${t.notReady}</p>`:`<p class="tab-empty">${t.calcHidden}</p>`}
   function detailHtml(){return`<div class="field"><label for="material">${t.material}</label><select id="material">${materials.map(m=>`<option value="${m.key}">${m.label}</option>`).join("")}</select></div><div class="field"><label for="thickness">${t.thickness}</label><select id="thickness"></select></div>`}
   function connectorsHtml(){
     if(cfg.category==="rectangular"){
@@ -172,7 +172,7 @@
   function setUnit(u){const from=UF();UNIT=u;const to=UF();document.querySelectorAll("[data-key]").forEach(el=>{const k=el.dataset.key;if(k==="Q")return;if(el.type==="number"){const val=parseFloat(el.value);if(!isNaN(val)){el.value=(u==="in")?(+(val*from/to).toFixed(2)):Math.round(val*from/to);state[k]=el.value;}}else if(el.type==="text"){const c=offsetCode(el.value);if(typeof c==="number"){const nv=(u==="in")?(+(c*from/to).toFixed(2)):Math.round(c*from/to);el.value=offsetDisplay(nv);state[k]=el.value;}}});update();}
   function setRail(connId,fieldKey){const sl=document.getElementById(connId),f=document.getElementById("f-"+fieldKey);if(!sl||!f)return;if(sl.value==="Рейка"){if(!f.readOnly)f.dataset.prev=f.value;f.value=0;f.readOnly=true;f.style.opacity=.6;}else if(f.readOnly){f.value=f.dataset.prev||25;f.readOnly=false;f.style.opacity=1;}state[f.dataset.key]=f.value;}
   function toMM(values){const v={...values};cfg.fields.filter(f=>f.type==="number").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});cfg.fields.filter(f=>f.type==="offset").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});return v;}
-  function helpHtml(){return`<p class="help-text">${t.connectionHelp}</p>`}
+  function helpHtml(){return canViewFormulas?`<p class="help-text" id="formulaHelp">${t.connectionHelp}</p>`:`<p class="help-text">${t.connectionHelp}</p>`}
   function bind(){
     document.getElementById("toAtlas").addEventListener("click",()=>sendOpen(moduleUrl("")));
     document.getElementById("toCategory").addEventListener("click",()=>sendOpen(moduleUrl(cfg.category)));
@@ -285,8 +285,8 @@
     if(guestLimitNode)guestLimitNode.textContent=guestLimitNote();
     const calcNote=document.getElementById("calcNote");
     if(calcNote)calcNote.textContent=result.note||"";
-    const optionCalcNote=document.getElementById("optionCalcNote");
-    if(optionCalcNote)optionCalcNote.textContent=result.note||"";
+    const formulaHelp=document.getElementById("formulaHelp");
+    if(formulaHelp)formulaHelp.textContent=result.help||result.note||"";
     document.getElementById("modeBadge").textContent=canViewFormulas?(result.badge||document.getElementById("modeBadge").textContent):(cfg.type==="table"?result.badge:t.calc);
     if(cfg.category==="rectangular"){
       const lv=document.getElementById("lockVal");
@@ -302,7 +302,7 @@
   }
   function calculate(v){
     const q=v.quantity||1;
-    let area=0,note="",sheetWarn="",lockName="",lockSize="";
+    let area=0,note="",help="",sheetWarn="",lockName="",lockSize="";
     switch(cfg.formula){
       case"roundDuct":area=Math.PI*v.D*v.L*q/1e6;note=`S = π × D × L × Q`;break;
       case"roundElbow":{const arc=Math.PI*v.R*v.Angle/180;area=Math.PI*v.D*arc*q/1e6;note=`S = π × D × arc × Q`;break}
@@ -310,7 +310,7 @@
       case"roundTee":area=(Math.PI*v.D*v.L+Math.PI*v.D1*v.H)*q/1e6;note=`S = ${t.main} + ${t.branch}`;break;
       case"roundCap":area=Math.PI*v.D*v.D/4*q/1e6;note=`S = π × D² / 4 × Q`;break;
       case"roundInset":area=(Math.PI*v.D+8)*v.H*q/1e6;note=`P = πD + 8`;break;
-      case"rectDuct":{const r=rectDuct(v);area=r.area;note=r.note;sheetWarn=r.sheetWarn;lockName=r.lockName;lockSize=r.lockSize;break}
+      case"rectDuct":{const r=rectDuct(v);area=r.area;note=r.note;help=r.help;sheetWarn=r.sheetWarn;lockName=r.lockName;lockSize=r.lockSize;break}
       case"rectElbow":{const arc=Math.PI*v.R*v.Angle/180;area=2*(v.A+v.B)*arc*q/1e6;note=`S = 2 × (A+B) × arc × Q`;break}
       case"rectTransition":{const r=rectTransition(v);area=r.area*q;note=r.note;sheetWarn=r.sheetWarn;break}
       case"rectTee":area=(2*(v.A+v.B)*v.L+2*(v.A1+v.B1)*v.H)*q/1e6;note=`S = ${t.main} + ${t.branch}`;break;
@@ -319,7 +319,7 @@
       case"roundRect":area=((Math.PI*v.D+2*(v.A+v.B))/2)*v.L*q/1e6;note=`S = ${t.avgPerimeter} × L`;break;
       default:area=0;note=t.notReady;
     }
-    return{area,description:"",note,sheetWarn,lockName,lockSize,badge:cfg.type==="table"?tableBadge(v):t.formula,status:cfg.type==="table"?tableStatus(v):""};
+    return{area,description:"",note,help,sheetWarn,lockName,lockSize,badge:cfg.type==="table"?tableBadge(v):t.formula,status:cfg.type==="table"?tableStatus(v):""};
   }
   function rectDuct(v){
     const A=v.A||0,B=v.B||0,L=v.L||0,Q=v.quantity||1,T=v.thickness||0.5;
@@ -348,7 +348,19 @@
     const lockArea=mainArea+russianArea;
     const area=cleanFinal+lockArea;
     const sheetWarn=(parts>1||russianLocks>0)?`${t.sheetSplit}: ${layout}, ${parts}${russianLocks?`, +${russianLocks}`:""}`:"";
-    const note=[
+    const note=`S = ${nf(cleanFinal)} + ${nf(lockArea)} = ${nf(area)} м²; ${lockName} ${lockSize}; ${layout}`;
+    const help=[
+      "Обозначения:",
+      `A — ширина изделия, ${nf(A,0)} ${t.mm}`,
+      `B — высота изделия, ${nf(B,0)} ${t.mm}`,
+      `L — длина изделия, ${nf(L,0)} ${t.mm}`,
+      `Q — количество, ${Q}`,
+      `t — толщина металла, ${nf(T)} ${t.mm}`,
+      "P — периметр прямоугольного сечения",
+      "Sчист — чистовая площадь без замков",
+      "Sзамк — добавка на замки",
+      "Sрус — добавка на русские замки, если лист делится по ширине/длине",
+      "",
       `P = 2 × (A + B) = 2 × (${nf(A,0)} + ${nf(B,0)}) = ${nf(P,0)} ${t.mm}`,
       `Sчист = P × L × Q / 1 000 000 = ${nf(P,0)} × ${nf(L,0)} × ${Q} / 1 000 000 = ${nf(cleanFinal)} м²`,
       `Замок: ${lockName}; Z1 = ${Z1} ${t.mm}, Z2 = ${Z2} ${t.mm}, размер ${lockSize}`,
@@ -357,7 +369,7 @@
       russianLocks?`Русские замки: ${russianLocks} × ${russianLockSize} × P × Q / 1 000 000 = ${nf(russianArea)} м²`:"Русские замки: 0",
       `Sитог = Sчист + Sзамк + Sрус = ${nf(cleanFinal)} + ${nf(mainArea)} + ${nf(russianArea)} = ${nf(area)} м²`
     ].join("\n");
-    return{area,note,sheetWarn,lockName,lockSize};
+    return{area,note,help,sheetWarn,lockName,lockSize};
   }
   function rectTransition(v){
     const railF=v.conn1==="Рейка",railG=v.conn2==="Рейка";
