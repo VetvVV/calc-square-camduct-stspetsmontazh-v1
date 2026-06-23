@@ -70,6 +70,9 @@ if ($Errors.Count -eq 0) {
     if ($CalculatorText -notmatch 'preview-axo\.js') {
         Add-Error 'modules/common/calculator.html does not include preview-axo.js.'
     }
+    if ($CalculatorText -notmatch 'panel-module\.js\?v=build-\d{4}-\d{2}-\d{2}-\d{6}' -or $CalculatorText -notmatch 'preview-axo\.js\?v=build-\d{4}-\d{2}-\d{2}-\d{6}' -or $CalculatorText -notmatch 'panel-module\.css\?v=build-\d{4}-\d{2}-\d{2}-\d{6}') {
+        Add-Error 'modules/common/calculator.html does not cache-bust calculator assets.'
+    }
 
     $FontLinks = @{
         $HomePath = 'assets/fonts/exo2.css'
