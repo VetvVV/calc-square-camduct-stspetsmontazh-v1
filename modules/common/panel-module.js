@@ -19,6 +19,9 @@
   Object.assign(i18n.ru,{units:"Ед. измерения",unitMM:"мм",unitIN:"дюймы",ft2:"ft²",lb:"lb",conn1:"Соединение 1",conn2:"Соединение 2",lock:"Продольный замок (S1)",lockAm:"Американский",lockSize:"Размер замка",sheetSplit:"Панель не влезает на лист — разделить, русский замок",pdf:"Сохранить PDF"});
   Object.assign(i18n.uk,{units:"Од. виміру",unitMM:"мм",unitIN:"дюйми",ft2:"ft²",lb:"lb",conn1:"З'єднання 1",conn2:"З'єднання 2",lock:"Поздовжній замок (S1)",lockAm:"Американський",lockSize:"Розмір замка",sheetSplit:"Панель не влазить на лист — розділити, російський замок",pdf:"Зберегти PDF"});
   Object.assign(i18n.en,{units:"Units",unitMM:"mm",unitIN:"inch",ft2:"ft²",lb:"lb",conn1:"Connection 1",conn2:"Connection 2",lock:"Longitudinal lock (S1)",lockAm:"American",lockSize:"Lock size",sheetSplit:"Panel exceeds sheet — split, Russian lock",pdf:"Save PDF"});
+  Object.assign(i18n.ru,{guestRemaining:"Гостевой доступ: осталось {left} из {limit} расчётов.",guestUsed:"Гостевой лимит на сегодня исчерпан. Войдите или зарегистрируйтесь, чтобы продолжить."});
+  Object.assign(i18n.uk,{guestRemaining:"Гостьовий доступ: залишилось {left} з {limit} розрахунків.",guestUsed:"Гостьовий ліміт на сьогодні вичерпано. Увійдіть або зареєструйтесь, щоб продовжити."});
+  Object.assign(i18n.en,{guestRemaining:"Guest access: {left} of {limit} calculations left.",guestUsed:"Today's guest limit is used. Sign in or register to continue."});
   let UNIT="mm";const UF=()=>UNIT==="in"?25.4:1;
   const RAILMM=10;const RECT_CONN=["Ш20","Ш30","Ш20 Сам","Ш30 Сам","Рейка","ГК"];
   const materials=[
@@ -76,9 +79,11 @@
   let result={area:0,mass:0,description:""};
   const canAddProject=["user","client","admin"].includes(role);
   const canUpdateProject=["client","admin"].includes(role);
-  const canViewFormulas=role!=="client";
+  const canViewFormulas=role==="admin";
   function localDateKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
   function readGuestUsage(){try{const data=JSON.parse(localStorage.getItem(guestUsageKey)||"{}");return data.date===localDateKey()?data:{date:localDateKey(),count:0}}catch(e){return{date:localDateKey(),count:0}}}
+  function guestLeft(){return Math.max(0,guestDailyLimit-readGuestUsage().count)}
+  function guestLimitNote(){const left=guestLeft();return left>0?t.guestRemaining.replace("{left}",left).replace("{limit}",guestDailyLimit):t.guestUsed}
   function moduleAllowed(){
     if(role!=="guest")return true;
     return readGuestUsage().count<=guestDailyLimit;
@@ -106,6 +111,7 @@
               <div class="result-row">${t.area}<b id="area">0.000 м²</b></div>
               <div class="result-row">${t.mass}<b id="mass">0.00 ${t.kg}</b></div>
               <div class="result-row">${t.desc}<b id="descLine">-</b><small id="statusLine"></small></div>
+              ${role==="guest"?`<div class="guest-limit-note" id="guestLimitNote">${guestLimitNote()}</div>`:""}
               ${canViewFormulas?`<details class="calc-details" open><summary>${t.calc}</summary><p id="calcNote"></p></details>`:""}
               <div class="comment-label">${t.comment}</div><textarea id="comment" placeholder="${t.commentPh}"></textarea>
               ${(editIndex!==null?canUpdateProject:canAddProject)?`<button class="add-btn" type="button" id="addBtn">${editIndex!==null?t.update:t.add}</button>`:""}${!canAddProject&&role==="guest"&&editIndex===null?`<div class="guest-note">${t.guest}</div>`:""}
@@ -273,6 +279,8 @@
     document.getElementById("mass").textContent=nf(mDisp,2)+mU;
     document.getElementById("descLine").textContent=result.description;
     document.getElementById("statusLine").textContent=result.status||"";
+    const guestLimitNode=document.getElementById("guestLimitNote");
+    if(guestLimitNode)guestLimitNode.textContent=guestLimitNote();
     const calcNote=document.getElementById("calcNote");
     if(calcNote)calcNote.textContent=result.note||"";
     document.getElementById("modeBadge").textContent=canViewFormulas?(result.badge||document.getElementById("modeBadge").textContent):(cfg.type==="table"?result.badge:t.calc);

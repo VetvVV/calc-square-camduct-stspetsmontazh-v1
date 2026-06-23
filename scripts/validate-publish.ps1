@@ -243,7 +243,7 @@ requireSource(home,'const roles=["guest","user","client","admin"];','home.html r
 requireSource(panel,'const roles=["guest","user","client","admin"];','panel-module.js role list changed unexpectedly');
 requireSource(panel,'const canAddProject=["user","client","admin"].includes(role);','panel add permissions changed unexpectedly');
 requireSource(panel,'const canUpdateProject=["client","admin"].includes(role);','panel update permissions changed unexpectedly');
-requireSource(panel,'const canViewFormulas=role!=="client";','client formula visibility guard changed unexpectedly');
+requireSource(panel,'const canViewFormulas=role==="admin";','formula visibility guard changed unexpectedly');
 requireSource(home,'function canAddProject(){return ["user","client","admin"].includes(currentRole())}','home add permissions changed unexpectedly');
 requireSource(home,'function canModifyProject(){return ["client","admin"].includes(currentRole())}','home modify permissions changed unexpectedly');
 requireSource(home,'function gatedProjectAction(feature,action){','project action gate is missing');

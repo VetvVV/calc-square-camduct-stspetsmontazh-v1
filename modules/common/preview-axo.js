@@ -45,14 +45,24 @@ function _rectDuct(v){
     var L=v.L,A=v.A,B=v.B;
     var c000=axo(0,0,0), c100=axo(L,0,0), c010=axo(0,A,0), c001=axo(0,0,B),
         c110=axo(L,A,0), c101=axo(L,0,B), c011=axo(0,A,B), c111=axo(L,A,B);
-    var f=makeFit([c000,c100,c010,c001,c110,c101,c011,c111],40);
+    var f=makeFit([c000,c100,c010,c001,c110,c101,c011,c111],34);
     var M000=f(c000),M100=f(c100),M010=f(c010),M001=f(c001),M110=f(c110),M101=f(c101),M011=f(c011),M111=f(c111);
     var cen=centroid([M000,M100,M010,M001,M110,M101,M011,M111]);
+    function edge(a,b,w){return seg(a,b,'#6f7682',w||1.15);}
+    function insetQuad(quad,ratio){
+      var c=centroid(quad);
+      return quad.map(function(p){return [c[0]+(p[0]-c[0])*ratio,c[1]+(p[1]-c[1])*ratio];});
+    }
     var g='';
-    /* грани: верх светлая, левая средняя, правая тёмная — для читаемого объёма */
-    g+=poly([M001,M101,M111,M011],'#eef1f4','#8a90a0',1.2);
-    g+=poly([M000,M100,M101,M001],'#cdd3db','#8a90a0',1.2);
-    g+=poly([M000,M010,M011,M001],'#dee3e9','#8a90a0',1.2);
+    /* Полный короб: торцы, боковые плоскости и проёмы, чтобы превью читалось как воздуховод. */
+    g+=poly([M010,M110,M111,M011],'#dde3ea','#9aa1aa',1.05);
+    g+=poly([M100,M110,M111,M101],'#f7f9fb','#7b838f',1.35);
+    g+=poly([M001,M101,M111,M011],'#eff3f7','#8a90a0',1.2);
+    g+=poly([M000,M100,M101,M001],'#cfd6de','#8a90a0',1.2);
+    g+=poly([M000,M010,M011,M001],'#e6ebf0','#6f7682',1.45);
+    g+=poly(insetQuad([M000,M010,M011,M001],0.72),'rgba(255,255,255,.55)','#a0a7b0',0.9);
+    g+=poly(insetQuad([M100,M110,M111,M101],0.72),'rgba(255,255,255,.7)','#a0a7b0',0.9);
+    [[M000,M100],[M010,M110],[M001,M101],[M011,M111],[M000,M010],[M010,M011],[M011,M001],[M100,M110],[M110,M111],[M111,M101]].forEach(function(e){g+=edge(e[0],e[1]);});
     /* цветные рёбра из ближнего угла */
     g+=seg(M000,M100,GREEN,4);
     g+=seg(M000,M010,BLUE,4);

@@ -26,8 +26,11 @@ button,input,select,textarea{font:inherit}
 .login-btn:focus-visible,.top-nav button:focus-visible,.nav-actions button:focus-visible,.project-actions button:focus-visible{outline:2px solid #f5b15a;outline-offset:2px}
 .role-chip{border:1px solid #d9dde3;border-radius:7px;background:#fff;color:#5b6573;padding:8px 11px;font-size:12px;line-height:1;font-weight:800;text-transform:uppercase}
 .guest-counter{border:1px solid #ead4b5;border-radius:7px;background:#fff7ed;color:#9a5800;padding:8px 11px;font-size:12px;line-height:1;font-weight:800}
+.admin-guest-reset{border:1px solid #ead4b5;border-radius:7px;background:#fff7ed;color:#9a5800;padding:8px 10px;font-size:12px;line-height:1;font-weight:800;cursor:pointer}
+.admin-guest-reset:hover{background:#ffedd5}
 body:not([data-role="guest"]) .guest-counter{display:none}
 body[data-role="guest"] .role-chip{display:none}
+body:not([data-role="admin"]) .admin-guest-reset{display:none}
 .app{--project-width:78vw;height:calc(100vh - 72px);display:grid;grid-template-columns:minmax(300px,1fr) 10px minmax(520px,min(var(--project-width),calc(100vw - 360px)));gap:10px;padding:0}
 body[data-layout="project"] .app{grid-template-columns:minmax(0,1fr)}
 body[data-layout="atlas"] .app{grid-template-columns:minmax(0,1fr)}
@@ -312,7 +315,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-23-202906">build 2026-06-23-2029</div>
+<div class="build-marker" hidden data-cache="build-2026-06-23-235240">build 2026-06-23-2352</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -334,6 +337,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
     </div>
     <span class="role-chip" id="roleChip">guest</span>
     <span class="guest-counter" id="guestCounter"></span>
+    <button class="admin-guest-reset" id="adminGuestReset" type="button"></button>
     <button class="login-btn" id="loginBtn" type="button" data-i="login">Вход / регистрация</button>
   </div>
 </header>
@@ -532,6 +536,7 @@ const registerBtn=document.getElementById("registerBtn");
 const loginHelp=document.getElementById("loginHelp");
 const roleHint=document.getElementById("roleHint");
 const roleChip=document.getElementById("roleChip");
+const adminGuestReset=document.getElementById("adminGuestReset");
 const projectRows=document.getElementById("projectRows");
 const projectTotal=document.getElementById("projectTotal");
 const materialRows=document.getElementById("materialRows");
@@ -592,7 +597,7 @@ const UI_TEXT={
     demoHelp:"Демо-режим: user/user или client/client. Админ откроется, если в роли Клиент ввести пароль admin.",
     currentLogin:"Текущий вход: {role}{login}",roleHintGuest:"Гость: только атлас и калькуляторы, до 5 открытий калькулятора в сутки.",roleHintUser:"Пользователь: атлас, расчёты и добавление в спецификацию без редактирования, удаления, сохранения, печати и экспорта.",roleHintClient:"Клиент: добавление, редактирование, сохранение, печать и экспорт без просмотра формул.",roleHintAdmin:"Админ: полный демо-доступ ко всем действиям.",
     guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь, клиент или админ.",
-    guestCounter:"Гость: {left}/5",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?",
+    guestCounter:"Гость: осталось {left}/5",resetGuestLimit:"Сбросить гостя",guestLimitResetDone:"Гостевой лимит сброшен",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?",
     accessTitle:"Приглашение к сотрудничеству",accessLead:"Эта возможность доступна клиентам ST Spetsmontazh.",accessBody:"Если вы уже подбираете изделия для проекта, свяжитесь с нами любым удобным способом. Менеджер поможет с заказом и выдаст персональный QR-код, чтобы открыть сохранение, печать и другие рабочие функции.",accessQrCaption:"QR-код выдаёт менеджер после обращения",accessLogin:"Открыть кабинет",accessSite:"Сайт компании",accessLater:"Позже",accessHours:"Пн-пт 9:00 - 18:00"
     ,languageConflictTitle:"Проверьте язык строки",languageConflictProduct:"Название изделия не распознано в каталоге",languageConflictMaterial:"Материал не распознан",languageConflictOpen:"Файл открыт, но часть строк требует проверки локализации:"
   },
@@ -611,7 +616,7 @@ const UI_TEXT={
     demoHelp:"Демо-режим: user/user або client/client. Адмін відкриється, якщо в ролі Клієнт ввести пароль admin.",
     currentLogin:"Поточний вхід: {role}{login}",roleHintGuest:"Гість: тільки атлас і калькулятори, до 5 відкриттів калькулятора на добу.",roleHintUser:"Користувач: атлас, розрахунки і додавання в специфікацію без редагування, видалення, збереження, друку й експорту.",roleHintClient:"Клієнт: додавання, редагування, збереження, друк і експорт без перегляду формул.",roleHintAdmin:"Адмін: повний демо-доступ до всіх дій.",
     guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач, клієнт або адмін.",
-    guestCounter:"Гість: {left}/5",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?",
+    guestCounter:"Гість: залишилось {left}/5",resetGuestLimit:"Скинути гостя",guestLimitResetDone:"Гостьовий ліміт скинуто",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?",
     accessTitle:"Запрошення до співпраці",accessLead:"Ця можливість доступна клієнтам ST Spetsmontazh.",accessBody:"Якщо ви вже підбираєте вироби для проєкту, зв'яжіться з нами будь-яким зручним способом. Менеджер допоможе із замовленням і видасть персональний QR-код, щоб відкрити збереження, друк та інші робочі функції.",accessQrCaption:"QR-код видає менеджер після звернення",accessLogin:"Відкрити кабінет",accessSite:"Сайт компанії",accessLater:"Пізніше",accessHours:"Пн-пт 9:00 - 18:00"
     ,languageConflictTitle:"Перевірте мову рядка",languageConflictProduct:"Назву виробу не розпізнано в каталозі",languageConflictMaterial:"Матеріал не розпізнано",languageConflictOpen:"Файл відкрито, але частина рядків потребує перевірки локалізації:"
   },
@@ -630,7 +635,7 @@ const UI_TEXT={
     demoHelp:"Demo mode: user/user or client/client. Admin appears after entering admin as the Client password.",
     currentLogin:"Current login: {role}{login}",roleHintGuest:"Guest: atlas and calculators only, up to 5 calculator opens per day.",roleHintUser:"User: atlas, calculations, and adding to the specification without editing, deleting, saving, printing, or export.",roleHintClient:"Client: add, edit, save, print, and export without calculator formulas.",roleHintAdmin:"Admin: full demo access to all actions.",
     guestLimit:"Guest limit: 5 calculations per day. Sign in as user, client, or admin.",
-    guestCounter:"Guest: {left}/5",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?",
+    guestCounter:"Guest: {left}/5 left",resetGuestLimit:"Reset guest",guestLimitResetDone:"Guest limit reset",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?",
     accessTitle:"Invitation to cooperate",accessLead:"This option is available to ST Spetsmontazh clients.",accessBody:"If you are already selecting products for a project, contact us in whichever way is convenient. A manager will help with the order and provide a personal QR code to unlock saving, printing, and other working tools.",accessQrCaption:"A manager provides the QR code after contact",accessLogin:"Open cabinet",accessSite:"Company website",accessLater:"Later",accessHours:"Mon-Fri 9:00 - 18:00"
     ,languageConflictTitle:"Check row language",languageConflictProduct:"Product name is not recognized in the catalog",languageConflictMaterial:"Material is not recognized",languageConflictOpen:"File opened, but some rows need localization review:"
   }
@@ -1038,6 +1043,8 @@ function renderRole(){
   const role=currentRole();
   document.body.dataset.role=role;
   roleChip.textContent=roleLabel(role);
+  adminGuestReset.textContent=t("resetGuestLimit");
+  adminGuestReset.title=t("resetGuestLimit");
   loginBtn.textContent=role==="guest"?t("login"):t("logout");
   renderGuestCounter();
   document.querySelectorAll(".role-option").forEach((button)=>button.classList.toggle("active",button.dataset.role===selectedLoginRole));
@@ -1141,6 +1148,14 @@ function renderGuestCounter(){
   const left=Math.max(0,guestDailyLimit-usage.count);
   guestCounter.textContent=t("guestCounter").replace("{left}",left);
 }
+function resetGuestLimit(){
+  localStorage.setItem(guestUsageKey,JSON.stringify({date:localDateKey(),count:0}));
+  renderGuestCounter();
+  adminGuestReset.textContent=t("guestLimitResetDone");
+  setTimeout(()=>{adminGuestReset.textContent=t("resetGuestLimit")},1600);
+  const url=currentFrameUrl();
+  if(isCalculatorUrl(url))openUrl(url,{countGuest:false});
+}
 function isCalculatorUrl(url){
   const next=new URL(url,location.href);
   return next.pathname.replaceAll("\\","/").endsWith("/modules/common/calculator.html")&&next.searchParams.has("module");
@@ -1148,7 +1163,10 @@ function isCalculatorUrl(url){
 function consumeGuestCalculation(url){
   if(currentRole()!=="guest"||!isCalculatorUrl(url))return true;
   const usage=readGuestUsage();
-  if(usage.count>=guestDailyLimit){alert(t("guestLimit"));return false}
+  if(usage.count>=guestDailyLimit){
+    openAccessInvite(t("guestLimit"));
+    return false;
+  }
   usage.count+=1;
   localStorage.setItem(guestUsageKey,JSON.stringify(usage));
   renderGuestCounter();
@@ -2011,6 +2029,7 @@ document.getElementById("openSpecFile").addEventListener("change",(event)=>{cons
 document.getElementById("fullscreenSpec").addEventListener("click",()=>gatedProjectAction("Fullscreen",()=>side.requestFullscreen?.()));
 lang.addEventListener("change",()=>{saveSettings();applyLanguage();openUrl(currentFrameUrl(),{countGuest:false})});
 loginBtn.addEventListener("click",()=>{currentRole()==="guest"?openLogin():saveRole("guest")});
+adminGuestReset.addEventListener("click",resetGuestLimit);
 document.getElementById("loginClose").addEventListener("click",closeLogin);
 loginForm.addEventListener("submit",(event)=>{event.preventDefault();tryLogin()});
 registerBtn.addEventListener("click",registerDemoAccount);
