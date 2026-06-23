@@ -168,6 +168,7 @@ body[data-role="user"] .project-actions button:hover{background:#fff3df;color:#b
 .mobile-switch button{flex:1;border:0;border-radius:8px;background:#eef0f3;padding:11px 10px;font-weight:700}
 .mobile-switch button.active{background:var(--accent);color:#fff}
 .print-watermark{display:none}
+.print-spec-report{display:none}
 .login-modal[hidden]{display:none}
 .login-modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;background:rgba(0,0,0,.55);padding:18px}
 .login-card{position:relative;width:min(340px,calc(100vw - 36px));border-radius:14px;background:#fff;box-shadow:0 22px 70px rgba(0,0,0,.28);padding:28px 28px 24px}
@@ -235,12 +236,12 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   @page{size:A4 landscape;margin:10mm}
   html,body{height:auto!important;overflow:visible!important;background:#fff!important}
   body{font-size:10px!important;color:#111!important}
-  .print-watermark{display:block!important;position:fixed;inset:-12mm;z-index:9998;pointer-events:none;overflow:hidden}
-  .print-watermark span{position:absolute;width:420mm;color:#5d6673;opacity:.11;font-family:"Open Sans Condensed","Arial Narrow",Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;white-space:nowrap;transform:rotate(-24deg)}
-  .print-watermark span:nth-child(2n){color:#df7a12;opacity:.105}
-  .print-watermark span:nth-child(1){left:-70mm;top:-18mm}.print-watermark span:nth-child(2){left:-12mm;top:10mm}.print-watermark span:nth-child(3){left:-95mm;top:39mm}.print-watermark span:nth-child(4){left:8mm;top:64mm}.print-watermark span:nth-child(5){left:-56mm;top:92mm}.print-watermark span:nth-child(6){left:-118mm;top:124mm}.print-watermark span:nth-child(7){left:-4mm;top:147mm}.print-watermark span:nth-child(8){left:-82mm;top:178mm}.print-watermark span:nth-child(9){left:24mm;top:204mm}
-  .print-watermark img{position:absolute;width:38mm;height:auto;opacity:.065;filter:grayscale(.2)}
-  .print-watermark img:nth-of-type(1){left:3mm;top:6mm;transform:rotate(-31deg)}.print-watermark img:nth-of-type(2){left:90mm;top:34mm;transform:rotate(-16deg)}.print-watermark img:nth-of-type(3){left:218mm;top:18mm;transform:rotate(-27deg)}.print-watermark img:nth-of-type(4){left:34mm;top:91mm;transform:rotate(-20deg)}.print-watermark img:nth-of-type(5){left:178mm;top:108mm;transform:rotate(-34deg)}.print-watermark img:nth-of-type(6){left:78mm;top:170mm;transform:rotate(-12deg)}.print-watermark img:nth-of-type(7){left:238mm;top:153mm;transform:rotate(-25deg)}
+  .print-watermark{display:block!important;position:fixed;left:0;right:0;top:34mm;bottom:0;z-index:2;pointer-events:none;overflow:hidden;mix-blend-mode:multiply}
+  .print-watermark span{position:absolute;width:360mm;color:#5d6673;opacity:.055;font-family:"Open Sans Condensed","Arial Narrow",Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;white-space:nowrap;transform:rotate(-23deg)}
+  .print-watermark span:nth-child(2n){color:#df7a12;opacity:.052}
+  .print-watermark span:nth-child(1){left:-78mm;top:6mm}.print-watermark span:nth-child(2){left:34mm;top:37mm}.print-watermark span:nth-child(3){left:-52mm;top:71mm}.print-watermark span:nth-child(4){left:54mm;top:106mm}.print-watermark span:nth-child(5){left:-66mm;top:142mm}.print-watermark span:nth-child(6){left:36mm;top:176mm}.print-watermark span:nth-child(7){left:-44mm;top:210mm}.print-watermark span:nth-child(8){left:58mm;top:242mm}.print-watermark span:nth-child(9){left:-30mm;top:274mm}
+  .print-watermark img{position:absolute;width:31mm;height:auto;opacity:.035;filter:grayscale(.15)}
+  .print-watermark img:nth-of-type(1){left:106mm;top:12mm;transform:rotate(-18deg)}.print-watermark img:nth-of-type(2){left:238mm;top:18mm;transform:rotate(-27deg)}.print-watermark img:nth-of-type(3){left:22mm;top:80mm;transform:rotate(-16deg)}.print-watermark img:nth-of-type(4){left:170mm;top:94mm;transform:rotate(-30deg)}.print-watermark img:nth-of-type(5){left:242mm;top:144mm;transform:rotate(-18deg)}.print-watermark img:nth-of-type(6){left:64mm;top:182mm;transform:rotate(-25deg)}.print-watermark img:nth-of-type(7){left:190mm;top:216mm;transform:rotate(-14deg)}
   .topbar{position:static!important;height:16mm!important;display:flex!important;box-shadow:none!important;border-bottom:1px solid #ddd!important;padding:0 0 4mm!important;margin:0 0 5mm!important;background:#fff!important}
   .topbar .brand img{width:40mm!important;height:auto!important}
   .top-actions,.work,.resizer,.mobile-switch,.nav-actions,.spec-panel,.project-actions,.project-row-actions,.project-clear-all,.project-edit,.project-remove,.filter-menu,.clear-menu,.project-tip,.login-modal{display:none!important}
@@ -251,7 +252,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   .project-hero h2{font-size:22px!important;margin:0 0 10px!important}
   .project-meta{gap:6px!important}
   .project-meta input{height:26px!important;font-size:10px!important;border-color:#ddd!important}
-  .project-head h2{font-size:14px!important;margin:0 0 4px!important}
+  .project-head{display:none!important}
   .project-table,.summary-table{overflow:visible!important;max-height:none!important;min-height:0!important;border-radius:0!important;box-shadow:none!important;border:1px solid #ddd!important;break-inside:auto!important;position:relative!important;z-index:1!important;background:rgba(255,255,255,.88)!important}
   .project-grid{min-width:100%!important;grid-template-columns:8mm 42mm 34mm 44mm 10mm 42mm 8mm 20mm 20mm 49mm 0!important}
   .summary-table .project-grid{grid-template-columns:8mm 12mm 72mm 8mm 24mm 24mm!important}
@@ -275,15 +276,20 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   .summary-table .project-cell:nth-child(9){display:block!important;grid-column:6!important;order:6!important}
   .summary-table .project-cell:nth-child(2),.summary-table .project-cell:nth-child(3),.summary-table .project-cell:nth-child(4),.summary-table .project-cell:nth-child(10),.summary-table .project-cell:nth-child(11){display:none!important}
   .summary-table .project-head-row .project-cell:nth-child(1),.summary-table .project-head-row .project-cell:nth-child(5),.summary-table .project-head-row .project-cell:nth-child(6),.summary-table .project-head-row .project-cell:nth-child(7),.summary-table .project-head-row .project-cell:nth-child(8),.summary-table .project-head-row .project-cell:nth-child(9){display:flex!important}
-  .project-table,.summary-table{display:table!important;width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
-  .project-table>.project-head-row,.summary-table .project-head-row{display:table-header-group!important}
-  #projectRows,#projectTotal,#materialRows,#materialTotal{display:table-row-group!important}
-  .project-grid{display:table-row!important;min-width:0!important}
-  .project-cell,.project-cell:nth-child(-n+10),.project-head-row .project-cell,.project-head-row .project-cell:nth-child(-n+10){display:table-cell!important;vertical-align:top!important}
-  .summary-table .project-head-row .project-cell,.summary-table .project-head-row .project-cell:nth-child(1),.summary-table .project-head-row .project-cell:nth-child(5),.summary-table .project-head-row .project-cell:nth-child(6),.summary-table .project-head-row .project-cell:nth-child(7),.summary-table .project-head-row .project-cell:nth-child(8),.summary-table .project-head-row .project-cell:nth-child(9){display:table-cell!important}
-  .project-head-row .project-cell{position:static!important;height:auto!important;min-height:0!important;padding:5px 6px!important}
-  .project-table .project-cell:nth-child(1){width:8mm!important}.project-table .project-cell:nth-child(2){width:48mm!important}.project-table .project-cell:nth-child(3){width:34mm!important}.project-table .project-cell:nth-child(4){width:42mm!important}.project-table .project-cell:nth-child(5){width:12mm!important}.project-table .project-cell:nth-child(6){width:38mm!important}.project-table .project-cell:nth-child(7){width:10mm!important}.project-table .project-cell:nth-child(8){width:24mm!important}.project-table .project-cell:nth-child(9){width:22mm!important}.project-table .project-cell:nth-child(10){width:39mm!important}
-  .summary-table .project-cell:nth-child(1){width:8mm!important}.summary-table .project-cell:nth-child(5){width:16mm!important}.summary-table .project-cell:nth-child(6){width:80mm!important}.summary-table .project-cell:nth-child(7){width:10mm!important}.summary-table .project-cell:nth-child(8){width:35mm!important}.summary-table .project-cell:nth-child(9){width:35mm!important}
+  .project-table,.material-summary{display:none!important}
+  .print-spec-report{display:block!important;position:relative;z-index:1;background:transparent!important}
+  .print-spec-section{margin:0 0 6mm!important;break-inside:auto}
+  .print-spec-title{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:0 0 2mm;font-size:14px;font-weight:800;font-style:italic}
+  .print-spec-title small{font-size:10px;font-weight:700;font-style:normal}
+  .print-spec-table{width:100%;border-collapse:collapse;table-layout:fixed;background:transparent;font-size:8px;line-height:1.18}
+  .print-spec-table thead{display:table-header-group}
+  .print-spec-table tfoot{display:table-row-group}
+  .print-spec-table tr{break-inside:avoid}
+  .print-spec-table th,.print-spec-table td{border:1px solid #e1e4e8;padding:3px 4px;vertical-align:top;white-space:normal;overflow-wrap:anywhere;word-break:normal}
+  .print-spec-table th{color:#7b838e;font-weight:800;font-style:italic;text-align:left;background:rgba(255,255,255,.72)}
+  .print-spec-table td.num,.print-spec-table th.num{text-align:center}
+  .print-spec-table td.total{font-weight:800;background:rgba(246,247,249,.9);border-top:2px solid #df7a12}
+  .print-spec-table strong{font-size:8.5px}
 }
 </style>
 </head>
@@ -306,7 +312,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-22-192302">build 2026-06-22-1923</div>
+<div class="build-marker" hidden data-cache="build-2026-06-23-191410">build 2026-06-23-1914</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -415,6 +421,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
           <div class="project-grid project-total" id="materialTotal"></div>
         </div>
       </section>
+      <div class="print-spec-report" id="printSpecReport" aria-hidden="true"></div>
       <div class="project-actions">
         <button id="printSpec" type="button" data-i="print">Печать</button>
         <button id="exportSpec" type="button" data-i="export">Экспорт</button>
@@ -529,6 +536,7 @@ const projectRows=document.getElementById("projectRows");
 const projectTotal=document.getElementById("projectTotal");
 const materialRows=document.getElementById("materialRows");
 const materialTotal=document.getElementById("materialTotal");
+const printSpecReport=document.getElementById("printSpecReport");
 const projectTip=document.getElementById("projectTip");
 const clearMenu=document.getElementById("clearMenu");
 const projectNameInput=document.getElementById("projectName");
@@ -1619,13 +1627,14 @@ function renderProject(){
   totalArea.textContent=area.toFixed(3)+" м²";
   totalMass.textContent=mass.toFixed(2)+" "+t("kg");
   renderMaterialSummary(visibleItems);
+  renderPrintSpecReport(entries,visibleItems,{qty,area,mass});
   applySortMarks();
   applyColumnVisibility();
   applyDimsUnderName();
   updateProjectOverflow();
   restoreScrollPositions();
 }
-function renderMaterialSummary(items=project){
+function materialSummaryRows(items=project){
   const groups=new Map();
   items.forEach((item)=>{
     const material=displayMaterial(item);
@@ -1636,7 +1645,10 @@ function renderMaterialSummary(items=project){
     group.mass+=Number(item.mass||0);
     groups.set(key,group);
   });
-  const rows=[...groups.values()];
+  return [...groups.values()];
+}
+function renderMaterialSummary(items=project){
+  const rows=materialSummaryRows(items);
   materialRows.innerHTML=rows.map((row,index)=>`
     <div class="project-grid project-row">
       <span class="project-cell is-numeric">${index+1}</span>
@@ -1666,6 +1678,109 @@ function renderMaterialSummary(items=project){
     <span class="project-cell is-numeric">${mass.toFixed(2)} ${t("kg")}</span>
     <span class="project-cell"></span>
     <span class="project-cell"></span>`;
+}
+function printSpecColumns(){
+  const dimsUnderName=showDimensionsUnderName();
+  const indexes=orderedColumnIndexes().filter((index)=>index!==10);
+  const fallback=[0,1,2,3,4,5,6,7,8,9].filter((index)=>!(dimsUnderName&&index===2));
+  const active=indexes.length?indexes:fallback;
+  const labels={
+    0:"№",
+    1:t("name"),
+    2:t("dimensions"),
+    3:t("description"),
+    4:t("quantity"),
+    5:t("material"),
+    6:"t",
+    7:t("area"),
+    8:t("mass"),
+    9:t("comment")
+  };
+  const classes={0:"num",4:"num",6:"num",7:"num",8:"num"};
+  const minMm={0:7,1:32,2:24,3:28,4:9,5:30,6:8,7:18,8:18,9:26};
+  const raw=effectiveColumnWidths();
+  const available=277;
+  const minSum=active.reduce((sum,index)=>sum+(minMm[index]||12),0);
+  const flex=Math.max(0,available-minSum);
+  const rawSum=active.reduce((sum,index)=>sum+Math.max(1,raw[index]||columnWidths[index]||defaultColumnWidths[index]||1),0)||1;
+  return active.map((index)=>({
+    index,
+    key:["no","name","dimensions","description","quantity","material","thickness","area","mass","comment"][index],
+    label:labels[index]||"",
+    width:`${((minMm[index]||12)+(flex*(Math.max(1,raw[index]||columnWidths[index]||defaultColumnWidths[index]||1)/rawSum))).toFixed(2)}mm`,
+    cls:classes[index]||""
+  }));
+}
+function printSpecCellValue(item,index,visibleIndex){
+  const dimensions=formatDimensions(item);
+  if(index===0)return visibleIndex+1;
+  if(index===1)return `<strong>${escapeHtml(displayProductName(item))}</strong>${showDimensionsUnderName()&&dimensions?`<br><small>${escapeHtml(dimensions)}</small>`:""}`;
+  if(index===2)return escapeHtml(dimensions);
+  if(index===3)return escapeHtml(displayDescription(item));
+  if(index===4)return escapeHtml(item.quantity||1);
+  if(index===5)return escapeHtml(displayMaterial(item));
+  if(index===6)return escapeHtml(item.thickness||"");
+  if(index===7)return `${Number(item.area||0).toFixed(3)} м²`;
+  if(index===8)return `${Number(item.mass||0).toFixed(2)} ${t("kg")}`;
+  if(index===9)return escapeHtml(item.comment||"");
+  return "";
+}
+function renderPrintSpecReport(entries=filteredProjectEntries(),visibleItems=entries.map(({item})=>item),totals=null){
+  const items=visibleItems;
+  const total=totals||{
+    qty:items.reduce((sum,item)=>sum+Number(item.quantity||1),0),
+    area:items.reduce((sum,item)=>sum+Number(item.area||0),0),
+    mass:items.reduce((sum,item)=>sum+Number(item.mass||0),0)
+  };
+  const specColumns=printSpecColumns();
+  const colgroup=(columns)=>`<colgroup>${columns.map((column)=>`<col style="width:${column.width}">`).join("")}</colgroup>`;
+  const head=(columns)=>`<thead><tr>${columns.map((column)=>`<th class="${column.cls||""}">${escapeHtml(column.label)}</th>`).join("")}</tr></thead>`;
+  const specBody=entries.map(({item,index})=>{
+    return `<tr>${specColumns.map((column)=>`<td class="${column.cls||""}">${printSpecCellValue(item,column.index,index)}</td>`).join("")}</tr>`;
+  }).join("");
+  const totalLabelColumn=specColumns.find((column)=>column.index===1)||specColumns.find((column)=>!column.cls)||specColumns[0];
+  const specTotal=`<tr>${specColumns.map((column,index)=>{
+    let value="";
+    if(column===totalLabelColumn)value=t("total");
+    if(column.index===4)value=total.qty;
+    if(column.index===7)value=`${total.area.toFixed(3)} м²`;
+    if(column.index===8)value=`${total.mass.toFixed(2)} ${t("kg")}`;
+    return `<td class="total ${column.cls||""}">${escapeHtml(value)}</td>`;
+  }).join("")}</tr>`;
+  const summaryRows=materialSummaryRows(items);
+  const summaryColumns=[
+    {key:"no",label:"№",width:"8mm",cls:"num"},
+    {key:"quantity",label:t("quantity"),width:"16mm",cls:"num"},
+    {key:"material",label:t("material"),width:"86mm"},
+    {key:"thickness",label:"t",width:"10mm",cls:"num"},
+    {key:"area",label:t("area"),width:"34mm",cls:"num"},
+    {key:"mass",label:t("mass"),width:"34mm",cls:"num"}
+  ];
+  const summaryBody=summaryRows.map((row,index)=>`<tr>
+    <td class="num">${index+1}</td>
+    <td class="num">${row.quantity}</td>
+    <td><strong>${escapeHtml(row.material)}</strong></td>
+    <td class="num">${escapeHtml(row.thickness)}</td>
+    <td class="num">${row.area.toFixed(3)} м²</td>
+    <td class="num">${row.mass.toFixed(2)} ${t("kg")}</td>
+  </tr>`).join("");
+  const summaryTotal=`<tr>
+    <td class="total"></td>
+    <td class="total num">${summaryRows.reduce((sum,row)=>sum+row.quantity,0)}</td>
+    <td class="total"><strong>${t("materialCount").replace("{count}",summaryRows.length)}</strong></td>
+    <td class="total"></td>
+    <td class="total num">${summaryRows.reduce((sum,row)=>sum+row.area,0).toFixed(3)} м²</td>
+    <td class="total num">${summaryRows.reduce((sum,row)=>sum+row.mass,0).toFixed(2)} ${t("kg")}</td>
+  </tr>`;
+  printSpecReport.innerHTML=`
+    <section class="print-spec-section">
+      <div class="print-spec-title"><span>${t("spec")}</span><small>${entries.length===project.length?project.length:`${entries.length}/${project.length}`}</small></div>
+      <table class="print-spec-table">${colgroup(specColumns)}${head(specColumns)}<tbody>${specBody}${specTotal}</tbody></table>
+    </section>
+    <section class="print-spec-section">
+      <div class="print-spec-title"><span>${t("materialSummary")}</span></div>
+      <table class="print-spec-table print-summary-table">${colgroup(summaryColumns)}${head(summaryColumns)}<tbody>${summaryBody}${summaryTotal}</tbody></table>
+    </section>`;
 }
 function escapeHtml(value){
   return String(value??"").replace(/[&<>"']/g,(char)=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char]));
@@ -1783,6 +1898,7 @@ projectRows.addEventListener("input",(event)=>{
   if(!project[index])return;
   project[index].comment=textarea.value;
   localStorage.setItem(storageKey,JSON.stringify(project));
+  renderPrintSpecReport();
 });
 projectRows.addEventListener("pointerover",(event)=>{
   const cell=event.target.closest(".project-pos");
@@ -1987,11 +2103,3 @@ openUrl("assets/atlas/atlas.html");
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
