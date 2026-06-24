@@ -17,7 +17,7 @@
   };
   const t=i18n[lang]||i18n.ru;
   Object.assign(i18n.ru,{units:"Ед. измерения",unitMM:"мм",unitIN:"дюймы",ft2:"ft²",lb:"lb",conn1:"Соединение 1",conn2:"Соединение 2",lock:"Продольный замок (S1)",lockAm:"Американский",lockSize:"Размер замка",sheetSplit:"Панель не влезает на лист — разделить, русский замок",pdf:"Сохранить PDF"});
-  Object.assign(i18n.uk,{units:"Од. виміру",unitMM:"мм",unitIN:"дюйми",ft2:"ft²",lb:"lb",conn1:"З'єднання 1",conn2:"З'єднання 2",lock:"Поздовжній замок (S1)",lockAm:"Американський",lockSize:"Розмір замка",sheetSplit:"Панель не влазить на лист — розділити, російський замок",pdf:"Зберегти PDF"});
+  Object.assign(i18n.uk,{units:"Од. виміру",unitMM:"мм",unitIN:"дюйми",ft2:"ft²",lb:"lb",conn1:"З'єднання 1",conn2:"З'єднання 2",lock:"Поздовжній замок (S1)",lockAm:"Американський",lockSize:"Розмір замка",sheetSplit:"Панель не влазить на лист — розділити, руський замок",pdf:"Зберегти PDF"});
   Object.assign(i18n.en,{units:"Units",unitMM:"mm",unitIN:"inch",ft2:"ft²",lb:"lb",conn1:"Connection 1",conn2:"Connection 2",lock:"Longitudinal lock (S1)",lockAm:"American",lockSize:"Lock size",sheetSplit:"Panel exceeds sheet — split, Russian lock",pdf:"Save PDF"});
   Object.assign(i18n.ru,{guestRemaining:"Гостевой доступ: осталось {left} из {limit} расчётов.",guestUsed:"Гостевой лимит на сегодня исчерпан. Войдите или зарегистрируйтесь, чтобы продолжить."});
   Object.assign(i18n.uk,{guestRemaining:"Гостьовий доступ: залишилось {left} з {limit} розрахунків.",guestUsed:"Гостьовий ліміт на сьогодні вичерпано. Увійдіть або зареєструйтесь, щоб продовжити."});
@@ -25,6 +25,15 @@
   Object.assign(i18n.ru,{optionsReserved:"Здесь будут настройки отверстий и дополнительных параметров изделия.",formulaHelpPending:"Инженерная расшифровка появится после расчёта."});
   Object.assign(i18n.uk,{optionsReserved:"Тут будуть налаштування отворів і додаткових параметрів виробу.",formulaHelpPending:"Інженерна розшифровка з'явиться після розрахунку."});
   Object.assign(i18n.en,{optionsReserved:"Opening and additional product options will appear here.",formulaHelpPending:"Engineering breakdown will appear after calculation."});
+  Object.assign(i18n.ru,{openings:"Отверстия",openingType:"Тип отверстия",openingNone:"Без отверстий",openingRound:"Круглое",openingRect:"Прямоугольное",openingD:"Диаметр D",openingA:"Размер A",openingB:"Размер B",openingQty:"Количество отверстий",openingArea:"Площадь отверстий",addOpening:"Добавить отверстие",removeOpening:"Удалить отверстие",openingRow:"Отверстие"});
+  Object.assign(i18n.uk,{openings:"Отвори",openingType:"Тип отвору",openingNone:"Без отворів",openingRound:"Круглий",openingRect:"Прямокутний",openingD:"Діаметр D",openingA:"Розмір A",openingB:"Розмір B",openingQty:"Кількість отворів",openingArea:"Площа отворів",addOpening:"Додати отвір",removeOpening:"Видалити отвір",openingRow:"Отвір"});
+  Object.assign(i18n.en,{openings:"Openings",openingType:"Opening type",openingNone:"No openings",openingRound:"Round",openingRect:"Rectangular",openingD:"Diameter D",openingA:"Size A",openingB:"Size B",openingQty:"Opening quantity",openingArea:"Opening area",addOpening:"Add opening",removeOpening:"Remove opening",openingRow:"Opening"});
+  Object.assign(i18n.ru,{helpParams:"ПАРАМЕТРЫ",helpLogic:"ЛОГИКА РАСЧЁТА",helpLocks:"ЗАМКИ",helpSheet:"РАСКЛАДКА ЛИСТА",helpResult:"ИТОГ",helpWidth:"ширина изделия",helpHeight:"высота изделия",helpLength:"длина изделия",helpQty:"количество",helpThickness:"толщина металла",helpPerimeter:"периметр прямоугольного сечения",helpGrossArea:"развернутая площадь до вычета отверстий",helpCleanArea:"чистовая площадь после вычета отверстий, без замков",helpOpeningArea:"площадь вычитаемых отверстий",helpLockArea:"добавка на замки",helpRussianArea:"добавка на русские замки, если лист делится по ширине/длине",helpLock:"Замок",helpParts:"частей",helpRussianLocks:"Русские замки",helpSheetLabel:"Лист",helpLayout:"Раскладка",helpNoOpenings:"Отверстия: 0"});
+  Object.assign(i18n.uk,{helpParams:"ПАРАМЕТРИ",helpLogic:"ЛОГІКА РОЗРАХУНКУ",helpLocks:"ЗАМКИ",helpSheet:"РОЗКЛАДКА ЛИСТА",helpResult:"ПІДСУМОК",helpWidth:"ширина виробу",helpHeight:"висота виробу",helpLength:"довжина виробу",helpQty:"кількість",helpThickness:"товщина металу",helpPerimeter:"периметр прямокутного перерізу",helpGrossArea:"розгорнута площа до віднімання отворів",helpCleanArea:"чистова площа після віднімання отворів, без замків",helpOpeningArea:"площа отворів, що віднімаються",helpLockArea:"добавка на замки",helpRussianArea:"добавка на руські замки, якщо лист ділиться за шириною/довжиною",helpLock:"Замок",helpParts:"частин",helpRussianLocks:"Руські замки",helpSheetLabel:"Лист",helpLayout:"Розкладка",helpNoOpenings:"Отвори: 0"});
+  Object.assign(i18n.en,{helpParams:"PARAMETERS",helpLogic:"CALCULATION LOGIC",helpLocks:"LOCKS",helpSheet:"SHEET LAYOUT",helpResult:"RESULT",helpWidth:"product width",helpHeight:"product height",helpLength:"product length",helpQty:"quantity",helpThickness:"metal thickness",helpPerimeter:"rectangular section perimeter",helpGrossArea:"developed area before opening deduction",helpCleanArea:"net area after opening deduction, without locks",helpOpeningArea:"deducted opening area",helpLockArea:"lock allowance",helpRussianArea:"Russian-lock allowance when the sheet is split by width/length",helpLock:"Lock",helpParts:"parts",helpRussianLocks:"Russian locks",helpSheetLabel:"Sheet",helpLayout:"Layout",helpNoOpenings:"Openings: 0"});
+  Object.assign(i18n.ru,{sGross:"Sразв",sClean:"Sчист",sOpening:"Sотв",sLock:"Sзамк",sRussian:"Sрус",sTotal:"Sитог"});
+  Object.assign(i18n.uk,{sGross:"Sрозг",sClean:"Sчист",sOpening:"Sотв",sLock:"Sзамк",sRussian:"Sруськ",sTotal:"Sпідс"});
+  Object.assign(i18n.en,{sGross:"Sgross",sClean:"Snet",sOpening:"Sopen",sLock:"Slock",sRussian:"Ssplit",sTotal:"Stotal"});
   let UNIT="mm";const UF=()=>UNIT==="in"?25.4:1;
   const RAILMM=10;const RECT_CONN=["Ш20","Ш30","Ш20 Сам","Ш30 Сам","Рейка","ГК"];
   const materials=[
@@ -136,7 +145,8 @@
   function panel(id,title,body,collapsed){return`<div class="panel ${collapsed?"collapsed":""}" id="panel-${id}"><div class="panel-head" draggable="true"><span class="drag">⠿</span><span class="caret">▼</span><span class="title">${title}</span><button class="hide" type="button">✕</button></div><div class="panel-body">${body}</div></div>`}
   function fieldLabel(field){return typeof field.label==="object"?pick(field.label):field.label}
   function fieldsHtml(fields){return fields.map(field=>`<div class="field"><label for="f-${field.key}">${fieldLabel(field)}</label>${field.type==="select"?selectHtml(field):field.type==="offset"?offsetHtml(field):numberHtml(field)}</div>`).join("")}
-  function numberHtml(field){return`<input id="f-${field.key}" data-key="${field.key}" type="number" inputmode="decimal" step="1" min="0" value="${field.default}" list="dl-${field.key}"><datalist id="dl-${field.key}">${standardSizes.map(v=>`<option value="${v}"></option>`).join("")}</datalist>`}
+  function sizeComboHtml(inputAttrs){return`<div class="size-combo"><input ${inputAttrs} type="number" inputmode="decimal" step="1" min="0"><button class="size-toggle" type="button" aria-label="${t.sizes}">▼</button><div class="size-menu" hidden>${standardSizes.map(v=>`<button type="button" data-size-value="${v}">${v}</button>`).join("")}</div></div>`}
+  function numberHtml(field){return sizeComboHtml(`id="f-${field.key}" data-key="${field.key}" value="${field.default}"`)}
   function selectHtml(field){return`<select id="f-${field.key}" data-key="${field.key}">${field.options.map(v=>`<option value="${v}" ${v===field.default?"selected":""}>${optionText(v)}</option>`).join("")}</select>`}
   function offsetOptions(field){return ["value",...field.options].filter((value,index,array)=>array.indexOf(value)===index)}
   function offsetHtml(field){const options=offsetOptions(field);return`<div class="offset-combo" data-offset-combo="${field.key}"><input id="f-${field.key}" data-key="${field.key}" data-offset-options="${options.join(",")}" type="text" inputmode="decimal" value="${optionText(field.default)}" placeholder="${optionText("value")}"><button class="offset-toggle" type="button" aria-label="${optionText("value")}">▼</button><div class="offset-menu" hidden>${options.map(v=>`<button type="button" data-offset-value="${v}">${optionText(v)}</button>`).join("")}</div></div>`}
@@ -157,7 +167,14 @@
     return typeof code==="number"?String(code):optionText(code);
   }
   function qtyHtml(){return`<div class="field"><label for="f-Q">${t.qty}</label><input id="f-Q" data-key="Q" type="number" min="1" step="1" value="1"></div>`}
-  function optionsHtml(){return cfg.type==="table"?`<p class="tab-empty">${t.notReady}</p>`:(canViewFormulas?`<p class="tab-empty">${t.optionsReserved}</p>`:`<p class="tab-empty">${t.calcHidden}</p>`)}
+  function optionsHtml(){
+    if(moduleKey==="rectangular-duct"){
+      return `<div id="openingList" class="opening-list" style="display:grid;gap:8px"></div>`+
+             `<button class="chip" type="button" id="addOpeningBtn" style="margin-top:8px">+ ${t.addOpening}</button>`+
+             `<p class="help-text" id="openingSummary" style="margin-top:6px"></p>`;
+    }
+    return cfg.type==="table"?`<p class="tab-empty">${t.notReady}</p>`:(canViewFormulas?`<p class="tab-empty">${t.optionsReserved}</p>`:`<p class="tab-empty">${t.calcHidden}</p>`);
+  }
   function detailHtml(){return`<div class="field"><label for="material">${t.material}</label><select id="material">${materials.map(m=>`<option value="${m.key}">${m.label}</option>`).join("")}</select></div><div class="field"><label for="thickness">${t.thickness}</label><select id="thickness"></select></div>`}
   function connectorsHtml(){
     if(cfg.category==="rectangular"){
@@ -172,9 +189,9 @@
     return`<div class="connection-grid">${cfg.connections.map(key=>`<div class="connection-row" data-conn="${key}"><span>${key}</span><label><input type="checkbox" data-conn-kind="minus" checked>${t.minus}</label><label><input type="checkbox" data-conn-kind="nom">${t.nom}</label><label><input type="checkbox" data-conn-kind="plus">${t.plus}</label></div>`).join("")}</div>`;
   }
   function unitRowHtml(){return`<div class="field"><label for="units">${t.units}</label><select id="units"><option value="mm">${t.unitMM}</option><option value="in">${t.unitIN}</option></select></div>`}
-  function setUnit(u){const from=UF();UNIT=u;const to=UF();document.querySelectorAll("[data-key]").forEach(el=>{const k=el.dataset.key;if(k==="Q")return;if(el.type==="number"){const val=parseFloat(el.value);if(!isNaN(val)){el.value=(u==="in")?(+(val*from/to).toFixed(2)):Math.round(val*from/to);state[k]=el.value;}}else if(el.type==="text"){const c=offsetCode(el.value);if(typeof c==="number"){const nv=(u==="in")?(+(c*from/to).toFixed(2)):Math.round(c*from/to);el.value=offsetDisplay(nv);state[k]=el.value;}}});update();}
+  function setUnit(u){const from=UF();UNIT=u;const to=UF();document.querySelectorAll("[data-key]").forEach(el=>{const k=el.dataset.key;if(k==="Q"||k==="HoleQ")return;if(el.type==="number"){const val=parseFloat(el.value);if(!isNaN(val)){el.value=(u==="in")?(+(val*from/to).toFixed(2)):Math.round(val*from/to);state[k]=el.value;}}else if(el.type==="text"){const c=offsetCode(el.value);if(typeof c==="number"){const nv=(u==="in")?(+(c*from/to).toFixed(2)):Math.round(c*from/to);el.value=offsetDisplay(nv);}}});document.querySelectorAll("[data-opening-dim]").forEach(el=>{const val=parseFloat(el.value);if(!isNaN(val))el.value=(u==="in")?(+(val*from/to).toFixed(2)):Math.round(val*from/to);});update();}
   function setRail(connId,fieldKey){const sl=document.getElementById(connId),f=document.getElementById("f-"+fieldKey);if(!sl||!f)return;if(sl.value==="Рейка"){if(!f.readOnly)f.dataset.prev=f.value;f.value=0;f.readOnly=true;f.style.opacity=.6;}else if(f.readOnly){f.value=f.dataset.prev||25;f.readOnly=false;f.style.opacity=1;}state[f.dataset.key]=f.value;}
-  function toMM(values){const v={...values};cfg.fields.filter(f=>f.type==="number").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});cfg.fields.filter(f=>f.type==="offset").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});return v;}
+  function toMM(values){const v={...values};cfg.fields.filter(f=>f.type==="number").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});cfg.fields.filter(f=>f.type==="offset").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});["HoleA","HoleB"].forEach(key=>{if(typeof v[key]==="number")v[key]=v[key]*UF();});if(Array.isArray(v.openings))v.openings=v.openings.map(opening=>({...opening,a:Number(opening.a||0)*UF(),b:Number(opening.b||0)*UF()}));return v;}
   function helpHtml(){return canViewFormulas?`<p class="help-text" id="formulaHelp">${t.formulaHelpPending}</p>`:`<p class="help-text">${t.connectionHelp}</p>`}
   function bind(){
     document.getElementById("toAtlas").addEventListener("click",()=>sendOpen(moduleUrl("")));
@@ -228,7 +245,9 @@
     });
     document.addEventListener("pointerdown",(event)=>{
       if(!event.target.closest(".offset-combo"))document.querySelectorAll(".offset-menu").forEach(menu=>menu.hidden=true);
+      if(!event.target.closest(".size-combo"))document.querySelectorAll(".size-menu").forEach(menu=>menu.hidden=true);
     });
+    bindSizeCombos(document);
     const material=document.getElementById("material");
     if(params.has("material")&&[...material.options].some(option=>option.value===params.get("material")))material.value=params.get("material");
     material.addEventListener("change",()=>{renderThicknessOptions();update()});
@@ -253,6 +272,98 @@
     const c1=document.getElementById("conn1"),c2=document.getElementById("conn2");
     if(c1)c1.addEventListener("change",()=>{setRail("conn1","F");update();});
     if(c2)c2.addEventListener("change",()=>{setRail("conn2","G");update();});
+    initOpenings();
+  }
+  function bindSizeCombos(root){
+    root.querySelectorAll(".size-combo").forEach(combo=>{
+      if(combo.dataset.sizeBound==="1")return;
+      combo.dataset.sizeBound="1";
+      const input=combo.querySelector("input");
+      const menu=combo.querySelector(".size-menu");
+      const showSizeMenu=()=>{
+        document.querySelectorAll(".size-menu").forEach(other=>{if(other!==menu)other.hidden=true});
+        menu.hidden=false;
+      };
+      input.addEventListener("focus",()=>{showSizeMenu();setTimeout(()=>input.select(),0);});
+      input.addEventListener("pointerdown",()=>setTimeout(()=>{showSizeMenu();input.select();},0));
+      combo.querySelector(".size-toggle").addEventListener("click",(event)=>{
+        event.preventDefault();
+        if(menu.hidden)showSizeMenu();else menu.hidden=true;
+        input.focus();
+        input.select();
+      });
+      menu.addEventListener("pointerdown",(event)=>event.preventDefault());
+      menu.addEventListener("click",(event)=>{
+        const button=event.target.closest("[data-size-value]");
+        if(!button)return;
+        input.value=button.dataset.sizeValue;
+        if(input.dataset.key)state[input.dataset.key]=input.value;
+        menu.hidden=true;
+        update();
+        input.focus();
+        input.select();
+      });
+    });
+  }
+  function defaultOpening(){return{type:"round",a:100,b:100,q:1}}
+  function readOpeningPayload(){
+    if(moduleKey!=="rectangular-duct")return[];
+    const raw=params.get("Openings");
+    if(raw){
+      try{
+        const parsed=JSON.parse(raw);
+        if(Array.isArray(parsed))return normalizeOpenings({openings:parsed});
+      }catch(e){}
+    }
+    const legacyType=params.get("HoleType");
+    if(legacyType&&legacyType!=="none"){
+      return normalizeOpenings({openings:[{type:legacyType,a:Number(params.get("HoleA")||0),b:Number(params.get("HoleB")||0),q:Number(params.get("HoleQ")||1)}]});
+    }
+    return[];
+  }
+  function initOpenings(){
+    const list=document.getElementById("openingList");
+    if(!list)return;
+    list.innerHTML="";
+    readOpeningPayload().forEach(addOpeningRow);
+    document.getElementById("addOpeningBtn")?.addEventListener("click",()=>{addOpeningRow(defaultOpening());update();});
+    refreshOpeningRows();
+  }
+  function addOpeningRow(opening=defaultOpening()){
+    const list=document.getElementById("openingList");
+    if(!list)return;
+    const row=document.createElement("div");
+    row.className="opening-row";
+    row.innerHTML=`<div class="opening-row-head"><div><div class="opening-index opening-row-title">${t.openingRow}</div><select data-opening-field="type"><option value="round">${t.openingRound}</option><option value="rect">${t.openingRect}</option></select></div><button class="ico" type="button" title="${t.removeOpening}" aria-label="${t.removeOpening}">×</button></div>`+
+      `<div class="opening-row-fields"><div class="field"><label class="opening-a-label">${t.openingA}</label>${sizeComboHtml(`data-opening-field="a" data-opening-dim value="0"`)}</div>`+
+      `<div class="field opening-b"><label>${t.openingB}</label>${sizeComboHtml(`data-opening-field="b" data-opening-dim value="0"`)}</div>`+
+      `<div class="field"><label>${t.openingQty}</label><input data-opening-field="q" type="number" min="1" step="1"></div></div>`;
+    row.querySelector('[data-opening-field="type"]').value=opening.type==="rect"?"rect":"round";
+    row.querySelector('[data-opening-field="a"]').value=opening.a||0;
+    row.querySelector('[data-opening-field="b"]').value=opening.b||0;
+    row.querySelector('[data-opening-field="q"]').value=Math.max(1,Math.round(Number(opening.q||1)));
+    row.querySelectorAll("input,select").forEach(el=>{el.addEventListener("input",()=>{refreshOpeningRows();update();});el.addEventListener("change",()=>{refreshOpeningRows();update();});});
+    row.querySelectorAll("input").forEach(el=>el.addEventListener("focus",()=>setTimeout(()=>el.select(),0)));
+    bindSizeCombos(row);
+    row.querySelector("button").addEventListener("click",()=>{row.remove();refreshOpeningRows();update();});
+    list.appendChild(row);
+    refreshOpeningRows();
+  }
+  function refreshOpeningRows(){
+    document.querySelectorAll(".opening-row").forEach((row,index)=>{
+      const type=row.querySelector('[data-opening-field="type"]').value;
+      row.querySelector(".opening-index").textContent=`${t.openingRow} ${index+1}`;
+      row.querySelector(".opening-a-label").textContent=type==="round"?t.openingD:t.openingA;
+      row.querySelector(".opening-b").hidden=type!=="rect";
+    });
+  }
+  function getOpenings(){
+    return normalizeOpenings({openings:[...document.querySelectorAll(".opening-row")].map(row=>({
+      type:row.querySelector('[data-opening-field="type"]').value,
+      a:Number(row.querySelector('[data-opening-field="a"]').value||0),
+      b:Number(row.querySelector('[data-opening-field="b"]').value||0),
+      q:Number(row.querySelector('[data-opening-field="q"]').value||1)
+    }))});
   }
   function renderThicknessOptions(){
     const material=materials.find(m=>m.key===document.getElementById("material").value)||materials[0];
@@ -264,6 +375,7 @@
   function currentValues(){
     const values={};
     document.querySelectorAll("[data-key]").forEach(el=>values[el.dataset.key]=el.type==="number"?Number(el.value||0):el.type==="text"?offsetCode(el.value):el.value);
+    if(moduleKey==="rectangular-duct")values.openings=getOpenings();
     values.material=document.getElementById("material").value;
     values.thickness=Number(document.getElementById("thickness").value||0.5);
     values.quantity=Math.max(1,Math.round(Number(values.Q||1)));
@@ -299,13 +411,16 @@
       const sw=document.getElementById("sheetWarn");
       if(sw){if(result.sheetWarn){sw.style.display="block";sw.textContent="⚠ "+result.sheetWarn;}else sw.style.display="none";}
     }
+    refreshOpeningRows();
+    const openingSummary=document.getElementById("openingSummary");
+    if(openingSummary)openingSummary.textContent=result.openingArea?`${t.openingArea}: ${nf(result.openingArea)} м²`:"";
     const box=document.getElementById("previewBox");
     const pv=window.CalcSquarePreview?window.CalcSquarePreview(moduleKey,values,lang):null;
     if(pv&&box){box.innerHTML=pv;}else{updateLabels(values);}
   }
   function calculate(v){
     const q=v.quantity||1;
-    let area=0,note="",help="",sheetWarn="",lockName="",lockSize="";
+    let area=0,note="",help="",sheetWarn="",lockName="",lockSize="",openingArea=0;
     switch(cfg.formula){
       case"roundDuct":area=Math.PI*v.D*v.L*q/1e6;note=`S = π × D × L × Q`;break;
       case"roundElbow":{const arc=Math.PI*v.R*v.Angle/180;area=Math.PI*v.D*arc*q/1e6;note=`S = π × D × arc × Q`;break}
@@ -313,7 +428,7 @@
       case"roundTee":area=(Math.PI*v.D*v.L+Math.PI*v.D1*v.H)*q/1e6;note=`S = ${t.main} + ${t.branch}`;break;
       case"roundCap":area=Math.PI*v.D*v.D/4*q/1e6;note=`S = π × D² / 4 × Q`;break;
       case"roundInset":area=(Math.PI*v.D+8)*v.H*q/1e6;note=`P = πD + 8`;break;
-      case"rectDuct":{const r=rectDuct(v);area=r.area;note=r.note;help=r.help;sheetWarn=r.sheetWarn;lockName=r.lockName;lockSize=r.lockSize;break}
+      case"rectDuct":{const r=rectDuct(v);area=r.area;note=r.note;help=r.help;sheetWarn=r.sheetWarn;lockName=r.lockName;lockSize=r.lockSize;openingArea=r.openingArea||0;break}
       case"rectElbow":{const arc=Math.PI*v.R*v.Angle/180;area=2*(v.A+v.B)*arc*q/1e6;note=`S = 2 × (A+B) × arc × Q`;break}
       case"rectTransition":{const r=rectTransition(v);area=r.area*q;note=r.note;sheetWarn=r.sheetWarn;break}
       case"rectTee":area=(2*(v.A+v.B)*v.L+2*(v.A1+v.B1)*v.H)*q/1e6;note=`S = ${t.main} + ${t.branch}`;break;
@@ -322,13 +437,34 @@
       case"roundRect":area=((Math.PI*v.D+2*(v.A+v.B))/2)*v.L*q/1e6;note=`S = ${t.avgPerimeter} × L`;break;
       default:area=0;note=t.notReady;
     }
-    return{area,description:"",note,help,sheetWarn,lockName,lockSize,badge:cfg.type==="table"?tableBadge(v):t.formula,status:cfg.type==="table"?tableStatus(v):""};
+    return{area,description:"",note,help,sheetWarn,lockName,lockSize,openingArea,badge:cfg.type==="table"?tableBadge(v):t.formula,status:cfg.type==="table"?tableStatus(v):""};
+  }
+  function normalizeOpenings(v){
+    const source=Array.isArray(v.openings)?v.openings:(v.HoleType&&v.HoleType!=="none"?[{type:v.HoleType,a:v.HoleA,b:v.HoleB,q:v.HoleQ}]:[]);
+    return source.map(opening=>({
+      type:opening.type==="rect"?"rect":"round",
+      a:Number(opening.a||0),
+      b:Number(opening.b||0),
+      q:Math.max(1,Math.round(Number(opening.q||1)))
+    })).filter(opening=>opening.type==="round"?opening.a>0:opening.a>0&&opening.b>0);
+  }
+  function openingAreaInfo(v,Q){
+    const rows=normalizeOpenings(v).map(opening=>{
+      const single=opening.type==="round"?Math.PI*Math.pow(opening.a/2,2)/1e6:opening.a*opening.b/1e6;
+      const area=single*opening.q*Q;
+      const label=opening.type==="round"?`D ${nf(opening.a,0)}`:`${nf(opening.a,0)} × ${nf(opening.b,0)}`;
+      const formula=opening.type==="round"?`π × (${nf(opening.a,0)} / 2)²`:`${nf(opening.a,0)} × ${nf(opening.b,0)}`;
+      return{...opening,single,area,label,formula};
+    }).filter(row=>row.area>0);
+    return{rows,area:rows.reduce((sum,row)=>sum+row.area,0)};
   }
   function rectDuct(v){
     const A=v.A||0,B=v.B||0,L=v.L||0,Q=v.quantity||1,T=v.thickness||0.5;
     const P=2*(A+B);
     const clean=P*L*Q/1e6;
-    const cleanFinal=Math.max(0,clean);
+    const openings=openingAreaInfo(v,Q);
+    const openingArea=openings.area;
+    const cleanFinal=Math.max(0,clean-openingArea);
     const welded=L<=200;
     const Z1=welded?15:(T<0.9?6:5);
     const Z2=welded?0:(T<0.9?30:28);
@@ -353,34 +489,38 @@
     const sheetWarn=(parts>1||russianLocks>0)?`${t.sheetSplit}: ${layout}, ${parts}${russianLocks?`, +${russianLocks}`:""}`:"";
     const note=`S = ${nf(cleanFinal)} + ${nf(lockArea)} = ${nf(area)} м²; ${lockName} ${lockSize}; ${layout}`;
     const help=[
-      "ПАРАМЕТРЫ",
-      `A — ширина изделия, ${nf(A,0)} ${t.mm}`,
-      `B — высота изделия, ${nf(B,0)} ${t.mm}`,
-      `L — длина изделия, ${nf(L,0)} ${t.mm}`,
-      `Q — количество, ${Q}`,
-      `t — толщина металла, ${nf(T)} ${t.mm}`,
-      "P — периметр прямоугольного сечения",
-      "Sчист — чистовая площадь без замков",
-      "Sзамк — добавка на замки",
-      "Sрус — добавка на русские замки, если лист делится по ширине/длине",
+      t.helpParams,
+      `A — ${t.helpWidth}, ${nf(A,0)} ${t.mm}`,
+      `B — ${t.helpHeight}, ${nf(B,0)} ${t.mm}`,
+      `L — ${t.helpLength}, ${nf(L,0)} ${t.mm}`,
+      `Q — ${t.helpQty}, ${Q}`,
+      `t — ${t.helpThickness}, ${nf(T)} ${t.mm}`,
+      `P — ${t.helpPerimeter}`,
+      `${t.sGross} — ${t.helpGrossArea}`,
+      `${t.sClean} — ${t.helpCleanArea}`,
+      `${t.sOpening} — ${t.helpOpeningArea}`,
+      `${t.sLock} — ${t.helpLockArea}`,
+      `${t.sRussian} — ${t.helpRussianArea}`,
       "",
-      "ЛОГИКА РАСЧЁТА",
+      t.helpLogic,
       `P = 2 × (A + B) = 2 × (${nf(A,0)} + ${nf(B,0)}) = ${nf(P,0)} ${t.mm}`,
-      `Sчист = P × L × Q / 1 000 000 = ${nf(P,0)} × ${nf(L,0)} × ${Q} / 1 000 000 = ${nf(cleanFinal)} м²`,
+      `${t.sGross} = P × L × Q / 1 000 000 = ${nf(P,0)} × ${nf(L,0)} × ${Q} / 1 000 000 = ${nf(clean)} м²`,
+      ...(openings.rows.length?openings.rows.map((opening,index)=>`${t.openingRow} ${index+1}: ${opening.formula} × ${opening.q} × ${Q} / 1 000 000 = ${nf(opening.area)} м²`):[t.helpNoOpenings]),
+      `${t.sClean} = max(0, ${t.sGross} − ${t.sOpening}) = max(0, ${nf(clean)} − ${nf(openingArea)}) = ${nf(cleanFinal)} м²`,
       "",
-      "ЗАМКИ",
-      `Замок: ${lockName}; Z1 = ${Z1} ${t.mm}, Z2 = ${Z2} ${t.mm}, размер ${lockSize}`,
-      `Sзамк = частей × (Z1 + Z2) × L × Q / 1 000 000 = ${parts} × ${Z1+Z2} × ${nf(L,0)} × ${Q} / 1 000 000 = ${nf(mainArea)} м²`,
-      russianLocks?`Русские замки: ${russianLocks} × ${russianLockSize} × P × Q / 1 000 000 = ${nf(russianArea)} м²`:"Русские замки: 0",
+      t.helpLocks,
+      `${t.helpLock}: ${lockName}; Z1 = ${Z1} ${t.mm}, Z2 = ${Z2} ${t.mm}, ${t.lockSize.toLowerCase()} ${lockSize}`,
+      `${t.sLock} = ${t.helpParts} × (Z1 + Z2) × L × Q / 1 000 000 = ${parts} × ${Z1+Z2} × ${nf(L,0)} × ${Q} / 1 000 000 = ${nf(mainArea)} м²`,
+      russianLocks?`${t.helpRussianLocks}: ${russianLocks} × ${russianLockSize} × P × Q / 1 000 000 = ${nf(russianArea)} м²`:`${t.helpRussianLocks}: 0`,
       "",
-      "РАСКЛАДКА ЛИСТА",
-      `Лист: 1245 × 2960 ${t.mm}`,
-      `Раскладка: ${layout}; частей: ${parts}`,
+      t.helpSheet,
+      `${t.helpSheetLabel}: 1245 × 2960 ${t.mm}`,
+      `${t.helpLayout}: ${layout}; ${t.helpParts}: ${parts}`,
       "",
-      "ИТОГ",
-      `Sитог = Sчист + Sзамк + Sрус = ${nf(cleanFinal)} + ${nf(mainArea)} + ${nf(russianArea)} = ${nf(area)} м²`
+      t.helpResult,
+      `${t.sTotal} = ${t.sClean} + ${t.sLock} + ${t.sRussian} = ${nf(cleanFinal)} + ${nf(mainArea)} + ${nf(russianArea)} = ${nf(area)} м²`
     ].join("\n");
-    return{area,note,help,sheetWarn,lockName,lockSize};
+    return{area,note,help,sheetWarn,lockName,lockSize,openingArea};
   }
   function rectTransition(v){
     const railF=v.conn1==="Рейка",railG=v.conn2==="Рейка";
@@ -403,9 +543,16 @@
   function isStandard(v){return cfg.fields.filter(f=>f.type==="number").every(f=>standardSizes.includes(Number(v[f.key])))}
   function description(v,{includeComment=true}={}){
     const dims=specDimensionParts(v).join(" × ");
+    const opening=openingDescription(v);
     const conn=connectionDescription();
     const comment=includeComment?document.getElementById("comment")?.value.trim():"";
-    return [dims+" "+t.mm,conn,comment].filter(Boolean).join(" · ");
+    return [dims+" "+t.mm,opening,conn,comment].filter(Boolean).join(" · ");
+  }
+  function openingDescription(v){
+    if(moduleKey!=="rectangular-duct")return "";
+    const openings=normalizeOpenings(v);
+    if(!openings.length)return "";
+    return `${t.openings}: `+openings.map(opening=>opening.type==="round"?`D ${opening.a} × ${opening.q}`:`${opening.a} × ${opening.b} × ${opening.q}`).join("; ");
   }
   function specDimensionParts(v){
     if(moduleKey==="rectangular-transition"){
@@ -431,6 +578,10 @@
   function rawDimensions(v){
     const dimensions={};
     cfg.fields.forEach((field)=>{dimensions[field.key]=v[field.key]});
+    if(moduleKey==="rectangular-duct"){
+      const openings=normalizeOpenings(v);
+      if(openings.length)dimensions.Openings=JSON.stringify(openings);
+    }
     return dimensions;
   }
   function connectionDescription(){
