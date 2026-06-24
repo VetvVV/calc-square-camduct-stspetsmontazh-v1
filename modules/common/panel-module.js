@@ -11,9 +11,9 @@
   const root=document.getElementById("app");
   const standardSizes=[80,100,125,150,160,180,200,225,250,280,300,315,350,355,400,450,500,560,600,630,700,710,800,900,1000,1120,1200,1250,1400,1500,1600,1800,2000,2500,3000];
   const i18n={
-    ru:{atlas:"← Атлас",category:"Категория →",sizes:"Размеры",options:"Опции",detail:"Деталь",connectors:"Соединители",help:"Помощь",expand:"Развернуть всё",collapse:"Свернуть всё",simple:"Простой",full:"Полный",reset:"Сброс",hidden:"Скрыто",area:"Площадь",mass:"Масса изделия",desc:"Описание (спецификация)",calc:"Расчёт",comment:"Комментарий",commentPh:"Примечание для спецификации",add:"Добавить в проект",update:"Сохранить",guest:"Для гостя добавление в проект отключено.",material:"Материал",thickness:"Толщина",qty:"Количество",galv:"Оцинкованная сталь",ss430:"Нержавеющая 430 техническая",ss304:"Нержавеющая 304 пищевая",aluminum:"Алюминий",mm:"мм",kg:"кг",standard:"Стандарт ✓",custom:"Нестандарт ✎",formula:"По формуле",calcHidden:"Формульная часть скрыта в клиентском режиме. Инженерный доступ можно запросить у менеджера.",notReady:"Расчёт будет уточнён по CAMduct-таблице.",minus:"−",nom:"ном",plus:"+",connectionHelp:"− ниппельное, ном - номинальное, + муфтовое. У переходов соединение задаётся по торцам.",saved:"Добавлено.",top:"верх",bottom:"низ",left:"лево",right:"право",angle:"Угол",main:"магистраль",branch:"патрубок",avgDiameter:"Dср",inclinedLength:"Lнакл",avgPerimeter:"средний периметр"},
-    uk:{atlas:"← Атлас",category:"Категорія →",sizes:"Розміри",options:"Опції",detail:"Деталь",connectors:"З'єднувачі",help:"Допомога",expand:"Розгорнути все",collapse:"Згорнути все",simple:"Простий",full:"Повний",reset:"Скидання",hidden:"Приховано",area:"Площа",mass:"Маса виробу",desc:"Опис (специфікація)",calc:"Розрахунок",comment:"Коментар",commentPh:"Примітка для специфікації",add:"Додати в проєкт",update:"Зберегти",guest:"Для гостя додавання в проєкт вимкнено.",material:"Матеріал",thickness:"Товщина",qty:"Кількість",galv:"Оцинкована сталь",ss430:"Нержавіюча 430 технічна",ss304:"Нержавіюча 304 харчова",aluminum:"Алюміній",mm:"мм",kg:"кг",standard:"Стандарт ✓",custom:"Нестандарт ✎",formula:"За формулою",calcHidden:"Формульну частину приховано в клієнтському режимі. Інженерний доступ можна запросити в менеджера.",notReady:"Розрахунок буде уточнено за CAMduct-таблицею.",minus:"−",nom:"ном",plus:"+",connectionHelp:"− ніпельне, ном - номінальне, + муфтове. У переходів з'єднання задається по торцях.",saved:"Додано.",top:"верх",bottom:"низ",left:"ліво",right:"право",angle:"Кут",main:"магістраль",branch:"патрубок",avgDiameter:"Dсер",inclinedLength:"Lпох",avgPerimeter:"середній периметр"},
-    en:{atlas:"← Atlas",category:"Category →",sizes:"Dimensions",options:"Options",detail:"Detail",connectors:"Connectors",help:"Help",expand:"Expand all",collapse:"Collapse all",simple:"Simple",full:"Full",reset:"Reset",hidden:"Hidden",area:"Area",mass:"Product mass",desc:"Specification description",calc:"Calculation",comment:"Comment",commentPh:"Specification note",add:"Add to project",update:"Save",guest:"Project adding is disabled for guests.",material:"Material",thickness:"Thickness",qty:"Quantity",galv:"Galvanized steel",ss430:"Stainless 430 technical",ss304:"Stainless 304 food",aluminum:"Aluminum",mm:"mm",kg:"kg",standard:"Standard ✓",custom:"Custom ✎",formula:"Formula",calcHidden:"Formula details are hidden in client mode. Engineering access can be requested from a manager.",notReady:"Calculation will be refined from CAMduct table.",minus:"−",nom:"nom",plus:"+",connectionHelp:"− nipple, nom - nominal, + coupling. Transitions have connection settings per end.",saved:"Added.",top:"top",bottom:"bottom",left:"left","right":"right",angle:"Angle",main:"main",branch:"branch",avgDiameter:"average D",inclinedLength:"sloped L",avgPerimeter:"average perimeter"}
+    ru:{atlas:"← Атлас",category:"Категория →",sizes:"Размеры",options:"Опции",detail:"Деталь",connectors:"Соединители",help:"Помощь",expand:"Развернуть всё",collapse:"Свернуть всё",simple:"Простой",full:"Полный",reset:"Сброс",hidden:"Скрыто",area:"Площадь",mass:"Масса изделия",desc:"Описание (спецификация)",calc:"Расчёт",comment:"Комментарий",commentPh:"Примечание для спецификации",add:"Добавить в проект",update:"Сохранить",guest:"Для гостя добавление в проект отключено.",material:"Материал",thickness:"Толщина",qty:"Количество",galv:"Оцинкованная сталь",ss430:"Нержавеющая 430 техническая",ss304:"Нержавеющая 304 пищевая",aluminum:"Алюминий",mm:"мм",kg:"кг",standard:"Стандарт ✓",custom:"Нестандарт ✎",formula:"По формуле",calcHidden:"Формульная часть скрыта.",notReady:"Расчёт будет уточнён по CAMduct-таблице.",minus:"−",nom:"ном",plus:"+",connectionHelp:"− ниппельное, ном - номинальное, + муфтовое. У переходов соединение задаётся по торцам.",saved:"Добавлено.",top:"верх",bottom:"низ",left:"лево",right:"право",angle:"Угол",main:"магистраль",branch:"патрубок",avgDiameter:"Dср",inclinedLength:"Lнакл",avgPerimeter:"средний периметр"},
+    uk:{atlas:"← Атлас",category:"Категорія →",sizes:"Розміри",options:"Опції",detail:"Деталь",connectors:"З'єднувачі",help:"Допомога",expand:"Розгорнути все",collapse:"Згорнути все",simple:"Простий",full:"Повний",reset:"Скидання",hidden:"Приховано",area:"Площа",mass:"Маса виробу",desc:"Опис (специфікація)",calc:"Розрахунок",comment:"Коментар",commentPh:"Примітка для специфікації",add:"Додати в проєкт",update:"Зберегти",guest:"Для гостя додавання в проєкт вимкнено.",material:"Матеріал",thickness:"Товщина",qty:"Кількість",galv:"Оцинкована сталь",ss430:"Нержавіюча 430 технічна",ss304:"Нержавіюча 304 харчова",aluminum:"Алюміній",mm:"мм",kg:"кг",standard:"Стандарт ✓",custom:"Нестандарт ✎",formula:"За формулою",calcHidden:"Формульну частину приховано.",notReady:"Розрахунок буде уточнено за CAMduct-таблицею.",minus:"−",nom:"ном",plus:"+",connectionHelp:"− ніпельне, ном - номінальне, + муфтове. У переходів з'єднання задається по торцях.",saved:"Додано.",top:"верх",bottom:"низ",left:"ліво",right:"право",angle:"Кут",main:"магістраль",branch:"патрубок",avgDiameter:"Dсер",inclinedLength:"Lпох",avgPerimeter:"середній периметр"},
+    en:{atlas:"← Atlas",category:"Category →",sizes:"Dimensions",options:"Options",detail:"Detail",connectors:"Connectors",help:"Help",expand:"Expand all",collapse:"Collapse all",simple:"Simple",full:"Full",reset:"Reset",hidden:"Hidden",area:"Area",mass:"Product mass",desc:"Specification description",calc:"Calculation",comment:"Comment",commentPh:"Specification note",add:"Add to project",update:"Save",guest:"Project adding is disabled for guests.",material:"Material",thickness:"Thickness",qty:"Quantity",galv:"Galvanized steel",ss430:"Stainless 430 technical",ss304:"Stainless 304 food",aluminum:"Aluminum",mm:"mm",kg:"kg",standard:"Standard ✓",custom:"Custom ✎",formula:"Formula",calcHidden:"Formula details are hidden.",notReady:"Calculation will be refined from CAMduct table.",minus:"−",nom:"nom",plus:"+",connectionHelp:"− nipple, nom - nominal, + coupling. Transitions have connection settings per end.",saved:"Added.",top:"top",bottom:"bottom",left:"left","right":"right",angle:"Angle",main:"main",branch:"branch",avgDiameter:"average D",inclinedLength:"sloped L",avgPerimeter:"average perimeter"}
   };
   const t=i18n[lang]||i18n.ru;
   Object.assign(i18n.ru,{units:"Ед. измерения",unitMM:"мм",unitIN:"дюймы",ft2:"ft²",lb:"lb",conn1:"Соединение 1",conn2:"Соединение 2",lock:"Продольный замок (S1)",lockAm:"Американский",lockSize:"Размер замка",sheetSplit:"Панель не влезает на лист — разделить, русский замок",pdf:"Сохранить PDF"});
@@ -22,6 +22,9 @@
   Object.assign(i18n.ru,{guestRemaining:"Гостевой доступ: осталось {left} из {limit} расчётов.",guestUsed:"Гостевой лимит на сегодня исчерпан. Войдите или зарегистрируйтесь, чтобы продолжить."});
   Object.assign(i18n.uk,{guestRemaining:"Гостьовий доступ: залишилось {left} з {limit} розрахунків.",guestUsed:"Гостьовий ліміт на сьогодні вичерпано. Увійдіть або зареєструйтесь, щоб продовжити."});
   Object.assign(i18n.en,{guestRemaining:"Guest access: {left} of {limit} calculations left.",guestUsed:"Today's guest limit is used. Sign in or register to continue."});
+  Object.assign(i18n.ru,{optionsReserved:"Здесь будут настройки отверстий и дополнительных параметров изделия.",formulaHelpPending:"Инженерная расшифровка появится после расчёта."});
+  Object.assign(i18n.uk,{optionsReserved:"Тут будуть налаштування отворів і додаткових параметрів виробу.",formulaHelpPending:"Інженерна розшифровка з'явиться після розрахунку."});
+  Object.assign(i18n.en,{optionsReserved:"Opening and additional product options will appear here.",formulaHelpPending:"Engineering breakdown will appear after calculation."});
   let UNIT="mm";const UF=()=>UNIT==="in"?25.4:1;
   const RAILMM=10;const RECT_CONN=["Ш20","Ш30","Ш20 Сам","Ш30 Сам","Рейка","ГК"];
   const materials=[
@@ -154,7 +157,7 @@
     return typeof code==="number"?String(code):optionText(code);
   }
   function qtyHtml(){return`<div class="field"><label for="f-Q">${t.qty}</label><input id="f-Q" data-key="Q" type="number" min="1" step="1" value="1"></div>`}
-  function optionsHtml(){return cfg.type==="table"?`<p class="tab-empty">${t.notReady}</p>`:`<p class="tab-empty">${t.calcHidden}</p>`}
+  function optionsHtml(){return cfg.type==="table"?`<p class="tab-empty">${t.notReady}</p>`:(canViewFormulas?`<p class="tab-empty">${t.optionsReserved}</p>`:`<p class="tab-empty">${t.calcHidden}</p>`)}
   function detailHtml(){return`<div class="field"><label for="material">${t.material}</label><select id="material">${materials.map(m=>`<option value="${m.key}">${m.label}</option>`).join("")}</select></div><div class="field"><label for="thickness">${t.thickness}</label><select id="thickness"></select></div>`}
   function connectorsHtml(){
     if(cfg.category==="rectangular"){
@@ -172,7 +175,7 @@
   function setUnit(u){const from=UF();UNIT=u;const to=UF();document.querySelectorAll("[data-key]").forEach(el=>{const k=el.dataset.key;if(k==="Q")return;if(el.type==="number"){const val=parseFloat(el.value);if(!isNaN(val)){el.value=(u==="in")?(+(val*from/to).toFixed(2)):Math.round(val*from/to);state[k]=el.value;}}else if(el.type==="text"){const c=offsetCode(el.value);if(typeof c==="number"){const nv=(u==="in")?(+(c*from/to).toFixed(2)):Math.round(c*from/to);el.value=offsetDisplay(nv);state[k]=el.value;}}});update();}
   function setRail(connId,fieldKey){const sl=document.getElementById(connId),f=document.getElementById("f-"+fieldKey);if(!sl||!f)return;if(sl.value==="Рейка"){if(!f.readOnly)f.dataset.prev=f.value;f.value=0;f.readOnly=true;f.style.opacity=.6;}else if(f.readOnly){f.value=f.dataset.prev||25;f.readOnly=false;f.style.opacity=1;}state[f.dataset.key]=f.value;}
   function toMM(values){const v={...values};cfg.fields.filter(f=>f.type==="number").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});cfg.fields.filter(f=>f.type==="offset").forEach(f=>{if(typeof v[f.key]==="number")v[f.key]=v[f.key]*UF();});return v;}
-  function helpHtml(){return canViewFormulas?`<p class="help-text" id="formulaHelp">${t.connectionHelp}</p>`:`<p class="help-text">${t.connectionHelp}</p>`}
+  function helpHtml(){return canViewFormulas?`<p class="help-text" id="formulaHelp">${t.formulaHelpPending}</p>`:`<p class="help-text">${t.connectionHelp}</p>`}
   function bind(){
     document.getElementById("toAtlas").addEventListener("click",()=>sendOpen(moduleUrl("")));
     document.getElementById("toCategory").addEventListener("click",()=>sendOpen(moduleUrl(cfg.category)));
@@ -350,7 +353,7 @@
     const sheetWarn=(parts>1||russianLocks>0)?`${t.sheetSplit}: ${layout}, ${parts}${russianLocks?`, +${russianLocks}`:""}`:"";
     const note=`S = ${nf(cleanFinal)} + ${nf(lockArea)} = ${nf(area)} м²; ${lockName} ${lockSize}; ${layout}`;
     const help=[
-      "Обозначения:",
+      "ПАРАМЕТРЫ",
       `A — ширина изделия, ${nf(A,0)} ${t.mm}`,
       `B — высота изделия, ${nf(B,0)} ${t.mm}`,
       `L — длина изделия, ${nf(L,0)} ${t.mm}`,
@@ -361,12 +364,20 @@
       "Sзамк — добавка на замки",
       "Sрус — добавка на русские замки, если лист делится по ширине/длине",
       "",
+      "ЛОГИКА РАСЧЁТА",
       `P = 2 × (A + B) = 2 × (${nf(A,0)} + ${nf(B,0)}) = ${nf(P,0)} ${t.mm}`,
       `Sчист = P × L × Q / 1 000 000 = ${nf(P,0)} × ${nf(L,0)} × ${Q} / 1 000 000 = ${nf(cleanFinal)} м²`,
+      "",
+      "ЗАМКИ",
       `Замок: ${lockName}; Z1 = ${Z1} ${t.mm}, Z2 = ${Z2} ${t.mm}, размер ${lockSize}`,
-      `Раскладка листа: ${layout}; частей: ${parts}`,
       `Sзамк = частей × (Z1 + Z2) × L × Q / 1 000 000 = ${parts} × ${Z1+Z2} × ${nf(L,0)} × ${Q} / 1 000 000 = ${nf(mainArea)} м²`,
       russianLocks?`Русские замки: ${russianLocks} × ${russianLockSize} × P × Q / 1 000 000 = ${nf(russianArea)} м²`:"Русские замки: 0",
+      "",
+      "РАСКЛАДКА ЛИСТА",
+      `Лист: 1245 × 2960 ${t.mm}`,
+      `Раскладка: ${layout}; частей: ${parts}`,
+      "",
+      "ИТОГ",
       `Sитог = Sчист + Sзамк + Sрус = ${nf(cleanFinal)} + ${nf(mainArea)} + ${nf(russianArea)} = ${nf(area)} м²`
     ].join("\n");
     return{area,note,help,sheetWarn,lockName,lockSize};
