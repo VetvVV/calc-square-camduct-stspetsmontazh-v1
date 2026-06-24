@@ -33,6 +33,10 @@ function Has-File([string]$Pattern) {
     return [bool]($Files | Where-Object { $_ -match $Pattern } | Select-Object -First 1)
 }
 
+function Has-FileExcept([string]$Pattern, [string]$ExcludePattern) {
+    return [bool]($Files | Where-Object { ($_ -match $Pattern) -and ($_ -notmatch $ExcludePattern) } | Select-Object -First 1)
+}
+
 function Has-Diff([string]$Pattern) {
     return [bool]($SignalDiff | Select-String -Pattern $Pattern -Quiet)
 }
@@ -54,6 +58,11 @@ if (Has-File '(^|/)publish\.bat$|(^|/)scripts/') {
     Add-Bullet 'Update PublishBot checks and publication scripts.'
 }
 
+if (Has-File '(^|/)scripts/make-commit-message\.ps1$') {
+    Add-Part 'commit message automation'
+    Add-Bullet 'Improve automatic publication commit message details.'
+}
+
 if (Has-File '(^|/)VERSION\.txt$|(^|/)home\.html$') {
     Add-Part 'build marker'
     Add-Bullet "Update build marker to $BuildLabel."
@@ -64,7 +73,7 @@ if (Has-File '(^|/)assets/atlas/|(^|/)assets\\atlas\\') {
     Add-Bullet 'Update atlas catalog behavior or assets.'
 }
 
-if (Has-File '(^|/)modules/|(^|/)modules\\') {
+if (Has-FileExcept '(^|/)modules/|(^|/)modules\\' '(^|/)modules/common/calculator\.html$|(^|/)modules\\common\\calculator\.html$') {
     Add-Part 'calculators'
     Add-Bullet 'Update calculator modules or shared calculator panel.'
 }
@@ -119,7 +128,17 @@ if (Has-Diff 'catalog assets ok|catalog modules ok|catalog keys ok|checkAsset|ch
     Add-Bullet 'Validate atlas assets, catalog keys, and calculator module coverage before publishing.'
 }
 
-if (Has-Diff 'local fonts ok|exo2\.css|font-family:"Exo 2"|assets/fonts') {
+if (Has-Diff 'checkCoreFormulaSmoke|formula smoke|round duct smoke|rectangular transition smoke|approxEqual') {
+    Add-Part 'formula validation'
+    Add-Bullet 'Guard core calculator formulas with publication smoke checks.'
+}
+
+if (Has-Diff 'roundShell|roundFlange|rectShell') {
+    Add-Part 'archived formulas'
+    Add-Bullet 'Restore archived round shell, round flange, and rectangular shell formulas for catalog items that were still stubs.'
+}
+
+if (Has-File '(^|/)assets/fonts/|(^|/)assets\\fonts\\') {
     Add-Part 'fonts'
     Add-Bullet 'Verify bundled Exo 2 font files and prevent external font dependencies.'
 }
