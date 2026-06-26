@@ -38,7 +38,7 @@ Use this checklist before publishing changes to GitHub Pages. A full pass is nee
 - Client: add, edit, delete, save, print, export, Excel, and open file work.
 - Client: formulas are hidden.
 - Admin: formulas and service details are visible.
-- Logout returns to guest mode.
+- "Guest mode" returns the application to guest mode.
 
 ## Specification
 
