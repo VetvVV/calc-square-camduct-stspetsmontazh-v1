@@ -11,6 +11,7 @@ body{margin:0;background:#e9e9e9;color:#24272d;font-family:"Exo 2",system-ui,-ap
 .wrap{width:100%;max-width:none;margin:0 auto;container-type:inline-size}
 .head{display:block;text-align:center;margin-bottom:18px}
 h1{margin:0;color:#5b6573;font-size:30px;line-height:1;font-weight:800;font-style:italic;text-transform:uppercase;letter-spacing:.03em}
+.intro{width:min(760px,calc(100% - 24px));margin:14px auto 6px;padding:12px 18px;border:1px solid rgba(223,122,18,.18);border-radius:14px;background:rgba(255,255,255,.62);color:#5b6573;font-size:14px;line-height:1.45;font-weight:700;text-align:center}
 .version{position:fixed;right:14px;bottom:10px;z-index:40;color:#9aa1ab;font-size:11px;font-weight:700}
 .cats{display:flex;flex-direction:column;gap:0}
 details{background:transparent;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.5);margin-bottom:0}
@@ -37,6 +38,7 @@ summary::-webkit-details-marker{display:none}
 <main class="wrap">
   <div class="head">
     <h1 id="title">Атлас изделий</h1>
+    <p class="intro" id="intro">Выберите изделие: откроется расчёт, где можно задать размеры и подготовить позицию.</p>
     <div class="version">clean-panel-v1</div>
   </div>
   <section class="cats" id="cats"></section>
@@ -49,13 +51,14 @@ let lang=params.get("lang")||settings.lang||"ru";
 let role=params.get("role")||settings.role||"guest";
 const active=params.get("cat")||params.get("category")||"";
 const text={
-  ru:{title:"Атлас изделий"},
-  uk:{title:"Атлас виробів"},
-  en:{title:"Product atlas"}
+  ru:{title:"Атлас изделий",intro:"Выберите изделие: откроется расчёт, где можно задать размеры и подготовить позицию."},
+  uk:{title:"Атлас виробів",intro:"Виберіть виріб: відкриється розрахунок, де можна задати розміри та підготувати позицію."},
+  en:{title:"Product atlas",intro:"Choose a fitting to open its calculator, enter dimensions, and prepare a specification item."}
 };
 if(!text[lang])lang="ru";
 document.documentElement.lang=lang;
 document.getElementById("title").textContent=(text[lang]||text.ru).title;
+document.getElementById("intro").textContent=(text[lang]||text.ru).intro;
 document.querySelector(".version").textContent=params.get("label")||params.get("v")||"dev";
 document.title="Calc Square · "+(text[lang]||text.ru).title;
 const cats=document.getElementById("cats");

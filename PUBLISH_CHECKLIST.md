@@ -32,6 +32,14 @@ Use this checklist before publishing changes to GitHub Pages. A full pass is nee
 - Return to atlas from the calculator.
 - Confirm no product atlas is blank.
 
+## Mobile Smoke Test
+
+- Check the landing page around 390 px viewport width.
+- Confirm the header, language selector, and "Open Atlas" button do not overlap.
+- Confirm the landing page has no horizontal scroll.
+- Open the application from the mobile landing page.
+- Confirm guest mode opens with only "Home" and "Atlas" visible in the top navigation.
+
 ## Roles
 
 - Guest: atlas opens; calculator opens count down from 5; the sixth calculator open is blocked.

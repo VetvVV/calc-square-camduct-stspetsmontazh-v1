@@ -130,7 +130,12 @@ body.summary-flow .project-table.has-x-overflow{overflow-x:auto}
 .project-cell.is-numeric{text-align:center;white-space:nowrap}
 .project-cell strong{display:block;font-size:14px;font-weight:800;overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere}
 .project-cell small{display:block;color:#7b838e;margin-top:3px}
-.project-empty{grid-column:1/-1;padding:28px;text-align:center;color:var(--muted);background:#fff;border-top:1px solid #ececec}
+.project-empty{grid-column:1/-1;padding:32px;text-align:center;color:var(--muted);background:#fff;border-top:1px solid #ececec}
+.project-empty-card{max-width:560px;margin:0 auto;display:grid;gap:12px}
+.project-empty-card strong{display:block;color:#3f4652;font-size:18px;font-weight:800}
+.project-empty-card p{margin:0;color:#66707d;font-size:13px;line-height:1.5;font-weight:700}
+.project-empty-steps{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.project-empty-steps span{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border:1px solid #ead4b5;border-radius:999px;background:#fff8ec;color:#9a5800;font-size:12px;font-weight:800}
 .project-comment{width:100%;min-height:34px;border:1px solid #d1d5db;border-radius:6px;padding:6px 8px;resize:vertical;background:#fff;font-size:13px}
 .project-row-actions{display:flex;justify-content:center;gap:3px}
 .project-edit,.project-remove{width:24px;height:24px;border:0;border-radius:8px;background:rgba(238,240,243,.72);backdrop-filter:blur(3px);cursor:pointer;opacity:.72}
@@ -328,7 +333,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-27-021012">build 2026-06-27-0210</div>
+<div class="build-marker" hidden data-cache="build-2026-06-27-022340">build 2026-06-27-0223</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -605,7 +610,7 @@ const UI_TEXT={
     name:"Наименование",dimensions:"Размеры",description:"Описание",quantity:"К-во",
     material:"Материал",area:"Площадь",mass:"Масса",comment:"Комментарий",
     total:"Итого",totalAreaLabel:"Итого площадь",totalMassLabel:"Итого масса",
-    empty:"Проект пустой. Добавьте изделие из калькулятора.",
+    empty:"Проект пустой. Добавьте изделие из калькулятора.",emptyTitle:"Спецификация пока пустая",emptyText:"Откройте атлас, выберите изделие, задайте параметры в расчёте и добавьте позицию в проект.",emptyStepAtlas:"1. Атлас",emptyStepCalc:"2. Расчёт",emptyStepSpec:"3. Спецификация",
     product:"Изделие",edit:"Редактировать",delete:"Удалить",pcs:"шт",kg:"кг",resize:"Изменить ширину спецификации",title:"Calc Square CAMduct",
     cabinet:"Кабинет",loginName:"Логин",loginPassword:"Пароль",signIn:"Войти",or:"или",continueGuest:"Продолжить как гость",
     guestRole:"Гость",userRole:"Пользователь",clientRole:"Клиент",adminRole:"Сервис",badLogin:"Логин или пароль не совпадают с выбранной ролью",
@@ -623,7 +628,7 @@ const UI_TEXT={
     name:"Найменування",dimensions:"Розміри",description:"Опис",quantity:"К-ть",
     material:"Матеріал",area:"Площа",mass:"Маса",comment:"Коментар",
     total:"Підсумок",totalAreaLabel:"Підсумкова площа",totalMassLabel:"Підсумкова маса",
-    empty:"Проєкт порожній. Додайте виріб із калькулятора.",
+    empty:"Проєкт порожній. Додайте виріб із калькулятора.",emptyTitle:"Специфікація поки порожня",emptyText:"Відкрийте атлас, виберіть виріб, задайте параметри в розрахунку та додайте позицію в проєкт.",emptyStepAtlas:"1. Атлас",emptyStepCalc:"2. Розрахунок",emptyStepSpec:"3. Специфікація",
     product:"Виріб",edit:"Редагувати",delete:"Видалити",pcs:"шт",kg:"кг",resize:"Змінити ширину специфікації",title:"Calc Square CAMduct",
     cabinet:"Кабінет",loginName:"Логін",loginPassword:"Пароль",signIn:"Увійти",or:"або",continueGuest:"Продовжити як гість",
     guestRole:"Гість",userRole:"Користувач",clientRole:"Клієнт",adminRole:"Сервіс",badLogin:"Логін або пароль не збігаються з обраною роллю",
@@ -641,7 +646,7 @@ const UI_TEXT={
     name:"Item",dimensions:"Dimensions",description:"Description",quantity:"Qty",
     material:"Material",area:"Area",mass:"Mass",comment:"Comment",
     total:"Total",totalAreaLabel:"Total area",totalMassLabel:"Total mass",
-    empty:"Project is empty. Add an item from the calculator.",
+    empty:"Project is empty. Add an item from the calculator.",emptyTitle:"The specification is empty",emptyText:"Open the atlas, choose a fitting, set parameters in the calculator, and add the item to the project.",emptyStepAtlas:"1. Atlas",emptyStepCalc:"2. Calculation",emptyStepSpec:"3. Specification",
     product:"Item",edit:"Edit",delete:"Delete",pcs:"pcs",kg:"kg",resize:"Resize specification",title:"Calc Square CAMduct",
     cabinet:"Cabinet",loginName:"Login",loginPassword:"Password",signIn:"Sign in",or:"or",continueGuest:"Continue as guest",
     guestRole:"Guest",userRole:"User",clientRole:"Client",adminRole:"Service",badLogin:"Login or password does not match the selected role",
@@ -1640,7 +1645,22 @@ function bindColumnReorder(){
 function renderProject(){
   projectRows.innerHTML="";
   const entries=filteredProjectEntries();
-  if(!entries.length){projectRows.innerHTML=`<div class="project-grid"><div class="project-empty">${t("empty")}</div></div>`}
+  if(!entries.length){
+    projectRows.innerHTML=`
+      <div class="project-grid">
+        <div class="project-empty">
+          <div class="project-empty-card">
+            <strong>${escapeHtml(t("emptyTitle"))}</strong>
+            <p>${escapeHtml(t("emptyText"))}</p>
+            <div class="project-empty-steps" aria-hidden="true">
+              <span>${escapeHtml(t("emptyStepAtlas"))}</span>
+              <span>${escapeHtml(t("emptyStepCalc"))}</span>
+              <span>${escapeHtml(t("emptyStepSpec"))}</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
   const showNameDims=showDimensionsUnderName();
   entries.forEach(({item,index})=>{
     const el=document.createElement("div");
