@@ -362,7 +362,8 @@
       });
 
       langButtons.forEach((btn) => btn.addEventListener('click', () => applyLandingLang(btn.dataset.lang)));
-      applyLandingLang(localStorage.getItem(storageKey) || 'ru');
+      const initialLang = new URLSearchParams(window.location.search).get('lang');
+      applyLandingLang(['ru', 'uk', 'en'].includes(initialLang) ? initialLang : (localStorage.getItem(storageKey) || 'ru'));
     </script>
   </body>
 </html>
