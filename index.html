@@ -1,12 +1,355 @@
 <!doctype html>
 <html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="0; url=home.html">
-<title>Calc Square</title>
-</head>
-<body>
-<a href="home.html">Calc Square</a>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calc Square</title>
+    <link rel="stylesheet" href="assets/fonts/exo2.css" />
+    <link rel="stylesheet" href="assets/css/landing.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html">
+          <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh" />
+        </a>
+        <nav class="header-nav">
+          <a href="#features" data-i="navFeatures">Возможности</a>
+          <a href="#catalog" data-i="navCatalog">Каталог</a>
+          <a href="#workflow" data-i="navWorkflow">Как работает</a>
+          <a href="#access" data-i="navAccess">Доступ</a>
+        </nav>
+        <div class="header-actions">
+          <div class="lang-dropdown" aria-label="Language switcher">
+            <button type="button" class="lang-current" id="langCurrentBtn">RU</button>
+            <div class="lang-menu">
+              <button type="button" class="lang-option is-active" data-lang="ru">RU</button>
+              <button type="button" class="lang-option" data-lang="uk">UK</button>
+              <button type="button" class="lang-option" data-lang="en">EN</button>
+            </div>
+          </div>
+          <a class="btn btn-primary" id="openAppBtn" href="home.html?lang=ru" data-i="openApp">Открыть приложение</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-backdrop"></div>
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow" data-i="eyebrow">Calc Square</span>
+            <h1 data-i="heroTitle">Калькулятор воздуховодов и фасонных изделий для быстрой подготовки спецификаций</h1>
+            <p class="hero-text" data-i="heroText">
+              Веб-приложение для подбора изделий, расчёта площади и массы, формирования проектной спецификации,
+              экспорта, печати и удобной работы с каталогом вентиляционных деталей.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary btn-lg" id="heroPrimaryBtn" href="home.html?lang=ru" data-i="heroPrimary">Запустить калькулятор</a>
+              <a class="btn btn-secondary btn-lg" href="#features" data-i="heroSecondary">Посмотреть возможности</a>
+            </div>
+            <ul class="hero-points">
+              <li data-i="heroPoint1">Круглые и прямоугольные изделия</li>
+              <li data-i="heroPoint2">Расчёт площади, массы и спецификации</li>
+              <li data-i="heroPoint3">Экспорт, печать и работа с проектом</li>
+            </ul>
+          </div>
+          <div class="hero-card">
+            <div class="app-preview">
+              <div class="preview-topbar">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="preview-layout">
+                <div class="preview-panel preview-panel--left">
+                  <div class="preview-title" data-i="previewProject">Проект / Спецификация</div>
+                  <div class="preview-lines">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                  <div class="preview-table">
+                    <div></div><div></div><div></div><div></div>
+                    <div></div><div></div><div></div><div></div>
+                    <div></div><div></div><div></div><div></div>
+                  </div>
+                </div>
+                <div class="preview-panel preview-panel--right">
+                  <div class="preview-title" data-i="previewAtlas">Атлас изделий</div>
+                  <div class="preview-cards">
+                    <article><img src="assets/products/round_duct.svg" alt="" /><span data-i="previewRound">Круглые</span></article>
+                    <article><img src="assets/products/rectangular_duct.svg" alt="" /><span data-i="previewRect">Прямоугольные</span></article>
+                    <article><img src="assets/products/round_to_rectangular.svg" alt="" /><span data-i="previewTransition">Комбинированные</span></article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="metrics metrics-compact">
+        <div class="container metrics-grid metrics-grid-four">
+          <article>
+            <strong data-i="metricAValue">3</strong>
+            <span data-i="metricALabel">типа каталога изделий</span>
+          </article>
+          <article>
+            <strong data-i="metricBValue">RU / UK / EN</strong>
+            <span data-i="metricBLabel">локализация интерфейса</span>
+          </article>
+          <article>
+            <strong data-i="metricCValue">1 проект</strong>
+            <span data-i="metricCLabel">спецификация, комментарии, итоги по материалам</span>
+          </article>
+          <article>
+            <strong data-i="metricDValue">Export</strong>
+            <span data-i="metricDLabel">печать, CSV, Excel и сохранение файлов</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="features" class="section">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow" data-i="featuresEyebrow">Возможности</span>
+            <h2 data-i="featuresTitle">Всё, что нужно для расчёта и подготовки проектной спецификации</h2>
+            <p data-i="featuresText">
+              Приложение объединяет каталог изделий, калькуляторы, проектную таблицу и рабочие действия в одном интерфейсе.
+            </p>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <h3 data-i="f1t">Каталог и атлас</h3>
+              <p data-i="f1d">Быстрый переход по категориям изделий с визуальной навигацией и подготовленными модулями расчёта.</p>
+            </article>
+            <article class="feature-card">
+              <h3 data-i="f2t">Калькуляторы изделий</h3>
+              <p data-i="f2d">Расчёт площади, массы, описания и параметров для круглых и прямоугольных деталей.</p>
+            </article>
+            <article class="feature-card">
+              <h3 data-i="f3t">Спецификация проекта</h3>
+              <p data-i="f3d">Добавление позиций в таблицу, комментарии, итог по материалам и подготовка к выгрузке.</p>
+            </article>
+            <article class="feature-card">
+              <h3 data-i="f4t">Экспорт и печать</h3>
+              <p data-i="f4d">Сохранение проекта в файл, печать, выгрузка CSV/Excel и рабочий документ.</p>
+            </article>
+            <article class="feature-card">
+              <h3 data-i="f5t">Рабочий процесс</h3>
+              <p data-i="f5d">Подбор изделий, расчёт, сборка спецификации и подготовка финального результата в одном месте.</p>
+            </article>
+            <article class="feature-card">
+              <h3 data-i="f6t">Адаптивная работа</h3>
+              <p data-i="f6d">Удобная работа с панелями, таблицей и приложением на разных экранах.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="catalog" class="section section-muted">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow" data-i="catalogEyebrow">Каталог</span>
+            <h2 data-i="catalogTitle">Основные категории изделий</h2>
+          </div>
+          <div class="catalog-grid">
+            <article class="catalog-card">
+              <img src="assets/products/round_duct.svg" alt="Round fittings" />
+              <h3 data-i="c1t">Круглые изделия</h3>
+              <p data-i="c1d">Воздуховоды, отводы, переходы, тройники, заглушки, врезки и другие изделия с круглыми сечениями.</p>
+            </article>
+            <article class="catalog-card">
+              <img src="assets/products/rectangular_duct.svg" alt="Rectangular fittings" />
+              <h3 data-i="c2t">Прямоугольные изделия</h3>
+              <p data-i="c2d">Воздуховоды, отводы, переходы, заглушки и другие изделия с прямоугольными сечениями.</p>
+            </article>
+            <article class="catalog-card">
+              <img src="assets/products/round_to_rectangular.svg" alt="Combined fittings" />
+              <h3 data-i="c3t">Комбинированные изделия</h3>
+              <p data-i="c3d">Соединения между круглыми и прямоугольными сечениями для переходных и комбинированных узлов.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow" class="section">
+        <div class="container workflow-grid">
+          <div>
+            <span class="eyebrow" data-i="workflowEyebrow">Как работает</span>
+            <h2 data-i="workflowTitle">Простой сценарий для расчёта и подготовки спецификации</h2>
+          </div>
+          <div class="steps">
+            <article>
+              <span>01</span>
+              <h3 data-i="s1t">Откройте приложение</h3>
+              <p data-i="s1d">Запустите приложение и начните работу с каталогом и калькуляторами.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3 data-i="s2t">Задайте параметры</h3>
+              <p data-i="s2d">Введите размеры, материал, толщину, количество и параметры изделия.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3 data-i="s3t">Соберите спецификацию</h3>
+              <p data-i="s3d">Добавьте позиции в проект, внесите комментарии и проверьте итоги.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <h3 data-i="s4t">Экспортируйте результат</h3>
+              <p data-i="s4d">Сохраните проект, распечатайте документ или выгрузите данные в CSV/Excel.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="access" class="section section-accent">
+        <div class="container cta-box">
+          <div>
+            <span class="eyebrow eyebrow-light" data-i="ctaEyebrow">Старт</span>
+            <h2 data-i="ctaTitle">Откройте приложение и используйте Calc Square как рабочий инструмент</h2>
+            <p data-i="ctaText">Запустите приложение и продолжайте работу с расчётом, спецификацией и экспортом.</p>
+          </div>
+          <div class="cta-actions">
+            <a class="btn btn-light btn-lg" id="ctaOpenBtn" href="home.html?lang=ru" data-i="ctaOpen">Открыть приложение</a>
+            <a class="btn btn-outline-light btn-lg" href="#catalog" data-i="ctaCatalog">Смотреть каталог</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <strong>ST Spetsmontazh</strong>
+          <span data-i="footerText">Расчёт вентиляционных изделий и подготовка спецификаций.</span>
+        </div>
+        <address>
+          <a href="tel:+380445022592">+38 (044) 502-25-92</a>
+          <a href="tel:+380674685551">+38 (067) 468-55-51</a>
+          <a href="mailto:office@stspecmontag.com.ua">office@stspecmontag.com.ua</a>
+          <a href="https://stspecmontag.com.ua">stspecmontag.com.ua</a>
+        </address>
+      </div>
+    </footer>
+
+    <script>
+      const landingI18n = {
+        ru: {
+          navFeatures: 'Возможности', navCatalog: 'Каталог', navWorkflow: 'Как работает', navAccess: 'Доступ',
+          openApp: 'Открыть приложение', eyebrow: 'Calc Square',
+          heroTitle: 'Калькулятор воздуховодов и фасонных изделий для быстрой подготовки спецификаций',
+          heroText: 'Веб-приложение для подбора изделий, расчёта площади и массы, формирования проектной спецификации, экспорта, печати и удобной работы с каталогом вентиляционных деталей.',
+          heroPrimary: 'Запустить калькулятор', heroSecondary: 'Посмотреть возможности',
+          heroPoint1: 'Круглые и прямоугольные изделия', heroPoint2: 'Расчёт площади, массы и спецификации', heroPoint3: 'Экспорт, печать и работа с проектом',
+          previewProject: 'Проект / Спецификация', previewAtlas: 'Атлас изделий', previewRound: 'Круглые', previewRect: 'Прямоугольные', previewTransition: 'Комбинированные',
+          metricAValue: '3', metricALabel: 'типа каталога изделий', metricBValue: 'RU / UK / EN', metricBLabel: 'локализация интерфейса', metricCValue: '1 проект', metricCLabel: 'спецификация, комментарии, итоги по материалам', metricDValue: 'Export', metricDLabel: 'печать, CSV, Excel и сохранение файлов',
+          featuresEyebrow: 'Возможности', featuresTitle: 'Всё, что нужно для расчёта и подготовки проектной спецификации',
+          featuresText: 'Приложение объединяет каталог изделий, калькуляторы, проектную таблицу и рабочие действия в одном интерфейсе.',
+          f1t: 'Каталог и атлас', f1d: 'Быстрый переход по категориям изделий с визуальной навигацией и подготовленными модулями расчёта.',
+          f2t: 'Калькуляторы изделий', f2d: 'Расчёт площади, массы, описания и параметров для круглых и прямоугольных деталей.',
+          f3t: 'Спецификация проекта', f3d: 'Добавление позиций в таблицу, комментарии, итог по материалам и подготовка к выгрузке.',
+          f4t: 'Экспорт и печать', f4d: 'Сохранение проекта в файл, печать, выгрузка CSV/Excel и рабочий документ.',
+          f5t: 'Рабочий процесс', f5d: 'Подбор изделий, расчёт, сборка спецификации и подготовка финального результата в одном месте.',
+          f6t: 'Адаптивная работа', f6d: 'Удобная работа с панелями, таблицей и приложением на разных экранах.',
+          catalogEyebrow: 'Каталог', catalogTitle: 'Основные категории изделий',
+          c1t: 'Круглые изделия', c1d: 'Воздуховоды, отводы, переходы, тройники, заглушки, врезки и другие изделия с круглыми сечениями.',
+          c2t: 'Прямоугольные изделия', c2d: 'Воздуховоды, отводы, переходы, заглушки и другие изделия с прямоугольными сечениями.',
+          c3t: 'Комбинированные изделия', c3d: 'Соединения между круглыми и прямоугольными сечениями для переходных и комбинированных узлов.',
+          workflowEyebrow: 'Как работает', workflowTitle: 'Простой сценарий для расчёта и подготовки спецификации',
+          s1t: 'Откройте приложение', s1d: 'Запустите приложение и начните работу с каталогом и калькуляторами.',
+          s2t: 'Задайте параметры', s2d: 'Введите размеры, материал, толщину, количество и параметры изделия.',
+          s3t: 'Соберите спецификацию', s3d: 'Добавьте позиции в проект, внесите комментарии и проверьте итоги.',
+          s4t: 'Экспортируйте результат', s4d: 'Сохраните проект, распечатайте документ или выгрузите данные в CSV/Excel.',
+          ctaEyebrow: 'Старт', ctaTitle: 'Откройте приложение и используйте Calc Square как рабочий инструмент',
+          ctaText: 'Запустите приложение и продолжайте работу с расчётом, спецификацией и экспортом.', ctaOpen: 'Открыть приложение', ctaCatalog: 'Смотреть каталог',
+          footerText: 'Расчёт вентиляционных изделий и подготовка спецификаций.'
+        },
+        uk: {
+          navFeatures: 'Можливості', navCatalog: 'Каталог', navWorkflow: 'Як працює', navAccess: 'Доступ',
+          openApp: 'Відкрити застосунок', eyebrow: 'Calc Square',
+          heroTitle: 'Калькулятор повітропроводів і фасонних виробів для швидкої підготовки специфікацій',
+          heroText: 'Вебзастосунок для підбору виробів, розрахунку площі та маси, формування проєктної специфікації, експорту, друку та зручної роботи з каталогом вентиляційних деталей.',
+          heroPrimary: 'Запустити калькулятор', heroSecondary: 'Переглянути можливості',
+          heroPoint1: 'Круглі та прямокутні вироби', heroPoint2: 'Розрахунок площі, маси та специфікації', heroPoint3: 'Експорт, друк і робота з проєктом',
+          previewProject: 'Проєкт / Специфікація', previewAtlas: 'Атлас виробів', previewRound: 'Круглі', previewRect: 'Прямокутні', previewTransition: 'Комбіновані',
+          metricAValue: '3', metricALabel: 'типи каталогу виробів', metricBValue: 'RU / UK / EN', metricBLabel: 'локалізація інтерфейсу', metricCValue: '1 проєкт', metricCLabel: 'специфікація, коментарі, підсумки за матеріалами', metricDValue: 'Export', metricDLabel: 'друк, CSV, Excel і збереження файлів',
+          featuresEyebrow: 'Можливості', featuresTitle: 'Усе, що потрібно для розрахунку та підготовки проєктної специфікації',
+          featuresText: 'Застосунок об’єднує каталог виробів, калькулятори, проєктну таблицю та робочі дії в одному інтерфейсі.',
+          f1t: 'Каталог і атлас', f1d: 'Швидкий перехід між категоріями виробів із візуальною навігацією та підготовленими модулями розрахунку.',
+          f2t: 'Калькулятори виробів', f2d: 'Розрахунок площі, маси, опису та параметрів для круглих і прямокутних деталей.',
+          f3t: 'Специфікація проєкту', f3d: 'Додавання позицій у таблицю, коментарі, підсумок за матеріалами та підготовка до вивантаження.',
+          f4t: 'Експорт і друк', f4d: 'Збереження проєкту у файл, друк, вивантаження CSV/Excel і робочий документ.',
+          f5t: 'Робочий процес', f5d: 'Підбір виробів, розрахунок, збірка специфікації та підготовка фінального результату в одному місці.',
+          f6t: 'Адаптивна робота', f6d: 'Зручна робота з панелями, таблицею та застосунком на різних екранах.',
+          catalogEyebrow: 'Каталог', catalogTitle: 'Основні категорії виробів',
+          c1t: 'Круглі вироби', c1d: 'Повітропроводи, відводи, переходи, трійники, заглушки, врізки та інші вироби з круглими перерізами.',
+          c2t: 'Прямокутні вироби', c2d: 'Повітропроводи, відводи, переходи, заглушки та інші вироби з прямокутними перерізами.',
+          c3t: 'Комбіновані вироби', c3d: 'З’єднання між круглими та прямокутними перерізами для перехідних і комбінованих вузлів.',
+          workflowEyebrow: 'Як працює', workflowTitle: 'Простий сценарій для розрахунку та підготовки специфікації',
+          s1t: 'Відкрийте застосунок', s1d: 'Запустіть застосунок і почніть роботу з каталогом та калькуляторами.',
+          s2t: 'Задайте параметри', s2d: 'Введіть розміри, матеріал, товщину, кількість і параметри виробу.',
+          s3t: 'Зберіть специфікацію', s3d: 'Додайте позиції в проєкт, внесіть коментарі та перевірте підсумки.',
+          s4t: 'Експортуйте результат', s4d: 'Збережіть проєкт, надрукуйте документ або вивантажте дані в CSV/Excel.',
+          ctaEyebrow: 'Старт', ctaTitle: 'Відкрийте застосунок і використовуйте Calc Square як робочий інструмент',
+          ctaText: 'Запустіть застосунок і продовжуйте роботу з розрахунком, специфікацією та експортом.', ctaOpen: 'Відкрити застосунок', ctaCatalog: 'Дивитися каталог',
+          footerText: 'Розрахунок вентиляційних виробів і підготовка специфікацій.'
+        },
+        en: {
+          navFeatures: 'Features', navCatalog: 'Catalog', navWorkflow: 'Workflow', navAccess: 'Access',
+          openApp: 'Open Application', eyebrow: 'Calc Square',
+          heroTitle: 'Duct and fitting calculator for fast specification preparation',
+          heroText: 'Web application for selecting fittings, calculating area and mass, preparing project specifications, exporting data and working with a ventilation product catalog.',
+          heroPrimary: 'Open Calculator', heroSecondary: 'View Features',
+          heroPoint1: 'Round and rectangular fittings', heroPoint2: 'Area, mass and specification workflow', heroPoint3: 'Export, print and project tools',
+          previewProject: 'Project / Specification', previewAtlas: 'Product Atlas', previewRound: 'Round', previewRect: 'Rectangular', previewTransition: 'Combined',
+          metricAValue: '3', metricALabel: 'catalog product types', metricBValue: 'RU / UK / EN', metricBLabel: 'interface localization', metricCValue: '1 project', metricCLabel: 'specification, comments and material totals', metricDValue: 'Export', metricDLabel: 'print, CSV, Excel and file saving',
+          featuresEyebrow: 'Features', featuresTitle: 'Everything needed for calculation and project specification preparation',
+          featuresText: 'The application combines a product catalog, calculators, a project table and working actions in one interface.',
+          f1t: 'Catalog and atlas', f1d: 'Fast movement through fitting categories with visual navigation and prepared calculation modules.',
+          f2t: 'Product calculators', f2d: 'Area, mass, description and parameter calculation for round and rectangular fittings.',
+          f3t: 'Project specification', f3d: 'Adding positions to the table, comments, material totals and export preparation.',
+          f4t: 'Export and print', f4d: 'Save the project to file, print, export CSV/Excel and prepare a working document.',
+          f5t: 'Workflow', f5d: 'Product selection, calculation, specification building and final result preparation in one place.',
+          f6t: 'Adaptive work', f6d: 'Comfortable work with panels, table and application on different screens.',
+          catalogEyebrow: 'Catalog', catalogTitle: 'Main product categories',
+          c1t: 'Round fittings', c1d: 'Ducts, elbows, transitions, tees, caps, insets and other fittings with round sections.',
+          c2t: 'Rectangular fittings', c2d: 'Ducts, elbows, transitions, caps and other fittings with rectangular sections.',
+          c3t: 'Combined fittings', c3d: 'Connections between round and rectangular sections for transition and combined nodes.',
+          workflowEyebrow: 'Workflow', workflowTitle: 'Simple flow for calculation and specification preparation',
+          s1t: 'Open the application', s1d: 'Launch the app and start working with the catalog and calculators.',
+          s2t: 'Set parameters', s2d: 'Enter dimensions, material, thickness, quantity and fitting parameters.',
+          s3t: 'Build the specification', s3d: 'Add positions to the project, enter comments and review totals.',
+          s4t: 'Export the result', s4d: 'Save the project, print the document or export data to CSV/Excel.',
+          ctaEyebrow: 'Start', ctaTitle: 'Open the application and use Calc Square as a working tool',
+          ctaText: 'Launch the application and continue with calculation, specification and export workflow.', ctaOpen: 'Open Application', ctaCatalog: 'View Catalog',
+          footerText: 'Ventilation fitting calculation and specification preparation.'
+        }
+      };
+
+      const storageKey = 'landingLanguage';
+      const langCurrentBtn = document.getElementById('langCurrentBtn');
+      const langButtons = document.querySelectorAll('.lang-option');
+      const heroPrimaryBtn = document.getElementById('heroPrimaryBtn');
+      const openAppBtn = document.getElementById('openAppBtn');
+      const ctaOpenBtn = document.getElementById('ctaOpenBtn');
+
+      function applyLandingLang(lang) {
+        const dict = landingI18n[lang] || landingI18n.ru;
+        document.documentElement.lang = ['ru', 'uk', 'en'].includes(lang) ? lang : 'ru';
+        document.title = 'Calc Square';
+        document.querySelectorAll('[data-i]').forEach((node) => {
+          const key = node.dataset.i;
+          if (dict[key]) node.textContent = dict[key];
+        });
+        [openAppBtn, heroPrimaryBtn, ctaOpenBtn].forEach((link) => {
+          if (link) link.href = `home.html?lang=${lang}`;
+        });
+        if (langCurrentBtn) langCurrentBtn.textContent = lang.toUpperCase();
+        langButtons.forEach((btn) => btn.classList.toggle('is-active', btn.dataset.lang === lang));
+        localStorage.setItem(storageKey, lang);
+      }
+
+      langButtons.forEach((btn) => btn.addEventListener('click', () => applyLandingLang(btn.dataset.lang)));
+      applyLandingLang(localStorage.getItem(storageKey) || 'ru');
+    </script>
+  </body>
 </html>

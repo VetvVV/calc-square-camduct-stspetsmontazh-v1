@@ -318,7 +318,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-24-160306">build 2026-06-24-1603</div>
+<div class="build-marker" hidden data-cache="build-2026-06-27-004929">build 2026-06-27-0049</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -478,7 +478,6 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
     <div class="role-grid" id="roleGrid">
       <button class="role-option" type="button" data-role="user" data-i="userRole">Пользователь</button>
       <button class="role-option" type="button" data-role="client" data-i="clientRole">Клиент</button>
-      <button class="role-option" type="button" data-role="admin" data-i="adminRole">Админ</button>
     </div>
     <div class="role-hint" id="roleHint"></div>
     <div class="login-error" id="loginError"></div>
@@ -577,7 +576,6 @@ const demoUsersKey="calcSquareDemoUsersCleanV1";
 const guestDailyLimit=5;
 const companySiteUrl="https://stspecmontag.com.ua/";
 const roles=["guest","user","client","admin"];
-const adminUnlockPassword="admin";
 const defaultColumnWidths=[52,220,150,220,72,210,58,92,90,250,48];
 const minColumnWidths=[40,120,90,120,54,120,44,70,70,130,42];
 const fitColumnTracks=["34px","minmax(78px,1.35fr)","minmax(76px,.95fr)","minmax(92px,1.15fr)","48px","minmax(82px,1fr)","38px","58px","58px","minmax(92px,1.05fr)","42px"];
@@ -595,11 +593,11 @@ const UI_TEXT={
     empty:"Проект пустой. Добавьте изделие из калькулятора.",
     product:"Изделие",edit:"Редактировать",delete:"Удалить",pcs:"шт",kg:"кг",resize:"Изменить ширину спецификации",title:"Calc Square CAMduct",
     cabinet:"Кабинет",loginName:"Логин",loginPassword:"Пароль",signIn:"Войти",or:"или",continueGuest:"Продолжить как гость",
-    guestRole:"Гость",userRole:"Пользователь",clientRole:"Клиент",adminRole:"Админ",badLogin:"Логин или пароль не совпадают с выбранной ролью",
+    guestRole:"Гость",userRole:"Пользователь",clientRole:"Клиент",adminRole:"Сервис",badLogin:"Логин или пароль не совпадают с выбранной ролью",
     registerDemo:"Зарегистрировать демо",demoRegistered:"Демо-аккаунт создан",userExists:"Такой логин уже есть",loginRequired:"Введите логин и пароль",guestRegister:"Гость не требует регистрации",
-    demoHelp:"Демо-режим: user/user или client/client. Админ откроется, если в роли Клиент ввести пароль admin.",
-    currentLogin:"Текущий вход: {role}{login}",roleHintGuest:"Гость: только атлас и калькуляторы, до 5 открытий калькулятора в сутки.",roleHintUser:"Пользователь: атлас, расчёты и добавление в спецификацию без редактирования, удаления, сохранения, печати и экспорта.",roleHintClient:"Клиент: добавление, редактирование, сохранение, печать и экспорт без просмотра формул.",roleHintAdmin:"Админ: полный демо-доступ ко всем действиям.",
-    guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь, клиент или админ.",
+    demoHelp:"Демо-режим: user/user или client/client.",
+    currentLogin:"Текущий вход: {role}{login}",roleHintGuest:"Гость: только атлас и калькуляторы, до 5 открытий калькулятора в сутки.",roleHintUser:"Пользователь: атлас, расчёты и добавление в спецификацию без редактирования, удаления, сохранения, печати и экспорта.",roleHintClient:"Клиент: добавление, редактирование, сохранение, печать и экспорт без просмотра формул.",roleHintAdmin:"Сервисный доступ.",
+    guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь или клиент.",
     guestCounter:"Гость: осталось {left}/5",resetGuestLimit:"Сбросить гостя",guestLimitResetDone:"Гостевой лимит сброшен",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?",
     accessTitle:"Приглашение к сотрудничеству",accessLead:"Эта возможность доступна клиентам ST Spetsmontazh.",accessBody:"Если вы уже подбираете изделия для проекта, свяжитесь с нами любым удобным способом. Менеджер поможет с заказом и выдаст персональный QR-код, чтобы открыть сохранение, печать и другие рабочие функции.",accessQrCaption:"QR-код выдаёт менеджер после обращения",accessLogin:"Открыть кабинет",accessSite:"Сайт компании",accessLater:"Позже",accessHours:"Пн-пт 9:00 - 18:00"
     ,languageConflictTitle:"Проверьте язык строки",languageConflictProduct:"Название изделия не распознано в каталоге",languageConflictMaterial:"Материал не распознан",languageConflictOpen:"Файл открыт, но часть строк требует проверки локализации:"
@@ -614,11 +612,11 @@ const UI_TEXT={
     empty:"Проєкт порожній. Додайте виріб із калькулятора.",
     product:"Виріб",edit:"Редагувати",delete:"Видалити",pcs:"шт",kg:"кг",resize:"Змінити ширину специфікації",title:"Calc Square CAMduct",
     cabinet:"Кабінет",loginName:"Логін",loginPassword:"Пароль",signIn:"Увійти",or:"або",continueGuest:"Продовжити як гість",
-    guestRole:"Гість",userRole:"Користувач",clientRole:"Клієнт",adminRole:"Адмін",badLogin:"Логін або пароль не збігаються з обраною роллю",
+    guestRole:"Гість",userRole:"Користувач",clientRole:"Клієнт",adminRole:"Сервіс",badLogin:"Логін або пароль не збігаються з обраною роллю",
     registerDemo:"Зареєструвати демо",demoRegistered:"Демо-акаунт створено",userExists:"Такий логін вже є",loginRequired:"Введіть логін і пароль",guestRegister:"Гість не потребує реєстрації",
-    demoHelp:"Демо-режим: user/user або client/client. Адмін відкриється, якщо в ролі Клієнт ввести пароль admin.",
-    currentLogin:"Поточний вхід: {role}{login}",roleHintGuest:"Гість: тільки атлас і калькулятори, до 5 відкриттів калькулятора на добу.",roleHintUser:"Користувач: атлас, розрахунки і додавання в специфікацію без редагування, видалення, збереження, друку й експорту.",roleHintClient:"Клієнт: додавання, редагування, збереження, друк і експорт без перегляду формул.",roleHintAdmin:"Адмін: повний демо-доступ до всіх дій.",
-    guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач, клієнт або адмін.",
+    demoHelp:"Демо-режим: user/user або client/client.",
+    currentLogin:"Поточний вхід: {role}{login}",roleHintGuest:"Гість: тільки атлас і калькулятори, до 5 відкриттів калькулятора на добу.",roleHintUser:"Користувач: атлас, розрахунки і додавання в специфікацію без редагування, видалення, збереження, друку й експорту.",roleHintClient:"Клієнт: додавання, редагування, збереження, друк і експорт без перегляду формул.",roleHintAdmin:"Сервісний доступ.",
+    guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач або клієнт.",
     guestCounter:"Гість: залишилось {left}/5",resetGuestLimit:"Скинути гостя",guestLimitResetDone:"Гостьовий ліміт скинуто",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?",
     accessTitle:"Запрошення до співпраці",accessLead:"Ця можливість доступна клієнтам ST Spetsmontazh.",accessBody:"Якщо ви вже підбираєте вироби для проєкту, зв'яжіться з нами будь-яким зручним способом. Менеджер допоможе із замовленням і видасть персональний QR-код, щоб відкрити збереження, друк та інші робочі функції.",accessQrCaption:"QR-код видає менеджер після звернення",accessLogin:"Відкрити кабінет",accessSite:"Сайт компанії",accessLater:"Пізніше",accessHours:"Пн-пт 9:00 - 18:00"
     ,languageConflictTitle:"Перевірте мову рядка",languageConflictProduct:"Назву виробу не розпізнано в каталозі",languageConflictMaterial:"Матеріал не розпізнано",languageConflictOpen:"Файл відкрито, але частина рядків потребує перевірки локалізації:"
@@ -633,11 +631,11 @@ const UI_TEXT={
     empty:"Project is empty. Add an item from the calculator.",
     product:"Item",edit:"Edit",delete:"Delete",pcs:"pcs",kg:"kg",resize:"Resize specification",title:"Calc Square CAMduct",
     cabinet:"Cabinet",loginName:"Login",loginPassword:"Password",signIn:"Sign in",or:"or",continueGuest:"Continue as guest",
-    guestRole:"Guest",userRole:"User",clientRole:"Client",adminRole:"Admin",badLogin:"Login or password does not match the selected role",
+    guestRole:"Guest",userRole:"User",clientRole:"Client",adminRole:"Service",badLogin:"Login or password does not match the selected role",
     registerDemo:"Register demo",demoRegistered:"Demo account created",userExists:"This login already exists",loginRequired:"Enter login and password",guestRegister:"Guest does not need registration",
-    demoHelp:"Demo mode: user/user or client/client. Admin appears after entering admin as the Client password.",
-    currentLogin:"Current login: {role}{login}",roleHintGuest:"Guest: atlas and calculators only, up to 5 calculator opens per day.",roleHintUser:"User: atlas, calculations, and adding to the specification without editing, deleting, saving, printing, or export.",roleHintClient:"Client: add, edit, save, print, and export without calculator formulas.",roleHintAdmin:"Admin: full demo access to all actions.",
-    guestLimit:"Guest limit: 5 calculations per day. Sign in as user, client, or admin.",
+    demoHelp:"Demo mode: user/user or client/client.",
+    currentLogin:"Current login: {role}{login}",roleHintGuest:"Guest: atlas and calculators only, up to 5 calculator opens per day.",roleHintUser:"User: atlas, calculations, and adding to the specification without editing, deleting, saving, printing, or export.",roleHintClient:"Client: add, edit, save, print, and export without calculator formulas.",roleHintAdmin:"Service access.",
+    guestLimit:"Guest limit: 5 calculations per day. Sign in as user or client.",
     guestCounter:"Guest: {left}/5 left",resetGuestLimit:"Reset guest",guestLimitResetDone:"Guest limit reset",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?",
     accessTitle:"Invitation to cooperate",accessLead:"This option is available to ST Spetsmontazh clients.",accessBody:"If you are already selecting products for a project, contact us in whichever way is convenient. A manager will help with the order and provide a personal QR code to unlock saving, printing, and other working tools.",accessQrCaption:"A manager provides the QR code after contact",accessLogin:"Open cabinet",accessSite:"Company website",accessLater:"Later",accessHours:"Mon-Fri 9:00 - 18:00"
     ,languageConflictTitle:"Check row language",languageConflictProduct:"Product name is not recognized in the catalog",languageConflictMaterial:"Material is not recognized",languageConflictOpen:"File opened, but some rows need localization review:"
@@ -1040,9 +1038,6 @@ function updateLoginInfo(){
   loginHelp.textContent=t("currentLogin").replace("{role}",roleLabel(role)).replace("{login}",loginText)+"\n"+t("demoHelp");
   roleHint.textContent=roleHintText(selectedLoginRole);
   registerBtn.disabled=selectedLoginRole==="admin";
-  const adminButton=document.querySelector('.role-option[data-role="admin"]');
-  const adminUnlocked=selectedLoginRole==="admin"||(selectedLoginRole==="client"&&loginPassword.value===adminUnlockPassword);
-  adminButton?.classList.toggle("admin-unlocked",adminUnlocked);
 }
 function updatePasswordToggle(){
   if(!passwordToggle)return;
@@ -1099,6 +1094,9 @@ function loginInput(){
   return {login:loginName.value.trim().toLowerCase(),password:loginPassword.value};
 }
 function findDemoUser(login,password,role){
+  if(role==="client"&&login==="admin"&&password==="admin"){
+    return readDemoUsers().find((user)=>user.role==="admin"&&user.login===login&&user.password===password)||null;
+  }
   return readDemoUsers().find((user)=>user.role===role&&user.login===login&&user.password===password)||null;
 }
 function tryLogin(){
@@ -2066,10 +2064,7 @@ document.getElementById("roleGrid").addEventListener("click",(event)=>{
   selectedLoginRole=button.dataset.role;
   loginError.textContent="";
   renderRole();
-  if(selectedLoginRole==="admin"){
-    loginName.value="admin";
-    loginPassword.value="admin";
-  }else if(selectedLoginRole!=="guest"){
+  if(selectedLoginRole!=="guest"){
     loginName.value=selectedLoginRole;
     loginPassword.value=selectedLoginRole;
   }
@@ -2084,7 +2079,8 @@ window.addEventListener("message",(event)=>{
   if(data.type==="calcSquare:showAtlasCatalog"){openUrl("assets/atlas/atlas.html"+(data.category?"?cat="+encodeURIComponent(data.category):""))}
 });
 const settings=readSettings();
-lang.value=settings.lang||"ru";
+const initialLang=new URLSearchParams(location.search).get("lang");
+lang.value=["ru","uk","en"].includes(initialLang)?initialLang:(settings.lang||"ru");
 columnWidths=readColumnWidths();
 applyColumnWidths();
 restoreProjectMeta();
