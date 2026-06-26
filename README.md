@@ -6,3 +6,5 @@ Main page: `index.html`.
 Application page: `home.html`.
 
 Presentation notes: `PRESENTATION.md`.
+
+GitHub Pages support files: `404.html`, `robots.txt`, `sitemap.xml`.

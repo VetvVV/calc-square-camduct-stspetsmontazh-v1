@@ -3,7 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Calc Square</title>
+    <title>Calc Square | ST Spetsmontazh</title>
+    <meta
+      name="description"
+      content="Атлас вентиляционных изделий, расчёт площади и массы, подготовка проектной спецификации для ST Spetsmontazh."
+    />
+    <meta name="theme-color" content="#df7a12" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vetvvv.github.io/calc-square-camduct-stspetsmontazh-v1/" />
+    <meta property="og:title" content="Calc Square | ST Spetsmontazh" />
+    <meta
+      property="og:description"
+      content="Атлас изделий, расчёт площади и массы, спецификация, экспорт и печать для вентиляционных деталей."
+    />
+    <meta property="og:image" content="assets/images/stspecmontazh-logo-dark.png" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://vetvvv.github.io/calc-square-camduct-stspetsmontazh-v1/" />
+    <link rel="icon" href="assets/images/calc_square_logo.png" />
     <link rel="stylesheet" href="assets/fonts/exo2.css" />
     <link rel="stylesheet" href="assets/css/landing.css" />
   </head>
@@ -255,6 +271,7 @@
         ru: {
           navFeatures: 'Возможности', navCatalog: 'Каталог', navWorkflow: 'Как работает', navContacts: 'Контакты',
           openApp: 'Открыть атлас', eyebrow: 'Calc Square',
+          pageTitle: 'Calc Square | ST Spetsmontazh',
           heroTitle: 'Атлас изделий, расчёт площади и спецификация для вентиляции',
           heroText: 'Веб-приложение для подбора изделий, расчёта площади и массы, формирования проектной спецификации, экспорта, печати и удобной работы с каталогом вентиляционных деталей.',
           heroPrimary: 'Открыть атлас', heroCatalog: 'Смотреть каталог',
@@ -290,6 +307,7 @@
         uk: {
           navFeatures: 'Можливості', navCatalog: 'Каталог', navWorkflow: 'Як працює', navContacts: 'Контакти',
           openApp: 'Відкрити атлас', eyebrow: 'Calc Square',
+          pageTitle: 'Calc Square | ST Spetsmontazh',
           heroTitle: 'Атлас виробів, розрахунок площі та специфікація для вентиляції',
           heroText: 'Вебзастосунок для підбору виробів, розрахунку площі та маси, формування проєктної специфікації, експорту, друку та зручної роботи з каталогом вентиляційних деталей.',
           heroPrimary: 'Відкрити атлас', heroCatalog: 'Дивитися каталог',
@@ -325,6 +343,7 @@
         en: {
           navFeatures: 'Features', navCatalog: 'Catalog', navWorkflow: 'Workflow', navContacts: 'Contacts',
           openApp: 'Open Atlas', eyebrow: 'Calc Square',
+          pageTitle: 'Calc Square | ST Spetsmontazh',
           heroTitle: 'Product atlas, area calculation, and ventilation specification workflow',
           heroText: 'Web application for selecting fittings, calculating area and mass, preparing project specifications, exporting data and working with a ventilation product catalog.',
           heroPrimary: 'Open Atlas', heroCatalog: 'View Catalog',
@@ -371,7 +390,7 @@
       function applyLandingLang(lang) {
         const dict = landingI18n[lang] || landingI18n.ru;
         document.documentElement.lang = ['ru', 'uk', 'en'].includes(lang) ? lang : 'ru';
-        document.title = 'Calc Square';
+        document.title = dict.pageTitle || 'Calc Square | ST Spetsmontazh';
         document.querySelectorAll('[data-i]').forEach((node) => {
           const key = node.dataset.i;
           if (dict[key]) node.textContent = dict[key];

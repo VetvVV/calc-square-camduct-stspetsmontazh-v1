@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vetvvv.github.io/calc-square-camduct-stspetsmontazh-v1/sitemap.xml
