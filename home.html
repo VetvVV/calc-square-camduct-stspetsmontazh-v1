@@ -16,7 +16,8 @@ button,input,select,textarea{font:inherit}
 .top-actions{margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:22px}
 .top-nav{display:flex;align-items:center;gap:28px}
 .top-nav button{border:0;background:transparent;padding:4px 0;color:#1f2328;font-family:"Open Sans Condensed","Arial Narrow",Arial,sans-serif;font-size:14px;font-weight:700;font-style:normal;text-transform:uppercase;cursor:pointer}
-.top-nav button:hover{color:var(--accent)}
+.top-nav button:hover,.top-nav button.active{color:var(--accent)}
+.top-nav button.active{box-shadow:inset 0 -2px 0 var(--accent)}
 .toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px}
 .toolbar label{position:relative;font-size:0;line-height:0;color:transparent}
 .toolbar label span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -41,7 +42,7 @@ body[data-layout="project"] .resizer{right:0}
 body[data-layout="atlas"] .resizer{left:0}
 body[data-role="guest"] .app{grid-template-columns:minmax(0,1fr)}
 body[data-role="guest"] .side,body[data-role="guest"] .resizer,body[data-role="guest"] .mobile-switch{display:none}
-body[data-role="guest"] .top-nav button:not(#topAtlas){display:none}
+body[data-role="guest"] .top-nav button:not(#topHome):not(#topAtlas){display:none}
 body[data-role="user"] .project-comment{background:#f6f7f8;color:#6b7280;resize:none;cursor:not-allowed}
 .side,.work{background:transparent;border-radius:0;box-shadow:none}
 .work{order:1}
@@ -197,6 +198,7 @@ body[data-role="user"] .project-actions button:hover{background:#fff3df;color:#b
 .guest-submit{background:#ececec;color:#3f4652}
 .login-divider{margin:14px 0;text-align:center;color:#9ca3af;font-size:13px;font-weight:800;font-style:italic}
 .login-help{margin:-10px 0 12px;color:#6b7280;font-size:12px;line-height:1.35;text-align:center;font-weight:700;white-space:pre-line}
+.cabinet-status{margin:0 0 12px;padding:12px;border:1px solid #e5e7eb;border-radius:10px;background:#f8fafc;color:#4b5563;font-size:12px;line-height:1.45;text-align:center;font-weight:700}
 .role-hint{min-height:34px;margin-top:10px;color:#5b6573;font-size:12px;line-height:1.35;text-align:center;font-weight:700}
 .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .role-option{height:36px;border:1px solid #d1d5db;border-radius:7px;background:#fff;color:#5b6573;font-size:13px;font-weight:800;cursor:pointer}
@@ -323,16 +325,17 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-27-011759">build 2026-06-27-0117</div>
+<div class="build-marker" hidden data-cache="build-2026-06-27-014226">build 2026-06-27-0142</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
   </div>
   <div class="top-actions">
     <nav class="top-nav" aria-label="Главная навигация">
-      <button type="button" data-i="home">Главная</button>
+      <button type="button" id="topHome" data-i="home">Главная</button>
       <button type="button" id="topAtlas" data-i="atlas">Атлас</button>
-      <button type="button" data-i="tables">Таблицы</button>
+      <button type="button" id="topSplit" data-i="split">Разделить</button>
+      <button type="button" id="topSpec" data-i="spec">Спецификация</button>
     </nav>
     <div class="toolbar">
       <label><span data-i="language">Язык</span>
@@ -473,6 +476,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
     <button class="login-close" id="loginClose" type="button" aria-label="Закрыть">×</button>
     <h2 data-i="cabinet">Кабинет</h2>
     <div class="login-help" id="loginHelp"></div>
+    <div class="cabinet-status" id="cabinetStatus"></div>
     <input class="login-field" id="loginName" autocomplete="username" data-i-ph="loginName" placeholder="Логин">
     <div class="password-wrap">
       <input class="login-field" id="loginPassword" type="password" autocomplete="current-password" data-i-ph="loginPassword" placeholder="Пароль">
@@ -543,6 +547,7 @@ const passwordToggle=document.getElementById("passwordToggle");
 const loginError=document.getElementById("loginError");
 const registerBtn=document.getElementById("registerBtn");
 const loginHelp=document.getElementById("loginHelp");
+const cabinetStatus=document.getElementById("cabinetStatus");
 const roleHint=document.getElementById("roleHint");
 const roleChip=document.getElementById("roleChip");
 const adminGuestReset=document.getElementById("adminGuestReset");
@@ -591,7 +596,7 @@ let selectedLoginRole="guest";
 let layoutMode="split";
 const UI_TEXT={
   ru:{
-    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",logout:"Выйти",clear:"Очистить",spec:"Спецификация",showPassword:"Показать пароль",hidePassword:"Скрыть пароль",
+    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",split:"Разделить",tables:"Таблицы",login:"Вход / регистрация",logout:"Выйти",clear:"Очистить",spec:"Спецификация",showPassword:"Показать пароль",hidePassword:"Скрыть пароль",
     projectSpec:"Проект / Спецификация",projectName:"Название проекта",projectCustomer:"Заказчик",projectObject:"Объект",
     autoWidth:"Автоширина",resetView:"Сбросить вид",resetSort:"Сбросить порядок",specSettings:"Настройки",panelLayout:"Панели",atlasLeft:"Атлас слева",projectLeft:"Проект слева",filterNo:"№",filterName:"Наименование",filterQty:"К-во",filterMaterial:"Материал",filterThickness:"t",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
     name:"Наименование",dimensions:"Размеры",description:"Описание",quantity:"К-во",
@@ -602,7 +607,7 @@ const UI_TEXT={
     cabinet:"Кабинет",loginName:"Логин",loginPassword:"Пароль",signIn:"Войти",or:"или",continueGuest:"Продолжить как гость",
     guestRole:"Гость",userRole:"Пользователь",clientRole:"Клиент",adminRole:"Сервис",badLogin:"Логин или пароль не совпадают с выбранной ролью",
     registerDemo:"Зарегистрировать демо",demoRegistered:"Демо-аккаунт создан",userExists:"Такой логин уже есть",loginRequired:"Введите логин и пароль",guestRegister:"Гость не требует регистрации",
-    demoHelp:"Демо-режим: user/user или client/client.",
+    demoHelp:"Выберите режим доступа и войдите в кабинет.",
     currentLogin:"Текущий вход: {role}{login}",roleHintGuest:"Гость: только атлас и калькуляторы, до 5 открытий калькулятора в сутки.",roleHintUser:"Пользователь: атлас, расчёты и добавление в спецификацию без редактирования, удаления, сохранения, печати и экспорта.",roleHintClient:"Клиент: добавление, редактирование, сохранение, печать и экспорт без просмотра формул.",roleHintAdmin:"Сервисный доступ.",
     guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь или клиент.",
     guestCounter:"Гость: осталось {left}/5",resetGuestLimit:"Сбросить гостя",guestLimitResetDone:"Гостевой лимит сброшен",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?",
@@ -610,7 +615,7 @@ const UI_TEXT={
     ,languageConflictTitle:"Проверьте язык строки",languageConflictProduct:"Название изделия не распознано в каталоге",languageConflictMaterial:"Материал не распознан",languageConflictOpen:"Файл открыт, но часть строк требует проверки локализации:"
   },
   uk:{
-    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вийти",clear:"Очистити",spec:"Специфікація",showPassword:"Показати пароль",hidePassword:"Сховати пароль",
+    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",split:"Розділити",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вийти",clear:"Очистити",spec:"Специфікація",showPassword:"Показати пароль",hidePassword:"Сховати пароль",
     projectSpec:"Проєкт / Специфікація",projectName:"Назва проєкту",projectCustomer:"Замовник",projectObject:"Об'єкт",
     autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути порядок",specSettings:"Налаштування",panelLayout:"Панелі",atlasLeft:"Атлас ліворуч",projectLeft:"Проєкт ліворуч",filterNo:"№",filterName:"Найменування",filterQty:"К-ть",filterMaterial:"Матеріал",filterThickness:"t",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
     name:"Найменування",dimensions:"Розміри",description:"Опис",quantity:"К-ть",
@@ -621,7 +626,7 @@ const UI_TEXT={
     cabinet:"Кабінет",loginName:"Логін",loginPassword:"Пароль",signIn:"Увійти",or:"або",continueGuest:"Продовжити як гість",
     guestRole:"Гість",userRole:"Користувач",clientRole:"Клієнт",adminRole:"Сервіс",badLogin:"Логін або пароль не збігаються з обраною роллю",
     registerDemo:"Зареєструвати демо",demoRegistered:"Демо-акаунт створено",userExists:"Такий логін вже є",loginRequired:"Введіть логін і пароль",guestRegister:"Гість не потребує реєстрації",
-    demoHelp:"Демо-режим: user/user або client/client.",
+    demoHelp:"Виберіть режим доступу та увійдіть у кабінет.",
     currentLogin:"Поточний вхід: {role}{login}",roleHintGuest:"Гість: тільки атлас і калькулятори, до 5 відкриттів калькулятора на добу.",roleHintUser:"Користувач: атлас, розрахунки і додавання в специфікацію без редагування, видалення, збереження, друку й експорту.",roleHintClient:"Клієнт: додавання, редагування, збереження, друк і експорт без перегляду формул.",roleHintAdmin:"Сервісний доступ.",
     guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач або клієнт.",
     guestCounter:"Гість: залишилось {left}/5",resetGuestLimit:"Скинути гостя",guestLimitResetDone:"Гостьовий ліміт скинуто",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?",
@@ -629,7 +634,7 @@ const UI_TEXT={
     ,languageConflictTitle:"Перевірте мову рядка",languageConflictProduct:"Назву виробу не розпізнано в каталозі",languageConflictMaterial:"Матеріал не розпізнано",languageConflictOpen:"Файл відкрито, але частина рядків потребує перевірки локалізації:"
   },
   en:{
-    language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Sign out",clear:"Clear",spec:"Specification",showPassword:"Show password",hidePassword:"Hide password",
+    language:"Language",role:"Role",home:"Home",atlas:"Atlas",split:"Split",tables:"Tables",login:"Login / sign up",logout:"Sign out",clear:"Clear",spec:"Specification",showPassword:"Show password",hidePassword:"Hide password",
     projectSpec:"Project / Specification",projectName:"Project name",projectCustomer:"Customer",projectObject:"Object",
     autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset order",specSettings:"Settings",panelLayout:"Panels",atlasLeft:"Atlas left",projectLeft:"Project left",filterNo:"No.",filterName:"Item",filterQty:"Qty",filterMaterial:"Material",filterThickness:"t",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
     name:"Item",dimensions:"Dimensions",description:"Description",quantity:"Qty",
@@ -640,7 +645,7 @@ const UI_TEXT={
     cabinet:"Cabinet",loginName:"Login",loginPassword:"Password",signIn:"Sign in",or:"or",continueGuest:"Continue as guest",
     guestRole:"Guest",userRole:"User",clientRole:"Client",adminRole:"Service",badLogin:"Login or password does not match the selected role",
     registerDemo:"Register demo",demoRegistered:"Demo account created",userExists:"This login already exists",loginRequired:"Enter login and password",guestRegister:"Guest does not need registration",
-    demoHelp:"Demo mode: user/user or client/client.",
+    demoHelp:"Choose an access mode and sign in to the cabinet.",
     currentLogin:"Current login: {role}{login}",roleHintGuest:"Guest: atlas and calculators only, up to 5 calculator opens per day.",roleHintUser:"User: atlas, calculations, and adding to the specification without editing, deleting, saving, printing, or export.",roleHintClient:"Client: add, edit, save, print, and export without calculator formulas.",roleHintAdmin:"Service access.",
     guestLimit:"Guest limit: 5 calculations per day. Sign in as user or client.",
     guestCounter:"Guest: {left}/5 left",resetGuestLimit:"Reset guest",guestLimitResetDone:"Guest limit reset",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?",
@@ -1042,7 +1047,8 @@ function updateLoginInfo(){
   const settings=readSettings();
   const role=currentRole();
   const loginText=settings.login&&role!=="guest"?` · ${settings.login}`:"";
-  loginHelp.textContent=t("currentLogin").replace("{role}",roleLabel(role)).replace("{login}",loginText)+"\n"+t("demoHelp");
+  loginHelp.textContent=t("currentLogin").replace("{role}",roleLabel(role)).replace("{login}",loginText);
+  cabinetStatus.textContent=roleHintText(role);
   roleHint.textContent=roleHintText(selectedLoginRole);
   registerBtn.disabled=selectedLoginRole==="admin";
 }
@@ -1415,7 +1421,13 @@ function setLayoutMode(mode){
   layoutMode=["split","project","atlas"].includes(mode)?mode:"split";
   document.body.dataset.layout=layoutMode;
   localStorage.setItem(layoutModeKey,layoutMode);
+  updateTopNavState();
   requestAnimationFrame(()=>{applyColumnWidths();updateProjectOverflow()});
+}
+function updateTopNavState(){
+  document.getElementById("topAtlas")?.classList.toggle("active",layoutMode==="atlas");
+  document.getElementById("topSplit")?.classList.toggle("active",layoutMode==="split");
+  document.getElementById("topSpec")?.classList.toggle("active",layoutMode==="project");
 }
 function cycleLayoutMode(){
   const next=layoutMode==="split"?"project":"split";
@@ -1423,12 +1435,16 @@ function cycleLayoutMode(){
 }
 function showAtlasPane(){
   if(window.matchMedia("(max-width:900px)").matches)setMobileView("atlas");
-  else setLayoutMode(layoutMode==="project"?"split":layoutMode==="atlas"?"split":"atlas");
+  else setLayoutMode("atlas");
   openUrl("assets/atlas/atlas.html");
 }
 function showProjectPane(){
   if(window.matchMedia("(max-width:900px)").matches)setMobileView("project");
-  else setLayoutMode(layoutMode==="project"?"split":"project");
+  else setLayoutMode("project");
+}
+function showSplitPane(){
+  if(window.matchMedia("(max-width:900px)").matches)setMobileView("atlas");
+  else setLayoutMode("split");
 }
 function restoreScrollPositions(){
   const state=readInterfaceState();
@@ -2008,11 +2024,13 @@ document.querySelector(".project-head-row").addEventListener("dblclick",(event)=
   clearTimeout(sortClickTimer);
   openFilterMenu(cell.dataset.sortKey,cell);
 });
-document.querySelector("[data-i='home']").addEventListener("click",()=>{
+document.getElementById("topHome").addEventListener("click",()=>{
   window.location.href=`index.html?lang=${encodeURIComponent(lang.value)}`;
 });
 document.getElementById("openAtlas").addEventListener("click",showAtlasPane);
 document.getElementById("topAtlas").addEventListener("click",showAtlasPane);
+document.getElementById("topSplit").addEventListener("click",showSplitPane);
+document.getElementById("topSpec").addEventListener("click",showProjectPane);
 document.getElementById("clearProjectHeader").addEventListener("click",(event)=>{event.stopPropagation();openClearMenu(event.currentTarget)});
 clearMenu.addEventListener("click",(event)=>{
   const button=event.target.closest("[data-clear-action]");

@@ -136,8 +136,11 @@ echo.
 echo Publication complete.
 set "CACHE_TAG=%BUILD_LABEL:build =%"
 set "CACHE_TAG=%CACHE_TAG: =-%"
-echo Site:
+echo Main page:
 echo https://vetvvv.github.io/calc-square-camduct-stspetsmontazh-v1/?v=%CACHE_TAG%
+echo.
+echo Application:
+echo https://vetvvv.github.io/calc-square-camduct-stspetsmontazh-v1/home.html?lang=ru^&role=guest^&v=%CACHE_TAG%
 echo.
 echo If the browser still shows an older build, press Ctrl+F5.
 start "" "https://vetvvv.github.io/calc-square-camduct-stspetsmontazh-v1/?v=%CACHE_TAG%"
