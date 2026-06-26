@@ -1,6 +1,6 @@
 # Calc Square Publish Checklist
 
-Use this checklist before publishing changes to GitHub Pages. A full pass is needed after changes in `home.html`, atlas, roles, localization, specification tables, saved-file import, or calculator logic. For text-only changes, run the automatic validation and do a quick visual check.
+Use this checklist before publishing changes to GitHub Pages. A full pass is needed after changes in `index.html`, `home.html`, atlas, roles, localization, specification tables, saved-file import, or calculator logic. For text-only changes, run the automatic validation and do a quick visual check.
 
 ## Automatic Checks
 
@@ -20,7 +20,9 @@ Use this checklist before publishing changes to GitHub Pages. A full pass is nee
 
 ## Quick Visual Smoke Test
 
-- Open `home.html` locally.
+- Open `index.html` locally.
+- Confirm the landing page opens first.
+- Open the application from the landing page.
 - Check that the top header, project/specification area, splitter, and atlas are visible.
 - Open the atlas and click one round calculator.
 - Open one rectangular calculator.
@@ -66,5 +68,6 @@ Use this checklist before publishing changes to GitHub Pages. A full pass is nee
 ## Publishing
 
 - Press Enter in `publish.bat` only after the generated commit message looks correct.
-- After GitHub Pages opens, hard-refresh once if the old page is still visible.
+- After GitHub Pages opens, confirm the URL is the site root, not `home.html`.
+- Hard-refresh once if the old page is still visible.
 - Confirm the atlas build label in the lower-right corner matches the new build label.

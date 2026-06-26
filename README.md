@@ -2,4 +2,5 @@
 
 Static HTML/JS/SVG calculator for ventilation sheet-metal fittings.
 
-Entry point: `home.html`.
+Main page: `index.html`.
+Application page: `home.html`.
