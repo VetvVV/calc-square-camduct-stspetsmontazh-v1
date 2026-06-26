@@ -52,7 +52,8 @@ git status --short
 echo.
 if exist "PUBLISH_CHECKLIST.md" (
     echo Quick reminder before publishing:
-    echo  - Local home page opens
+    echo  - Local landing page opens first
+    echo  - Root GitHub Pages link opens index.html, not home.html
     echo  - Guest/User/Client/Admin basics checked after major UI changes
     echo  - Saved file and language switch checked after localization/import changes
     echo  - GitHub page hard-refresh if an old build is still visible

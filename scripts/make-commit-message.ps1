@@ -88,6 +88,21 @@ if (Has-File '(^|/)README\.md$|(^|/)PUBLISH_CHECKLIST\.md$|(^|/)docs/') {
     Add-Bullet 'Update project documentation.'
 }
 
+if (Has-File '(^|/)index\.html$|(^|/)assets/css/landing\.css$|(^|/)assets\\css\\landing\.css$') {
+    Add-Part 'landing page'
+    Add-Bullet 'Update the public landing page and presentation entry point.'
+}
+
+if (Has-File '(^|/)404\.html$|(^|/)robots\.txt$|(^|/)sitemap\.xml$') {
+    Add-Part 'GitHub Pages metadata'
+    Add-Bullet 'Add GitHub Pages support files for errors, robots, and sitemap.'
+}
+
+if (Has-Diff 'canonical|og:url|og:title|og:description|twitter:card|theme-color|rel="icon"') {
+    Add-Part 'share metadata'
+    Add-Bullet 'Improve browser title, favicon, and link preview metadata.'
+}
+
 if (Has-Diff 'MATERIAL_TEXT|materialKeyFromLabel|const materials=|materials ok|aluminum|Алюминий|Алюміній') {
     Add-Part 'materials'
     Add-Bullet 'Synchronize material dictionaries, calculator materials, and material validation.'
@@ -113,7 +128,7 @@ if (Has-Diff '@media print|window\.print|project-actions|mobile-switch|project-c
     Add-Bullet 'Refine printed specification columns, comments, wrapping, material summary layout, and repeated page headers.'
 }
 
-if (Has-Diff 'logo-circle|watermark|ST SPETSMONTAZH') {
+if (Has-Diff 'print-watermark|logo-circle|watermark protection') {
     Add-Part 'print protection'
     Add-Bullet 'Add subtle ST Spetsmontazh watermark protection to printed specifications.'
 }

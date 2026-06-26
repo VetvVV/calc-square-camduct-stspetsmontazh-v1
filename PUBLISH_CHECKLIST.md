@@ -15,6 +15,7 @@ Use this checklist before publishing changes to GitHub Pages. A full pass is nee
 - Confirm `role matrix ok` is printed.
 - Confirm `local fonts ok` is printed.
 - Confirm `dev traces ok` is printed, or review any development trace warnings.
+- Confirm landing metadata, sitemap, robots, and 404 checks pass through the validator.
 - Confirm the build label changed in the console.
 - Confirm the automatic commit message lists the expected files.
 
@@ -22,7 +23,9 @@ Use this checklist before publishing changes to GitHub Pages. A full pass is nee
 
 - Open `index.html` locally.
 - Confirm the landing page opens first.
+- Confirm the top buttons read as atlas/catalog/contact actions, not calculator preview or access actions.
 - Open the application from the landing page.
+- Confirm the application opens in guest mode.
 - Check that the top header, project/specification area, splitter, and atlas are visible.
 - Open the atlas and click one round calculator.
 - Open one rectangular calculator.

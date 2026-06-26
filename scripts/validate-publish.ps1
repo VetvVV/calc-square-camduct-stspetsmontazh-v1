@@ -2,6 +2,7 @@ $ErrorActionPreference = 'Stop'
 
 $Root = Resolve-Path (Join-Path $PSScriptRoot '..')
 $HomePath = Join-Path $Root 'home.html'
+$IndexPath = Join-Path $Root 'index.html'
 $AtlasPath = Join-Path $Root 'assets\atlas\atlas.html'
 $CatalogPath = Join-Path $Root 'assets\atlas\catalog-map.js'
 $PreviewPath = Join-Path $Root 'modules\common\preview-axo.js'
@@ -9,6 +10,9 @@ $PanelPath = Join-Path $Root 'modules\common\panel-module.js'
 $CalculatorPath = Join-Path $Root 'modules\common\calculator.html'
 $FontCssPath = Join-Path $Root 'assets\fonts\exo2.css'
 $VersionPath = Join-Path $Root 'VERSION.txt'
+$RobotsPath = Join-Path $Root 'robots.txt'
+$SitemapPath = Join-Path $Root 'sitemap.xml'
+$NotFoundPath = Join-Path $Root '404.html'
 
 $Errors = New-Object System.Collections.Generic.List[string]
 $Warnings = New-Object System.Collections.Generic.List[string]
@@ -22,6 +26,7 @@ Write-Host 'Running publication checks...'
 
 $RequiredFiles = @(
     $HomePath,
+    $IndexPath,
     $AtlasPath,
     $CatalogPath,
     $PreviewPath,
@@ -29,7 +34,10 @@ $RequiredFiles = @(
     $CalculatorPath,
     $VersionPath,
     (Join-Path $Root 'scripts\make-commit-message.ps1'),
-    $FontCssPath
+    $FontCssPath,
+    $RobotsPath,
+    $SitemapPath,
+    $NotFoundPath
 )
 
 foreach ($Path in $RequiredFiles) {
@@ -40,10 +48,43 @@ foreach ($Path in $RequiredFiles) {
 
 if ($Errors.Count -eq 0) {
     $HomeText = Read-Text $HomePath
+    $IndexText = Read-Text $IndexPath
     $AtlasText = Read-Text $AtlasPath
     $CalculatorText = Read-Text $CalculatorPath
     $FontCssText = Read-Text $FontCssPath
     $VersionText = (Read-Text $VersionPath).Trim()
+    $RobotsText = Read-Text $RobotsPath
+    $SitemapText = Read-Text $SitemapPath
+    $NotFoundText = Read-Text $NotFoundPath
+
+    if ($IndexText -notmatch '<title>Calc Square \| ST Spetsmontazh</title>') {
+        Add-Error 'index.html has an unexpected page title.'
+    }
+
+    if ($IndexText -notmatch '<link rel="canonical" href="https://vetvvv\.github\.io/calc-square-camduct-stspetsmontazh-v1/"') {
+        Add-Error 'index.html canonical URL is missing or incorrect.'
+    }
+
+    if ($IndexText -notmatch 'home\.html\?lang=\$\{lang\}&role=guest') {
+        Add-Error 'index.html landing buttons do not force guest mode when opening the application.'
+    }
+
+    if ($IndexText -match 'href="#access"|navAccess|heroSecondary|app-preview|preview-layout|preview-table') {
+        Add-Error 'index.html contains removed landing UI/access/preview references.'
+    }
+
+    if ($RobotsText -notmatch 'Sitemap: https://vetvvv\.github\.io/calc-square-camduct-stspetsmontazh-v1/sitemap\.xml') {
+        Add-Error 'robots.txt does not point to the GitHub Pages sitemap.'
+    }
+
+    if ($SitemapText -notmatch '<loc>https://vetvvv\.github\.io/calc-square-camduct-stspetsmontazh-v1/</loc>' -or
+        $SitemapText -notmatch '<loc>https://vetvvv\.github\.io/calc-square-camduct-stspetsmontazh-v1/home\.html</loc>') {
+        Add-Error 'sitemap.xml does not include the landing page and application page.'
+    }
+
+    if ($NotFoundText -notmatch 'href="/calc-square-camduct-stspetsmontazh-v1/"') {
+        Add-Error '404.html does not link back to the GitHub Pages root.'
+    }
 
     if ($HomeText -notmatch '<div class="build-marker" hidden data-cache="build-\d{4}-\d{2}-\d{2}-\d{6}">build \d{4}-\d{2}-\d{2}-\d{4}</div>') {
         Add-Error 'home.html build marker is missing or has an invalid format.'
