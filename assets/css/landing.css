@@ -500,10 +500,15 @@ img { max-width: 100%; display: block; }
 }
 .cta-box p { color: rgba(255,255,255,.8); }
 .cta-actions {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   justify-content: flex-end;
+}
+.cta-actions .btn {
+  pointer-events: auto;
 }
 .site-footer {
   padding: 34px 0;

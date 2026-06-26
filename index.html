@@ -210,7 +210,7 @@
           </div>
           <div class="cta-actions">
             <a class="btn btn-light btn-lg" id="ctaOpenBtn" href="home.html?lang=ru" data-i="ctaOpen">Открыть приложение</a>
-            <a class="btn btn-outline-light btn-lg" href="#catalog" data-i="ctaCatalog">Смотреть каталог</a>
+            <a class="btn btn-outline-light btn-lg" id="ctaCatalogBtn" href="#catalog" data-i="ctaCatalog">Смотреть каталог</a>
           </div>
         </div>
       </section>
@@ -331,6 +331,7 @@
       const heroPrimaryBtn = document.getElementById('heroPrimaryBtn');
       const openAppBtn = document.getElementById('openAppBtn');
       const ctaOpenBtn = document.getElementById('ctaOpenBtn');
+      const ctaCatalogBtn = document.getElementById('ctaCatalogBtn');
 
       function applyLandingLang(lang) {
         const dict = landingI18n[lang] || landingI18n.ru;
@@ -341,12 +342,24 @@
           if (dict[key]) node.textContent = dict[key];
         });
         [openAppBtn, heroPrimaryBtn, ctaOpenBtn].forEach((link) => {
-          if (link) link.href = `home.html?lang=${lang}`;
+          if (link) link.href = `home.html?lang=${lang}&role=guest`;
         });
         if (langCurrentBtn) langCurrentBtn.textContent = lang.toUpperCase();
         langButtons.forEach((btn) => btn.classList.toggle('is-active', btn.dataset.lang === lang));
         localStorage.setItem(storageKey, lang);
       }
+
+      [openAppBtn, heroPrimaryBtn, ctaOpenBtn].forEach((link) => {
+        link?.addEventListener('click', (event) => {
+          event.preventDefault();
+          window.location.href = link.href;
+        });
+      });
+
+      ctaCatalogBtn?.addEventListener('click', (event) => {
+        event.preventDefault();
+        document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
 
       langButtons.forEach((btn) => btn.addEventListener('click', () => applyLandingLang(btn.dataset.lang)));
       applyLandingLang(localStorage.getItem(storageKey) || 'ru');

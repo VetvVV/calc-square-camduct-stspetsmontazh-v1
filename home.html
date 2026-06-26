@@ -323,7 +323,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-27-005619">build 2026-06-27-0056</div>
+<div class="build-marker" hidden data-cache="build-2026-06-27-010425">build 2026-06-27-0104</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -346,7 +346,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
     <span class="role-chip" id="roleChip">guest</span>
     <span class="guest-counter" id="guestCounter"></span>
     <button class="admin-guest-reset" id="adminGuestReset" type="button"></button>
-    <button class="login-btn" id="loginBtn" type="button" data-i="login">Вход / регистрация</button>
+    <button class="login-btn" id="loginBtn" type="button" data-i="cabinet">Кабинет</button>
   </div>
 </header>
 <div class="app">
@@ -480,6 +480,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
     </div>
     <button class="login-submit" type="submit" data-i="signIn">Войти</button>
     <button class="register-submit" id="registerBtn" type="button" data-i="registerDemo">Зарегистрировать демо</button>
+    <button class="guest-submit" id="logoutBtn" type="button" data-i="logout">Выход</button>
     <div class="role-grid" id="roleGrid">
       <button class="role-option" type="button" data-role="user" data-i="userRole">Пользователь</button>
       <button class="role-option" type="button" data-role="client" data-i="clientRole">Клиент</button>
@@ -523,6 +524,7 @@ const resizer=document.getElementById("resizer");
 const mobileSwitch=document.getElementById("mobileSwitch");
 const lang=document.getElementById("lang");
 const loginBtn=document.getElementById("loginBtn");
+const logoutBtn=document.getElementById("logoutBtn");
 const loginModal=document.getElementById("loginModal");
 const accessModal=document.getElementById("accessModal");
 const accessTitle=document.getElementById("accessTitle");
@@ -589,7 +591,7 @@ let selectedLoginRole="guest";
 let layoutMode="split";
 const UI_TEXT={
   ru:{
-    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",logout:"Выход",clear:"Очистить",spec:"Спецификация",showPassword:"Показать пароль",hidePassword:"Скрыть пароль",
+    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",tables:"Таблицы",login:"Вход / регистрация",logout:"Выйти",clear:"Очистить",spec:"Спецификация",showPassword:"Показать пароль",hidePassword:"Скрыть пароль",
     projectSpec:"Проект / Спецификация",projectName:"Название проекта",projectCustomer:"Заказчик",projectObject:"Объект",
     autoWidth:"Автоширина",resetView:"Сбросить вид",resetSort:"Сбросить порядок",specSettings:"Настройки",panelLayout:"Панели",atlasLeft:"Атлас слева",projectLeft:"Проект слева",filterNo:"№",filterName:"Наименование",filterQty:"К-во",filterMaterial:"Материал",filterThickness:"t",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
     name:"Наименование",dimensions:"Размеры",description:"Описание",quantity:"К-во",
@@ -608,7 +610,7 @@ const UI_TEXT={
     ,languageConflictTitle:"Проверьте язык строки",languageConflictProduct:"Название изделия не распознано в каталоге",languageConflictMaterial:"Материал не распознан",languageConflictOpen:"Файл открыт, но часть строк требует проверки локализации:"
   },
   uk:{
-    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вихід",clear:"Очистити",spec:"Специфікація",showPassword:"Показати пароль",hidePassword:"Сховати пароль",
+    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вийти",clear:"Очистити",spec:"Специфікація",showPassword:"Показати пароль",hidePassword:"Сховати пароль",
     projectSpec:"Проєкт / Специфікація",projectName:"Назва проєкту",projectCustomer:"Замовник",projectObject:"Об'єкт",
     autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути порядок",specSettings:"Налаштування",panelLayout:"Панелі",atlasLeft:"Атлас ліворуч",projectLeft:"Проєкт ліворуч",filterNo:"№",filterName:"Найменування",filterQty:"К-ть",filterMaterial:"Матеріал",filterThickness:"t",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
     name:"Найменування",dimensions:"Розміри",description:"Опис",quantity:"К-ть",
@@ -627,7 +629,7 @@ const UI_TEXT={
     ,languageConflictTitle:"Перевірте мову рядка",languageConflictProduct:"Назву виробу не розпізнано в каталозі",languageConflictMaterial:"Матеріал не розпізнано",languageConflictOpen:"Файл відкрито, але частина рядків потребує перевірки локалізації:"
   },
   en:{
-    language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Logout",clear:"Clear",spec:"Specification",showPassword:"Show password",hidePassword:"Hide password",
+    language:"Language",role:"Role",home:"Home",atlas:"Atlas",tables:"Tables",login:"Login / sign up",logout:"Sign out",clear:"Clear",spec:"Specification",showPassword:"Show password",hidePassword:"Hide password",
     projectSpec:"Project / Specification",projectName:"Project name",projectCustomer:"Customer",projectObject:"Object",
     autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset order",specSettings:"Settings",panelLayout:"Panels",atlasLeft:"Atlas left",projectLeft:"Project left",filterNo:"No.",filterName:"Item",filterQty:"Qty",filterMaterial:"Material",filterThickness:"t",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
     name:"Item",dimensions:"Dimensions",description:"Description",quantity:"Qty",
@@ -1058,7 +1060,8 @@ function renderRole(){
   roleChip.textContent=roleLabel(role);
   adminGuestReset.textContent=t("resetGuestLimit");
   adminGuestReset.title=t("resetGuestLimit");
-  loginBtn.textContent=role==="guest"?t("login"):t("logout");
+  loginBtn.textContent=t("cabinet");
+  logoutBtn.hidden=role==="guest";
   renderGuestCounter();
   document.querySelectorAll(".role-option").forEach((button)=>button.classList.toggle("active",button.dataset.role===selectedLoginRole));
   updateLoginInfo();
@@ -2046,7 +2049,8 @@ document.getElementById("openSpec").addEventListener("click",()=>gatedProjectAct
 document.getElementById("openSpecFile").addEventListener("change",(event)=>{const file=event.target.files?.[0];if(file&&canModifyProject())openSpecFile(file);event.target.value=""});
 document.getElementById("fullscreenSpec").addEventListener("click",()=>gatedProjectAction("Fullscreen",()=>side.requestFullscreen?.()));
 lang.addEventListener("change",()=>{saveSettings();applyLanguage();openUrl(currentFrameUrl(),{countGuest:false})});
-loginBtn.addEventListener("click",()=>{currentRole()==="guest"?openLogin():saveRole("guest")});
+loginBtn.addEventListener("click",openLogin);
+logoutBtn.addEventListener("click",()=>{saveRole("guest");closeLogin()});
 adminGuestReset.addEventListener("click",resetGuestLimit);
 document.getElementById("loginClose").addEventListener("click",closeLogin);
 loginForm.addEventListener("submit",(event)=>{event.preventDefault();tryLogin()});
@@ -2084,7 +2088,13 @@ window.addEventListener("message",(event)=>{
   if(data.type==="calcSquare:showAtlasCatalog"){openUrl("assets/atlas/atlas.html"+(data.category?"?cat="+encodeURIComponent(data.category):""))}
 });
 const settings=readSettings();
-const initialLang=new URLSearchParams(location.search).get("lang");
+const startupParams=new URLSearchParams(location.search);
+const initialLang=startupParams.get("lang");
+if(startupParams.get("role")==="guest"){
+  settings.role="guest";
+  settings.login="";
+  localStorage.setItem(settingsKey,JSON.stringify(settings));
+}
 lang.value=["ru","uk","en"].includes(initialLang)?initialLang:(settings.lang||"ru");
 columnWidths=readColumnWidths();
 applyColumnWidths();
