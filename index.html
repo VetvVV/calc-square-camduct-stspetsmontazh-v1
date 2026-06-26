@@ -17,6 +17,7 @@
           <a href="#features" data-i="navFeatures">Возможности</a>
           <a href="#catalog" data-i="navCatalog">Каталог</a>
           <a href="#workflow" data-i="navWorkflow">Как работает</a>
+          <a href="#contacts" data-i="navContacts">Контакты</a>
         </nav>
         <div class="header-actions">
           <div class="lang-dropdown" aria-label="Language switcher">
@@ -44,7 +45,8 @@
               экспорта, печати и удобной работы с каталогом вентиляционных деталей.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-primary btn-lg" id="heroPrimaryBtn" href="home.html?lang=ru" data-i="heroPrimary">Перейти в атлас</a>
+              <a class="btn btn-primary btn-lg" id="heroPrimaryBtn" href="home.html?lang=ru" data-i="heroPrimary">Открыть атлас</a>
+              <a class="btn btn-secondary btn-lg" id="heroCatalogBtn" href="#catalog" data-i="heroCatalog">Смотреть каталог</a>
             </div>
             <ul class="hero-points">
               <li data-i="heroPoint1">Круглые и прямоугольные изделия</li>
@@ -203,6 +205,34 @@
           </div>
         </div>
       </section>
+
+      <section id="contacts" class="section contacts-section">
+        <div class="container contacts-grid">
+          <div class="contacts-copy">
+            <span class="eyebrow" data-i="contactsEyebrow">Контакты</span>
+            <h2 data-i="contactsTitle">Нужен расчёт или консультация по вентиляционным изделиям?</h2>
+            <p data-i="contactsText">Свяжитесь со ST Spetsmontazh: поможем с подбором изделий, расчётом и подготовкой спецификации.</p>
+          </div>
+          <div class="contacts-panel">
+            <a class="contact-line" href="tel:+380445022592">
+              <span data-i="contactOffice">Офис</span>
+              <strong>+38 (044) 502-25-92</strong>
+            </a>
+            <a class="contact-line" href="tel:+380674685551">
+              <span data-i="contactMobile">Мобильный</span>
+              <strong>+38 (067) 468-55-51</strong>
+            </a>
+            <a class="contact-line" href="mailto:office@stspecmontag.com.ua">
+              <span>Email</span>
+              <strong>office@stspecmontag.com.ua</strong>
+            </a>
+            <div class="contact-actions">
+              <a class="btn btn-primary" href="https://stspecmontag.com.ua/" target="_blank" rel="noopener" data-i="contactSite">Сайт компании</a>
+              <a class="btn btn-secondary" href="mailto:office@stspecmontag.com.ua" data-i="contactMail">Написать письмо</a>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
@@ -223,11 +253,11 @@
     <script>
       const landingI18n = {
         ru: {
-          navFeatures: 'Возможности', navCatalog: 'Каталог', navWorkflow: 'Как работает',
+          navFeatures: 'Возможности', navCatalog: 'Каталог', navWorkflow: 'Как работает', navContacts: 'Контакты',
           openApp: 'Открыть атлас', eyebrow: 'Calc Square',
           heroTitle: 'Атлас изделий, расчёт площади и спецификация для вентиляции',
           heroText: 'Веб-приложение для подбора изделий, расчёта площади и массы, формирования проектной спецификации, экспорта, печати и удобной работы с каталогом вентиляционных деталей.',
-          heroPrimary: 'Перейти в атлас', heroSecondary: 'Посмотреть возможности',
+          heroPrimary: 'Открыть атлас', heroCatalog: 'Смотреть каталог',
           heroPoint1: 'Круглые и прямоугольные изделия', heroPoint2: 'Расчёт площади, массы и спецификации', heroPoint3: 'Экспорт, печать и работа с проектом',
           flowAtlasTitle: 'Откройте атлас', flowAtlasText: 'Выберите круглое, прямоугольное или комбинированное изделие.',
           flowCalcTitle: 'Рассчитайте изделие', flowCalcText: 'Введите размеры, материал, толщину и количество.',
@@ -252,14 +282,17 @@
           s4t: 'Экспортируйте результат', s4d: 'Сохраните проект, распечатайте документ или выгрузите данные в CSV/Excel.',
           ctaEyebrow: 'Старт', ctaTitle: 'Откройте атлас и выберите изделие для расчёта',
           ctaText: 'В атласе выберите тип изделия, откройте его калькулятор и добавьте результат в спецификацию.', ctaOpen: 'Открыть атлас', ctaCatalog: 'Смотреть каталог',
+          contactsEyebrow: 'Контакты', contactsTitle: 'Нужен расчёт или консультация по вентиляционным изделиям?',
+          contactsText: 'Свяжитесь со ST Spetsmontazh: поможем с подбором изделий, расчётом и подготовкой спецификации.',
+          contactOffice: 'Офис', contactMobile: 'Мобильный', contactSite: 'Сайт компании', contactMail: 'Написать письмо',
           footerText: 'Расчёт вентиляционных изделий и подготовка спецификаций.'
         },
         uk: {
-          navFeatures: 'Можливості', navCatalog: 'Каталог', navWorkflow: 'Як працює',
+          navFeatures: 'Можливості', navCatalog: 'Каталог', navWorkflow: 'Як працює', navContacts: 'Контакти',
           openApp: 'Відкрити атлас', eyebrow: 'Calc Square',
           heroTitle: 'Атлас виробів, розрахунок площі та специфікація для вентиляції',
           heroText: 'Вебзастосунок для підбору виробів, розрахунку площі та маси, формування проєктної специфікації, експорту, друку та зручної роботи з каталогом вентиляційних деталей.',
-          heroPrimary: 'Перейти в атлас', heroSecondary: 'Переглянути можливості',
+          heroPrimary: 'Відкрити атлас', heroCatalog: 'Дивитися каталог',
           heroPoint1: 'Круглі та прямокутні вироби', heroPoint2: 'Розрахунок площі, маси та специфікації', heroPoint3: 'Експорт, друк і робота з проєктом',
           flowAtlasTitle: 'Відкрийте атлас', flowAtlasText: 'Виберіть круглий, прямокутний або комбінований виріб.',
           flowCalcTitle: 'Розрахуйте виріб', flowCalcText: 'Введіть розміри, матеріал, товщину та кількість.',
@@ -284,14 +317,17 @@
           s4t: 'Експортуйте результат', s4d: 'Збережіть проєкт, надрукуйте документ або вивантажте дані в CSV/Excel.',
           ctaEyebrow: 'Старт', ctaTitle: 'Відкрийте атлас і виберіть виріб для розрахунку',
           ctaText: 'В атласі виберіть тип виробу, відкрийте його калькулятор і додайте результат у специфікацію.', ctaOpen: 'Відкрити атлас', ctaCatalog: 'Дивитися каталог',
+          contactsEyebrow: 'Контакти', contactsTitle: 'Потрібен розрахунок або консультація щодо вентиляційних виробів?',
+          contactsText: 'Зв’яжіться зі ST Spetsmontazh: допоможемо з підбором виробів, розрахунком і підготовкою специфікації.',
+          contactOffice: 'Офіс', contactMobile: 'Мобільний', contactSite: 'Сайт компанії', contactMail: 'Написати лист',
           footerText: 'Розрахунок вентиляційних виробів і підготовка специфікацій.'
         },
         en: {
-          navFeatures: 'Features', navCatalog: 'Catalog', navWorkflow: 'Workflow',
+          navFeatures: 'Features', navCatalog: 'Catalog', navWorkflow: 'Workflow', navContacts: 'Contacts',
           openApp: 'Open Atlas', eyebrow: 'Calc Square',
           heroTitle: 'Product atlas, area calculation, and ventilation specification workflow',
           heroText: 'Web application for selecting fittings, calculating area and mass, preparing project specifications, exporting data and working with a ventilation product catalog.',
-          heroPrimary: 'Open Atlas', heroSecondary: 'View Features',
+          heroPrimary: 'Open Atlas', heroCatalog: 'View Catalog',
           heroPoint1: 'Round and rectangular fittings', heroPoint2: 'Area, mass and specification workflow', heroPoint3: 'Export, print and project tools',
           flowAtlasTitle: 'Open the atlas', flowAtlasText: 'Choose a round, rectangular, or combined fitting.',
           flowCalcTitle: 'Calculate the fitting', flowCalcText: 'Enter dimensions, material, thickness, and quantity.',
@@ -316,6 +352,9 @@
           s4t: 'Export the result', s4d: 'Save the project, print the document or export data to CSV/Excel.',
           ctaEyebrow: 'Start', ctaTitle: 'Open the atlas and choose a fitting to calculate',
           ctaText: 'Choose a fitting type in the atlas, open its calculator, and add the result to the specification.', ctaOpen: 'Open Atlas', ctaCatalog: 'View Catalog',
+          contactsEyebrow: 'Contacts', contactsTitle: 'Need a calculation or consultation on ventilation fittings?',
+          contactsText: 'Contact ST Spetsmontazh: we will help with product selection, calculation, and specification preparation.',
+          contactOffice: 'Office', contactMobile: 'Mobile', contactSite: 'Company site', contactMail: 'Write an email',
           footerText: 'Ventilation fitting calculation and specification preparation.'
         }
       };
@@ -324,6 +363,7 @@
       const langCurrentBtn = document.getElementById('langCurrentBtn');
       const langButtons = document.querySelectorAll('.lang-option');
       const heroPrimaryBtn = document.getElementById('heroPrimaryBtn');
+      const heroCatalogBtn = document.getElementById('heroCatalogBtn');
       const openAppBtn = document.getElementById('openAppBtn');
       const ctaOpenBtn = document.getElementById('ctaOpenBtn');
       const ctaCatalogBtn = document.getElementById('ctaCatalogBtn');
@@ -352,6 +392,10 @@
       });
 
       ctaCatalogBtn?.addEventListener('click', (event) => {
+        event.preventDefault();
+        document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      heroCatalogBtn?.addEventListener('click', (event) => {
         event.preventDefault();
         document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });

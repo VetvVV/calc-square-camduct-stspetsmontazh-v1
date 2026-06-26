@@ -448,6 +448,70 @@ img { max-width: 100%; display: block; }
 .cta-actions .btn {
   pointer-events: auto;
 }
+.contacts-section {
+  padding-top: 0;
+}
+.contacts-grid {
+  display: grid;
+  grid-template-columns: .95fr 1.05fr;
+  gap: 28px;
+  align-items: stretch;
+}
+.contacts-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.contacts-copy h2 {
+  margin: 18px 0 14px;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.05;
+  letter-spacing: -.03em;
+}
+.contacts-copy p {
+  max-width: 560px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.65;
+}
+.contacts-panel {
+  display: grid;
+  gap: 12px;
+  padding: 28px;
+  border-radius: 28px;
+  background: rgba(255,255,255,.82);
+  border: 1px solid rgba(31,36,48,.08);
+  box-shadow: var(--shadow-soft);
+}
+.contact-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(31,36,48,.08);
+}
+.contact-line span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.contact-line strong {
+  color: var(--ink);
+  font-size: 17px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.contact-line:hover strong {
+  color: var(--accent-dark);
+}
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 10px;
+}
 .site-footer {
   padding: 34px 0;
   border-top: 1px solid var(--line);
@@ -486,7 +550,8 @@ img { max-width: 100%; display: block; }
   .header-inner,
   .hero-grid,
   .workflow-grid,
-  .cta-box { grid-template-columns: 1fr; }
+  .cta-box,
+  .contacts-grid { grid-template-columns: 1fr; }
   .header-inner {
     min-height: auto;
     padding: 18px 0;
@@ -498,6 +563,7 @@ img { max-width: 100%; display: block; }
   .metrics-grid,
   .steps { grid-template-columns: repeat(2, 1fr); }
   .cta-actions { justify-content: flex-start; }
+  .contact-line { align-items: flex-start; }
   .footer-inner { align-items: flex-start; flex-direction: column; }
   .footer-inner address { justify-content: flex-start; }
 }
@@ -513,4 +579,11 @@ img { max-width: 100%; display: block; }
   .hero-copy h1 { font-size: 38px; }
   .section { padding: 64px 0; }
   .cta-box { padding: 26px; }
+  .contacts-section { padding-top: 0; }
+  .contacts-panel { padding: 22px; }
+  .contact-line {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .contact-line strong { text-align: left; }
 }
