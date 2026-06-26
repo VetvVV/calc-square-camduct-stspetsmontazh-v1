@@ -325,7 +325,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-27-014946">build 2026-06-27-0149</div>
+<div class="build-marker" hidden data-cache="build-2026-06-27-015452">build 2026-06-27-0154</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -484,7 +484,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
     </div>
     <button class="login-submit" type="submit" data-i="signIn">Войти</button>
     <button class="register-submit" id="registerBtn" type="button" data-i="registerDemo">Зарегистрировать демо</button>
-    <button class="guest-submit" id="logoutBtn" type="button" data-i="logout">Выход</button>
+    <button class="guest-submit" id="logoutBtn" type="button" data-i="guestMode">Гостевой режим</button>
     <div class="role-grid" id="roleGrid">
       <button class="role-option" type="button" data-role="user" data-i="userRole">Пользователь</button>
       <button class="role-option" type="button" data-role="client" data-i="clientRole">Клиент</button>
@@ -596,7 +596,7 @@ let selectedLoginRole="guest";
 let layoutMode="split";
 const UI_TEXT={
   ru:{
-    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",split:"Разделить",tables:"Таблицы",login:"Вход / регистрация",logout:"Выйти",clear:"Очистить",spec:"Спецификация",showPassword:"Показать пароль",hidePassword:"Скрыть пароль",
+    language:"Язык",role:"Роль",home:"Главная",atlas:"Атлас",split:"Разделить",tables:"Таблицы",login:"Вход / регистрация",guestMode:"Гостевой режим",clear:"Очистить",spec:"Спецификация",showPassword:"Показать пароль",hidePassword:"Скрыть пароль",
     projectSpec:"Проект / Спецификация",projectName:"Название проекта",projectCustomer:"Заказчик",projectObject:"Объект",
     autoWidth:"Автоширина",resetView:"Сбросить вид",resetSort:"Сбросить порядок",specSettings:"Настройки",panelLayout:"Панели",atlasLeft:"Атлас слева",projectLeft:"Проект слева",filterNo:"№",filterName:"Наименование",filterQty:"К-во",filterMaterial:"Материал",filterThickness:"t",dimsUnderName:"Размеры под названием",summaryPinned:"Фиксировать итог",
     name:"Наименование",dimensions:"Размеры",description:"Описание",quantity:"К-во",
@@ -607,15 +607,14 @@ const UI_TEXT={
     cabinet:"Кабинет",loginName:"Логин",loginPassword:"Пароль",signIn:"Войти",or:"или",continueGuest:"Продолжить как гость",
     guestRole:"Гость",userRole:"Пользователь",clientRole:"Клиент",adminRole:"Сервис",badLogin:"Логин или пароль не совпадают с выбранной ролью",
     registerDemo:"Зарегистрировать демо",demoRegistered:"Демо-аккаунт создан",userExists:"Такой логин уже есть",loginRequired:"Введите логин и пароль",guestRegister:"Гость не требует регистрации",
-    demoHelp:"Выберите режим доступа и войдите в кабинет.",
-    currentLogin:"Текущий вход: {role}{login}",roleHintGuest:"Гость: только атлас и калькуляторы, до 5 открытий калькулятора в сутки.",roleHintUser:"Пользователь: атлас, расчёты и добавление в спецификацию без редактирования, удаления, сохранения, печати и экспорта.",roleHintClient:"Клиент: добавление, редактирование, сохранение, печать и экспорт без просмотра формул.",roleHintAdmin:"Сервисный доступ.",
+    demoHelp:"Выберите режим доступа и войдите в кабинет.",cabinetLead:"Здесь можно сменить режим работы без перехода на другую страницу.",currentMode:"Сейчас: {role}{login}",roleHintGuest:"Гость: только атлас и калькуляторы, до 5 открытий калькулятора в сутки.",roleHintUser:"Пользователь: атлас, расчёты и добавление в спецификацию без редактирования, удаления, сохранения, печати и экспорта.",roleHintClient:"Клиент: добавление, редактирование, сохранение, печать и экспорт без просмотра формул.",roleHintAdmin:"Сервисный доступ.",
     guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь или клиент.",
     guestCounter:"Гость: осталось {left}/5",resetGuestLimit:"Сбросить гостя",guestLimitResetDone:"Гостевой лимит сброшен",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?",
     accessTitle:"Приглашение к сотрудничеству",accessLead:"Эта возможность доступна клиентам ST Spetsmontazh.",accessBody:"Если вы уже подбираете изделия для проекта, свяжитесь с нами любым удобным способом. Менеджер поможет с заказом и выдаст персональный QR-код, чтобы открыть сохранение, печать и другие рабочие функции.",accessQrCaption:"QR-код выдаёт менеджер после обращения",accessLogin:"Открыть кабинет",accessSite:"Сайт компании",accessLater:"Позже",accessHours:"Пн-пт 9:00 - 18:00"
     ,languageConflictTitle:"Проверьте язык строки",languageConflictProduct:"Название изделия не распознано в каталоге",languageConflictMaterial:"Материал не распознан",languageConflictOpen:"Файл открыт, но часть строк требует проверки локализации:"
   },
   uk:{
-    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",split:"Розділити",tables:"Таблиці",login:"Вхід / реєстрація",logout:"Вийти",clear:"Очистити",spec:"Специфікація",showPassword:"Показати пароль",hidePassword:"Сховати пароль",
+    language:"Мова",role:"Роль",home:"Головна",atlas:"Атлас",split:"Розділити",tables:"Таблиці",login:"Вхід / реєстрація",guestMode:"Гостьовий режим",clear:"Очистити",spec:"Специфікація",showPassword:"Показати пароль",hidePassword:"Сховати пароль",
     projectSpec:"Проєкт / Специфікація",projectName:"Назва проєкту",projectCustomer:"Замовник",projectObject:"Об'єкт",
     autoWidth:"Автоширина",resetView:"Скинути вигляд",resetSort:"Скинути порядок",specSettings:"Налаштування",panelLayout:"Панелі",atlasLeft:"Атлас ліворуч",projectLeft:"Проєкт ліворуч",filterNo:"№",filterName:"Найменування",filterQty:"К-ть",filterMaterial:"Матеріал",filterThickness:"t",dimsUnderName:"Розміри під назвою",summaryPinned:"Фіксувати підсумок",
     name:"Найменування",dimensions:"Розміри",description:"Опис",quantity:"К-ть",
@@ -626,15 +625,14 @@ const UI_TEXT={
     cabinet:"Кабінет",loginName:"Логін",loginPassword:"Пароль",signIn:"Увійти",or:"або",continueGuest:"Продовжити як гість",
     guestRole:"Гість",userRole:"Користувач",clientRole:"Клієнт",adminRole:"Сервіс",badLogin:"Логін або пароль не збігаються з обраною роллю",
     registerDemo:"Зареєструвати демо",demoRegistered:"Демо-акаунт створено",userExists:"Такий логін вже є",loginRequired:"Введіть логін і пароль",guestRegister:"Гість не потребує реєстрації",
-    demoHelp:"Виберіть режим доступу та увійдіть у кабінет.",
-    currentLogin:"Поточний вхід: {role}{login}",roleHintGuest:"Гість: тільки атлас і калькулятори, до 5 відкриттів калькулятора на добу.",roleHintUser:"Користувач: атлас, розрахунки і додавання в специфікацію без редагування, видалення, збереження, друку й експорту.",roleHintClient:"Клієнт: додавання, редагування, збереження, друк і експорт без перегляду формул.",roleHintAdmin:"Сервісний доступ.",
+    demoHelp:"Виберіть режим доступу та увійдіть у кабінет.",cabinetLead:"Тут можна змінити режим роботи без переходу на іншу сторінку.",currentMode:"Зараз: {role}{login}",roleHintGuest:"Гість: тільки атлас і калькулятори, до 5 відкриттів калькулятора на добу.",roleHintUser:"Користувач: атлас, розрахунки і додавання в специфікацію без редагування, видалення, збереження, друку й експорту.",roleHintClient:"Клієнт: додавання, редагування, збереження, друк і експорт без перегляду формул.",roleHintAdmin:"Сервісний доступ.",
     guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач або клієнт.",
     guestCounter:"Гість: залишилось {left}/5",resetGuestLimit:"Скинути гостя",guestLimitResetDone:"Гостьовий ліміт скинуто",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?",
     accessTitle:"Запрошення до співпраці",accessLead:"Ця можливість доступна клієнтам ST Spetsmontazh.",accessBody:"Якщо ви вже підбираєте вироби для проєкту, зв'яжіться з нами будь-яким зручним способом. Менеджер допоможе із замовленням і видасть персональний QR-код, щоб відкрити збереження, друк та інші робочі функції.",accessQrCaption:"QR-код видає менеджер після звернення",accessLogin:"Відкрити кабінет",accessSite:"Сайт компанії",accessLater:"Пізніше",accessHours:"Пн-пт 9:00 - 18:00"
     ,languageConflictTitle:"Перевірте мову рядка",languageConflictProduct:"Назву виробу не розпізнано в каталозі",languageConflictMaterial:"Матеріал не розпізнано",languageConflictOpen:"Файл відкрито, але частина рядків потребує перевірки локалізації:"
   },
   en:{
-    language:"Language",role:"Role",home:"Home",atlas:"Atlas",split:"Split",tables:"Tables",login:"Login / sign up",logout:"Sign out",clear:"Clear",spec:"Specification",showPassword:"Show password",hidePassword:"Hide password",
+    language:"Language",role:"Role",home:"Home",atlas:"Atlas",split:"Split",tables:"Tables",login:"Login / sign up",guestMode:"Guest mode",clear:"Clear",spec:"Specification",showPassword:"Show password",hidePassword:"Hide password",
     projectSpec:"Project / Specification",projectName:"Project name",projectCustomer:"Customer",projectObject:"Object",
     autoWidth:"Auto width",resetView:"Reset view",resetSort:"Reset order",specSettings:"Settings",panelLayout:"Panels",atlasLeft:"Atlas left",projectLeft:"Project left",filterNo:"No.",filterName:"Item",filterQty:"Qty",filterMaterial:"Material",filterThickness:"t",dimsUnderName:"Dimensions under name",summaryPinned:"Pin summary",
     name:"Item",dimensions:"Dimensions",description:"Description",quantity:"Qty",
@@ -645,8 +643,7 @@ const UI_TEXT={
     cabinet:"Cabinet",loginName:"Login",loginPassword:"Password",signIn:"Sign in",or:"or",continueGuest:"Continue as guest",
     guestRole:"Guest",userRole:"User",clientRole:"Client",adminRole:"Service",badLogin:"Login or password does not match the selected role",
     registerDemo:"Register demo",demoRegistered:"Demo account created",userExists:"This login already exists",loginRequired:"Enter login and password",guestRegister:"Guest does not need registration",
-    demoHelp:"Choose an access mode and sign in to the cabinet.",
-    currentLogin:"Current login: {role}{login}",roleHintGuest:"Guest: atlas and calculators only, up to 5 calculator opens per day.",roleHintUser:"User: atlas, calculations, and adding to the specification without editing, deleting, saving, printing, or export.",roleHintClient:"Client: add, edit, save, print, and export without calculator formulas.",roleHintAdmin:"Service access.",
+    demoHelp:"Choose an access mode and sign in to the cabinet.",cabinetLead:"Change the working mode here without leaving the page.",currentMode:"Current: {role}{login}",roleHintGuest:"Guest: atlas and calculators only, up to 5 calculator opens per day.",roleHintUser:"User: atlas, calculations, and adding to the specification without editing, deleting, saving, printing, or export.",roleHintClient:"Client: add, edit, save, print, and export without calculator formulas.",roleHintAdmin:"Service access.",
     guestLimit:"Guest limit: 5 calculations per day. Sign in as user or client.",
     guestCounter:"Guest: {left}/5 left",resetGuestLimit:"Reset guest",guestLimitResetDone:"Guest limit reset",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?",
     accessTitle:"Invitation to cooperate",accessLead:"This option is available to ST Spetsmontazh clients.",accessBody:"If you are already selecting products for a project, contact us in whichever way is convenient. A manager will help with the order and provide a personal QR code to unlock saving, printing, and other working tools.",accessQrCaption:"A manager provides the QR code after contact",accessLogin:"Open cabinet",accessSite:"Company website",accessLater:"Later",accessHours:"Mon-Fri 9:00 - 18:00"
@@ -1047,8 +1044,8 @@ function updateLoginInfo(){
   const settings=readSettings();
   const role=currentRole();
   const loginText=settings.login&&role!=="guest"?` · ${settings.login}`:"";
-  loginHelp.textContent=t("currentLogin").replace("{role}",roleLabel(role)).replace("{login}",loginText);
-  cabinetStatus.textContent=roleHintText(role);
+  loginHelp.textContent=t("cabinetLead");
+  cabinetStatus.textContent=t("currentMode").replace("{role}",roleLabel(role)).replace("{login}",loginText);
   roleHint.textContent=roleHintText(selectedLoginRole);
   registerBtn.disabled=selectedLoginRole==="admin";
 }
@@ -1067,6 +1064,7 @@ function renderRole(){
   adminGuestReset.textContent=t("resetGuestLimit");
   adminGuestReset.title=t("resetGuestLimit");
   loginBtn.textContent=t("cabinet");
+  logoutBtn.textContent=t("guestMode");
   logoutBtn.hidden=role==="guest";
   renderGuestCounter();
   document.querySelectorAll(".role-option").forEach((button)=>button.classList.toggle("active",button.dataset.role===selectedLoginRole));
@@ -1077,7 +1075,9 @@ function openLogin(){
   loginError.textContent="";
   loginModal.hidden=false;
   renderRole();
-  setTimeout(()=>loginName.focus(),0);
+  if(!window.matchMedia("(max-width:900px)").matches){
+    setTimeout(()=>loginName.focus(),0);
+  }
 }
 function closeLogin(){loginModal.hidden=true}
 function closeAccessInvite(){accessModal.hidden=true}
