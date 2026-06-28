@@ -333,7 +333,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-27-022340">build 2026-06-27-0223</div>
+<div class="build-marker" hidden data-cache="build-2026-06-28-190436">build 2026-06-28-1904</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -449,10 +449,13 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
         <button id="printSpec" type="button" data-i="print">Печать</button>
         <button id="exportSpec" type="button" data-i="export">Экспорт</button>
         <button id="excelSpec" type="button">Excel</button>
+        <button id="camductSpec" type="button" data-i="camductExport">CAMduct JSON</button>
+        <button id="importCamduct" type="button" data-i="camductImport">Импорт MAJ</button>
         <button id="saveSpec" type="button" data-i="saveFile">Сохранить в файл</button>
         <button id="openSpec" type="button" data-i="openFile">Открыть</button>
         <button class="icon-btn" id="fullscreenSpec" type="button">⛶</button>
         <input id="openSpecFile" type="file" accept="application/json,.json" hidden>
+        <input id="importCamductFile" type="file" accept=".maj,.MAJ" hidden>
       </div>
       <div class="totals"><span data-i="totalAreaLabel">Итого площадь</span><br><b id="totalArea">0.000 м²</b><br><br><span data-i="totalMassLabel">Итого масса</span><br><b id="totalMass">0.00 кг</b></div>
     </section>
@@ -527,6 +530,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
     </div>
   </section>
 </div>
+<script src="assets/camduct/camduct-map.js"></script>
 <script>
 const frame=document.getElementById("frame");
 const app=document.querySelector(".app");
@@ -618,7 +622,7 @@ const UI_TEXT={
     demoHelp:"Выберите режим доступа и войдите в кабинет.",cabinetLead:"Здесь можно сменить режим работы без перехода на другую страницу.",currentMode:"Сейчас: {role}{login}",roleHintGuest:"Гость: только атлас и калькуляторы, до 5 открытий калькулятора в сутки.",roleHintUser:"Пользователь: атлас, расчёты и добавление в спецификацию без редактирования, удаления, сохранения, печати и экспорта.",roleHintClient:"Клиент: добавление, редактирование, сохранение, печать и экспорт без просмотра формул.",roleHintAdmin:"Сервисный доступ.",
     guestLimit:"Гостевой лимит: 5 расчётов в сутки. Войдите как пользователь или клиент.",
     guestCounter:"Гость: осталось {left}/5",resetGuestLimit:"Сбросить гостя",guestLimitResetDone:"Гостевой лимит сброшен",materialSummary:"Итог по материалам",materialCount:"Материалов: {count}",print:"Печать",export:"Экспорт",saveFile:"Сохранить в файл",openFile:"Открыть",image:"Изображение",clearConfirm:"Очистить всю спецификацию?",
-    accessTitle:"Приглашение к сотрудничеству",accessLead:"Эта возможность доступна клиентам ST Spetsmontazh.",accessBody:"Если вы уже подбираете изделия для проекта, свяжитесь с нами любым удобным способом. Менеджер поможет с заказом и выдаст персональный QR-код, чтобы открыть сохранение, печать и другие рабочие функции.",accessQrCaption:"QR-код выдаёт менеджер после обращения",accessLogin:"Открыть кабинет",accessSite:"Сайт компании",accessLater:"Позже",accessHours:"Пн-пт 9:00 - 18:00"
+    accessTitle:"Приглашение к сотрудничеству",accessLead:"Эта возможность доступна клиентам ST Spetsmontazh.",accessBody:"Если вы уже подбираете изделия для проекта, свяжитесь с нами любым удобным способом. Менеджер поможет с заказом и выдаст персональный QR-код, чтобы открыть сохранение, печать и другие рабочие функции.",accessQrCaption:"QR-код выдаёт менеджер после обращения",accessLogin:"Открыть кабинет",accessSite:"Сайт компании",accessLater:"Позже",accessHours:"Пн-пт 9:00 - 18:00",camductExport:"CAMduct JSON",camductImport:"Импорт MAJ",camductImportDone:"Импортировано строк из CAMduct: {count}. Проверьте размеры и количество.",camductImportEmpty:"В файле не найдены изделия, которые уже есть в CAMduct-словаре.",camductImportComment:"Импортировано из CAMduct MAJ. Проверьте размеры и количество."
     ,languageConflictTitle:"Проверьте язык строки",languageConflictProduct:"Название изделия не распознано в каталоге",languageConflictMaterial:"Материал не распознан",languageConflictOpen:"Файл открыт, но часть строк требует проверки локализации:"
   },
   uk:{
@@ -636,7 +640,7 @@ const UI_TEXT={
     demoHelp:"Виберіть режим доступу та увійдіть у кабінет.",cabinetLead:"Тут можна змінити режим роботи без переходу на іншу сторінку.",currentMode:"Зараз: {role}{login}",roleHintGuest:"Гість: тільки атлас і калькулятори, до 5 відкриттів калькулятора на добу.",roleHintUser:"Користувач: атлас, розрахунки і додавання в специфікацію без редагування, видалення, збереження, друку й експорту.",roleHintClient:"Клієнт: додавання, редагування, збереження, друк і експорт без перегляду формул.",roleHintAdmin:"Сервісний доступ.",
     guestLimit:"Гостьовий ліміт: 5 розрахунків на добу. Увійдіть як користувач або клієнт.",
     guestCounter:"Гість: залишилось {left}/5",resetGuestLimit:"Скинути гостя",guestLimitResetDone:"Гостьовий ліміт скинуто",materialSummary:"Підсумок за матеріалами",materialCount:"Матеріалів: {count}",print:"Друк",export:"Експорт",saveFile:"Зберегти у файл",openFile:"Відкрити",image:"Зображення",clearConfirm:"Очистити всю специфікацію?",
-    accessTitle:"Запрошення до співпраці",accessLead:"Ця можливість доступна клієнтам ST Spetsmontazh.",accessBody:"Якщо ви вже підбираєте вироби для проєкту, зв'яжіться з нами будь-яким зручним способом. Менеджер допоможе із замовленням і видасть персональний QR-код, щоб відкрити збереження, друк та інші робочі функції.",accessQrCaption:"QR-код видає менеджер після звернення",accessLogin:"Відкрити кабінет",accessSite:"Сайт компанії",accessLater:"Пізніше",accessHours:"Пн-пт 9:00 - 18:00"
+    accessTitle:"Запрошення до співпраці",accessLead:"Ця можливість доступна клієнтам ST Spetsmontazh.",accessBody:"Якщо ви вже підбираєте вироби для проєкту, зв'яжіться з нами будь-яким зручним способом. Менеджер допоможе із замовленням і видасть персональний QR-код, щоб відкрити збереження, друк та інші робочі функції.",accessQrCaption:"QR-код видає менеджер після звернення",accessLogin:"Відкрити кабінет",accessSite:"Сайт компанії",accessLater:"Пізніше",accessHours:"Пн-пт 9:00 - 18:00",camductExport:"CAMduct JSON",camductImport:"Імпорт MAJ",camductImportDone:"Імпортовано рядків із CAMduct: {count}. Перевірте розміри та кількість.",camductImportEmpty:"У файлі не знайдено виробів, які вже є в CAMduct-словнику.",camductImportComment:"Імпортовано з CAMduct MAJ. Перевірте розміри та кількість."
     ,languageConflictTitle:"Перевірте мову рядка",languageConflictProduct:"Назву виробу не розпізнано в каталозі",languageConflictMaterial:"Матеріал не розпізнано",languageConflictOpen:"Файл відкрито, але частина рядків потребує перевірки локалізації:"
   },
   en:{
@@ -654,7 +658,7 @@ const UI_TEXT={
     demoHelp:"Choose an access mode and sign in to the cabinet.",cabinetLead:"Change the working mode here without leaving the page.",currentMode:"Current: {role}{login}",roleHintGuest:"Guest: atlas and calculators only, up to 5 calculator opens per day.",roleHintUser:"User: atlas, calculations, and adding to the specification without editing, deleting, saving, printing, or export.",roleHintClient:"Client: add, edit, save, print, and export without calculator formulas.",roleHintAdmin:"Service access.",
     guestLimit:"Guest limit: 5 calculations per day. Sign in as user or client.",
     guestCounter:"Guest: {left}/5 left",resetGuestLimit:"Reset guest",guestLimitResetDone:"Guest limit reset",materialSummary:"Material summary",materialCount:"Materials: {count}",print:"Print",export:"Export",saveFile:"Save file",openFile:"Open",image:"Image",clearConfirm:"Clear the whole specification?",
-    accessTitle:"Invitation to cooperate",accessLead:"This option is available to ST Spetsmontazh clients.",accessBody:"If you are already selecting products for a project, contact us in whichever way is convenient. A manager will help with the order and provide a personal QR code to unlock saving, printing, and other working tools.",accessQrCaption:"A manager provides the QR code after contact",accessLogin:"Open cabinet",accessSite:"Company website",accessLater:"Later",accessHours:"Mon-Fri 9:00 - 18:00"
+    accessTitle:"Invitation to cooperate",accessLead:"This option is available to ST Spetsmontazh clients.",accessBody:"If you are already selecting products for a project, contact us in whichever way is convenient. A manager will help with the order and provide a personal QR code to unlock saving, printing, and other working tools.",accessQrCaption:"A manager provides the QR code after contact",accessLogin:"Open cabinet",accessSite:"Company website",accessLater:"Later",accessHours:"Mon-Fri 9:00 - 18:00",camductExport:"CAMduct JSON",camductImport:"Import MAJ",camductImportDone:"Imported CAMduct rows: {count}. Check dimensions and quantity.",camductImportEmpty:"No items from the current CAMduct dictionary were found in the file.",camductImportComment:"Imported from CAMduct MAJ. Check dimensions and quantity."
     ,languageConflictTitle:"Check row language",languageConflictProduct:"Product name is not recognized in the catalog",languageConflictMaterial:"Material is not recognized",languageConflictOpen:"File opened, but some rows need localization review:"
   }
 };
@@ -720,10 +724,10 @@ const MATERIAL_TEXT={
   aluminum:{ru:"Алюминий",uk:"Алюміній",en:"Aluminum"}
 };
 const PRODUCT_IMAGES={
-  "round-duct":"assets/catalog-images/round-duct-dalap.jpg",
-  "round-elbow":"assets/catalog-images/round-elbow-dalap-90.jpg",
-  "round-transition":"assets/catalog-images/round-transition-dalap.jpg",
-  "round-offset-transition":"assets/products/round_offset.svg",
+  "round-duct":"assets/catalog-images/round-duct-v2.png",
+  "round-elbow":"assets/catalog-images/round-elbow-90.png",
+  "round-transition":"assets/catalog-images/round-transition-v4.png",
+  "round-offset-transition":"assets/catalog-images/round-offset-transition-v8.png",
   "round-tee":"assets/catalog-images/round-tee-dalap.jpg",
   "round-cap":"assets/catalog-images/round-cap-dalap.jpg",
   "round-inset":"modules/common/stub-preview.svg",
@@ -739,6 +743,7 @@ const PRODUCT_IMAGES={
   "rect-tee-round":"modules/common/stub-preview.svg",
   "grease-trap":"modules/common/stub-preview.svg"
 };
+const CAMDUCT_MAP=window.CALC_CAMDUCT_MAP||{families:{},materials:{}};
 let project=[];
 function t(key){return (UI_TEXT[lang.value]||UI_TEXT.ru)[key]||UI_TEXT.ru[key]||key}
 function pickText(map,fallback=""){return map?.[lang.value]||map?.ru||map?.en||fallback}
@@ -1290,6 +1295,323 @@ function projectExportRows(){
     comment:item.comment||""
   }));
 }
+function camductProfileForItem(item){
+  const productType=PRODUCT_TEXT[item.productType]?item.productType:productKeyFromName(item.name||item.title||item.label||item.description||item.size);
+  return productType?CAMDUCT_MAP.families?.[productType]||null:null;
+}
+function itemFieldValue(item,source){
+  if(!source)return "";
+  const pools=[item.rawDimensions,item.dimensions,item];
+  for(const pool of pools){
+    if(pool&&typeof pool==="object"&&pool[source]!==undefined&&pool[source]!==null&&pool[source]!=="")return pool[source];
+  }
+  if(source==="angle"&&(item.variant?.params?.angle||item.variantAngle))return item.variant?.params?.angle||item.variantAngle;
+  return "";
+}
+function camductMaterialForItem(item){
+  const key=item.materialKey||materialKeyFromLabel(item.material);
+  const mapped=CAMDUCT_MAP.materials?.[key]||null;
+  return {
+    key:key||"",
+    label:displayMaterial(item),
+    camductCode:mapped?.camductCode||key||"",
+    camductName:mapped?.camductName||displayMaterial(item)
+  };
+}
+function buildCamductPayload(item,index){
+  const profile=camductProfileForItem(item);
+  const params=item.camductCurrentParams&&typeof item.camductCurrentParams==="object"
+    ?{...item.camductCurrentParams}
+    :item.camductOriginalParams&&typeof item.camductOriginalParams==="object"&&!item.camductDirty
+      ?{...item.camductOriginalParams}
+      :{};
+  const unresolved=[];
+  if(!Object.keys(params).length){
+    (profile?.params||[]).forEach((param)=>{
+      const value=itemFieldValue(item,param.source);
+      if(value===""&&param.fallback===undefined)unresolved.push(param.camduct);
+      params[param.camduct]=value===""&&param.fallback!==undefined?param.fallback:value;
+    });
+  }
+  const productType=PRODUCT_TEXT[item.productType]?item.productType:productKeyFromName(item.name||item.title||item.label||item.description||item.size);
+  return {
+    schemaVersion:1,
+    status:item.camductStandard&&!item.camductDirty?"standard":profile?(unresolved.length?"draft":"mapped"):"needs-mapping",
+    row:index+1,
+    productType:productType||item.productType||"",
+    productName:displayProductName(item),
+    camductFamily:profile?.camductFamily||"",
+    camductImage:profile?.camductImage||"",
+    folder:profile?.folder||"./Fabrication/",
+    standard:profile?.standard||"DW144-LV",
+    category:profile?.category||"HVAC",
+    material:camductMaterialForItem(item),
+    thickness:item.thickness||"",
+    quantity:Number(item.quantity||1),
+    params,
+    originalParams:item.camductOriginalParams||null,
+    dirty:!!item.camductDirty,
+    importedSpecNo:item.camductImport?.specNo||item.rawDimensions?.camductSpecNo||"",
+    unresolved,
+    sourceDimensions:item.rawDimensions||item.dimensions||{},
+    sourceDescription:displayDescription(item),
+    comment:item.comment||""
+  };
+}
+function calculatorParamsForProjectItem(item){
+  if(item.camductCurrentParams&&typeof item.camductCurrentParams==="object")return {...item.camductCurrentParams};
+  if(item.camductOriginalParams&&typeof item.camductOriginalParams==="object")return {...item.camductOriginalParams};
+  return item.rawDimensions&&typeof item.rawDimensions==="object"?{...item.rawDimensions}:item.dimensions&&typeof item.dimensions==="object"?{...item.dimensions}:{};
+}
+function projectCamductRows(){
+  return project.map((item,index)=>({
+    ...projectExportRows()[index],
+    camduct:buildCamductPayload(item,index)
+  }));
+}
+function specificationPayload(){
+  return {
+    version:1,
+    savedAt:new Date().toISOString(),
+    meta:readProjectMeta(),
+    items:project.map((item,index)=>({
+      ...item,
+      camduct:buildCamductPayload(item,index)
+    }))
+  };
+}
+function exportCamductJson(){
+  const payload={
+    version:1,
+    exportedAt:new Date().toISOString(),
+    generator:"Calc Square CAMduct bridge",
+    camductMapVersion:CAMDUCT_MAP.version||1,
+    meta:readProjectMeta(),
+    rows:projectCamductRows(),
+    dictionaries:{
+      families:CAMDUCT_MAP.families||{},
+      materials:CAMDUCT_MAP.materials||{}
+    }
+  };
+  downloadFile("calc-square-camduct.json","application/json;charset=utf-8",JSON.stringify(payload,null,2));
+}
+function camductImportMarkers(){
+  return Object.entries(CAMDUCT_MAP.families||{}).flatMap(([productType,profile])=>{
+    const tokens=[profile.camductImage].filter(Boolean);
+    return tokens.map((token)=>({productType,profile,token,hints:profile.contextHints||[]}));
+  });
+}
+function readCamductStrings(buffer){
+  const text=new TextDecoder("utf-16le").decode(buffer);
+  const pattern=/[A-Za-z0-9\p{Script=Cyrillic}_ .\/\\:\-+(),;]{1,}/gu;
+  return [...text.matchAll(pattern)]
+    .map((match)=>String(match[0]||"").trim())
+    .filter((value)=>value&&/[A-Za-z0-9\p{Script=Cyrillic}]/u.test(value));
+}
+function utf16leBytes(text){
+  const bytes=new Uint8Array(text.length*2);
+  for(let index=0;index<text.length;index++){
+    const code=text.charCodeAt(index);
+    bytes[index*2]=code&255;
+    bytes[index*2+1]=code>>8;
+  }
+  return bytes;
+}
+function findBytePattern(bytes,pattern,start=0){
+  for(let index=start;index<=bytes.length-pattern.length;index++){
+    let ok=true;
+    for(let offset=0;offset<pattern.length;offset++){
+      if(bytes[index+offset]!==pattern[offset]){ok=false;break}
+    }
+    if(ok)return index;
+  }
+  return -1;
+}
+function camductMarkerPositions(buffer,token){
+  const bytes=new Uint8Array(buffer);
+  const pattern=utf16leBytes(token);
+  const positions=[];
+  let start=0;
+  while(start<bytes.length){
+    const found=findBytePattern(bytes,pattern,start);
+    if(found<0)break;
+    positions.push(found);
+    start=found+pattern.length;
+  }
+  return positions;
+}
+function readInt32At(buffer,offset){
+  if(offset<0||offset+4>buffer.byteLength)return null;
+  return new DataView(buffer).getInt32(offset,true);
+}
+function readDoubleAt(buffer,offset){
+  if(offset<0||offset+8>buffer.byteLength)return null;
+  return new DataView(buffer).getFloat64(offset,true);
+}
+function camductMarkerPosition(buffer,token,occurrenceIndex=0){
+  return camductMarkerPositions(buffer,token)[occurrenceIndex]??-1;
+}
+function inferCamductQuantity(buffer,marker,occurrenceIndex){
+  const offset=Number(marker.profile?.quantityOffsetAfterImage);
+  if(!Number.isFinite(offset))return 1;
+  const position=camductMarkerPosition(buffer,marker.token,occurrenceIndex);
+  const value=readInt32At(buffer,(position??-1)+offset);
+  return Number.isInteger(value)&&value>0&&value<10000?value:1;
+}
+function inferBinaryCamductParams(buffer,marker,occurrenceIndex){
+  const position=camductMarkerPosition(buffer,marker.token,occurrenceIndex);
+  if(position<0)return {};
+  const offsets=marker.profile?.binaryParamOffsetsFromImage||{};
+  const params={};
+  Object.entries(offsets).forEach(([key,offset])=>{
+    const value=readDoubleAt(buffer,position+Number(offset));
+    if(Number.isFinite(value))params[key]=Math.round(value*1000)/1000;
+  });
+  return params;
+}
+function camductContext(strings,index,radius=8){
+  return strings.slice(Math.max(0,index-radius),Math.min(strings.length,index+radius+1));
+}
+function camductNumbers(context){
+  return context.map((value,index)=>({value:Number(String(value).replace(",", ".")),index,raw:value}))
+    .filter((entry)=>Number.isFinite(entry.value)&&entry.value>=1&&entry.value<=10000);
+}
+function inferCamductAngle(context,fallback=""){
+  const text=context.join(" ");
+  const match=text.match(/(?:отвод|bend)[^\d]*(45|90|30|60)\b/i);
+  if(match)return Number(match[1]);
+  const number=camductNumbers(context).find((entry)=>[30,45,60,90].includes(entry.value));
+  return number?.value||fallback;
+}
+function inferRoundElbowConnectors(context){
+  return {
+    C1:context.find((value)=>/^\d+\/\d+$/.test(String(value).trim()))||"8/8",
+    S1:context.find((value)=>normalizeLookupText(value).includes("точка"))||"точка0/3",
+    D1:"Нет",
+    D2:"Нет"
+  };
+}
+function inferRoundDuctConnectors(context){
+  return {
+    C1:"Нет",
+    C2:"Нет",
+    S1:context.find((value)=>/^\d+(?:,\d+)?\/\d+(?:,\d+)?$/.test(String(value).trim()))||"12,5/12,5",
+    D1:"Нет",
+    D2:"Нет"
+  };
+}
+function inferCamductDimensions(productType,context){
+  const numbers=camductNumbers(context).map((entry)=>entry.value);
+  const dimensions={};
+  if(productType.startsWith("round-")){
+    const diameter=numbers.find((value)=>value>=40&&value<=3000);
+    if(diameter){dimensions.A=diameter;dimensions.D=diameter}
+    if(productType==="round-duct"){
+      const length=numbers.find((value)=>value!==diameter&&value>=40&&value<=6000);
+      if(length)dimensions.L=length;
+      Object.assign(dimensions,inferRoundDuctConnectors(context));
+    }
+    if(productType==="round-elbow"){
+      const angle=inferCamductAngle(context,90);
+      dimensions.C=angle;
+      dimensions.Angle=angle;
+      Object.assign(dimensions,inferRoundElbowConnectors(context));
+    }
+    return dimensions;
+  }
+  if(productType.startsWith("rectangular-")){
+    const sizes=numbers.filter((value)=>value>=40&&value<=6000).slice(0,3);
+    if(sizes[0])dimensions.A=sizes[0];
+    if(sizes[1])dimensions.B=sizes[1];
+    if(sizes[2])dimensions.L=sizes[2];
+  }
+  return dimensions;
+}
+function resolveCamductProductType(marker,context){
+  const normalized=context.map(normalizeLookupText).join(" ");
+  const hinted=camductImportMarkers().find((entry)=>entry.token===marker.token&&entry.hints?.some((hint)=>normalized.includes(normalizeLookupText(hint))));
+  return hinted?.productType||marker.productType;
+}
+function inferCamductSpecNo(context,markerToken){
+  const markerIndex=context.findIndex((value)=>String(value).includes(markerToken));
+  const before=markerIndex>=0?context.slice(Math.max(0,markerIndex-5),markerIndex).reverse():[...context].reverse();
+  return before.find((value)=>{
+    const text=String(value).trim();
+    if(!text||text===markerToken)return false;
+    if(/^\d{1,5}(?:[A-Za-zА-Яа-яЁёІіЇїЄєҐґ]+)?$/.test(text))return true;
+    return false;
+  })||"";
+}
+function camductImportedItem(marker,context,index,fileName,quantity=1,binaryParams={}){
+  const productType=resolveCamductProductType(marker,context);
+  const profile=CAMDUCT_MAP.families?.[productType]||marker.profile||{};
+  const dimensions={...inferCamductDimensions(productType,context),...binaryParams};
+  if(productType==="round-duct"){
+    if(dimensions.A!==undefined)dimensions.D=dimensions.A;
+    if(dimensions.B!==undefined)dimensions.L=dimensions.B;
+  }
+  const camductSpecNo=inferCamductSpecNo(context,marker.token);
+  const originalParams={...dimensions};
+  const name=pickText(PRODUCT_TEXT[productType],CAMDUCT_MAP.pickText?.(profile.names,lang.value)||marker.token);
+  return normalizeProjectItem({
+    name,
+    productType,
+    dimensions,
+    rawDimensions:{
+      camductSpecNo,
+      camductMarker:marker.token,
+      camductContext:context.join(" | ")
+    },
+    description:["CAMduct",camductSpecNo?`№ ${camductSpecNo}`:"",marker.token,formatDimensions({dimensions})].filter(Boolean).join(" · "),
+    quantity,
+    materialKey:"galv",
+    material:pickText(MATERIAL_TEXT.galv,""),
+    thickness:"",
+    area:0,
+    mass:0,
+    comment:t("camductImportComment"),
+    camductSource:"imported",
+    camductStandard:true,
+    camductOriginalParams:originalParams,
+    camductCurrentParams:{...originalParams},
+    camductDirty:false,
+    camductImport:{
+      file:fileName,
+      specNo:camductSpecNo,
+      marker:marker.token,
+      family:profile.camductFamily||"",
+      image:profile.camductImage||marker.token,
+      sourceIndex:index,
+      standardParams:originalParams,
+      context
+    }
+  });
+}
+function parseCamductMajItems(buffer,fileName){
+  const strings=readCamductStrings(buffer);
+  const markers=camductImportMarkers();
+  const rows=[];
+  const occurrences={};
+  strings.forEach((value,index)=>{
+    const marker=markers.find((entry)=>value.includes(entry.token));
+    if(!marker)return;
+    const occurrenceIndex=occurrences[marker.token]||0;
+    occurrences[marker.token]=occurrenceIndex+1;
+    rows.push(camductImportedItem(marker,camductContext(strings,index),index,fileName,inferCamductQuantity(buffer,marker,occurrenceIndex),inferBinaryCamductParams(buffer,marker,occurrenceIndex)));
+  });
+  return rows;
+}
+async function importCamductMajFile(file){
+  try{
+    const items=parseCamductMajItems(await file.arrayBuffer(),file.name);
+    if(!items.length){alert(t("camductImportEmpty"));return}
+    project=normalizeProject([...project,...items]);
+    saveProject();
+    alert(t("camductImportDone").replace("{count}",items.length));
+  }catch(e){
+    alert(t("camductImportEmpty"));
+  }
+}
 function exportCsv(){
   const headers=["No","Name","Dimensions","Description","Qty","Material","t","Area","Mass","Comment"];
   const rows=projectExportRows().map((row)=>[row.no,row.name,row.dimensions,row.description,row.quantity,row.material,row.thickness,row.area,row.mass,row.comment]);
@@ -1301,7 +1623,7 @@ function exportExcel(){
   downloadFile("calc-square-spec.xls","application/vnd.ms-excel;charset=utf-8","\ufeff"+html);
 }
 async function saveSpecFile(){
-  await saveTextFile("calc-square-spec.json","application/json;charset=utf-8",JSON.stringify({version:1,savedAt:new Date().toISOString(),meta:readProjectMeta(),items:project},null,2));
+  await saveTextFile("calc-square-spec.json","application/json;charset=utf-8",JSON.stringify(specificationPayload(),null,2));
 }
 function openSpecFile(file){
   const reader=new FileReader();
@@ -2087,9 +2409,12 @@ window.addEventListener("beforeprint",preparePrintSpecReport);
 document.getElementById("printSpec").addEventListener("click",()=>gatedProjectAction(t("print"),()=>window.print()));
 document.getElementById("exportSpec").addEventListener("click",()=>gatedProjectAction(t("export"),exportCsv));
 document.getElementById("excelSpec").addEventListener("click",()=>gatedProjectAction("Excel",exportExcel));
+document.getElementById("camductSpec").addEventListener("click",()=>gatedProjectAction(t("camductExport"),exportCamductJson));
+document.getElementById("importCamduct").addEventListener("click",()=>gatedProjectAction(t("camductImport"),()=>document.getElementById("importCamductFile").click()));
 document.getElementById("saveSpec").addEventListener("click",()=>gatedProjectAction(t("saveFile"),saveSpecFile));
 document.getElementById("openSpec").addEventListener("click",()=>gatedProjectAction(t("openFile"),()=>document.getElementById("openSpecFile").click()));
 document.getElementById("openSpecFile").addEventListener("change",(event)=>{const file=event.target.files?.[0];if(file&&canModifyProject())openSpecFile(file);event.target.value=""});
+document.getElementById("importCamductFile").addEventListener("change",(event)=>{const file=event.target.files?.[0];if(file&&canModifyProject())importCamductMajFile(file);event.target.value=""});
 document.getElementById("fullscreenSpec").addEventListener("click",()=>gatedProjectAction("Fullscreen",()=>side.requestFullscreen?.()));
 lang.addEventListener("change",()=>{saveSettings();applyLanguage();openUrl(currentFrameUrl(),{countGuest:false})});
 loginBtn.addEventListener("click",openLogin);

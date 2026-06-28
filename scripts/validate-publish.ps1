@@ -191,7 +191,7 @@ if ($Errors.Count -eq 0) {
 const fs=require('fs');
 const path=require('path');
 const vm=require('vm');
-const files=['home.html','assets/atlas/atlas.html','modules/common/panel-module.js','modules/common/preview-axo.js','assets/atlas/catalog-map.js'];
+const files=['home.html','assets/atlas/atlas.html','modules/common/panel-module.js','modules/common/preview-axo.js','assets/atlas/catalog-map.js','assets/camduct/camduct-map.js'];
 for (const file of files) {
   const source=fs.readFileSync(file,'utf8');
   const scripts=file.endsWith('.html')

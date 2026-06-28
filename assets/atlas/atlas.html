@@ -19,19 +19,28 @@ details+details{margin-top:-1px}
 summary{cursor:pointer;list-style:none;padding:24px 18px 6px;background:transparent;font-weight:800;color:#df7a12;text-align:center;font-size:18px}
 summary::-webkit-details-marker{display:none}
 .grid{display:grid;grid-template-columns:repeat(var(--atlas-cols,8),minmax(0,1fr));gap:20px 24px;padding:16px 32px 26px;background:transparent}
-.card{position:relative;display:grid;grid-template-rows:86px auto;gap:8px;border:0;border-radius:0;background:transparent;padding:0;text-align:center;cursor:pointer;color:inherit}
-.card:hover strong{color:#df7a12}
-.card img{width:100%;height:86px;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(0,0,0,.08))}
-.card strong{font-size:14px;line-height:1.15;font-weight:700;color:#3f4652}
-.variants{position:absolute;z-index:20;left:50%;top:72px;display:grid;grid-template-columns:repeat(auto-fit,minmax(78px,1fr));gap:8px;width:min(260px,calc(100vw - 30px));padding:10px;border:1px solid rgba(214,205,183,.9);border-radius:10px;background:rgba(255,255,255,.96);box-shadow:0 14px 34px rgba(0,0,0,.16);opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,8px);transition:opacity .14s ease,transform .14s ease,visibility 0s linear .14s}
-.card:hover .variants,.card:focus-visible .variants{opacity:1;visibility:visible;transform:translate(-50%,0);transition-delay:.55s,.55s,0s}
-.variant{display:grid;gap:5px;min-width:0}
-.variant img{height:58px;border-radius:6px;background:#f7f7f7}
-.variant span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#5b6573;font-size:11px;font-weight:700}
+.card{position:relative;display:grid;min-width:0;text-align:center;color:inherit}
+.card-main{display:grid;grid-template-rows:86px auto;gap:8px;width:100%;border:0;border-radius:0;background:transparent;padding:0;text-align:center;cursor:pointer;color:inherit;font:inherit}
+.card:hover .card-main strong,.card-main:focus-visible strong{color:#df7a12}
+.card-main img{width:100%;height:86px;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(0,0,0,.08))}
+.card-main strong{font-size:14px;line-height:1.15;font-weight:700;color:#3f4652}
+.variants{position:absolute;z-index:20;left:50%;top:72px;width:min(420px,calc(100vw - 32px));padding:14px;border:1px solid rgba(214,205,183,.95);border-radius:14px;background:rgba(255,255,255,.98);box-shadow:0 18px 44px rgba(0,0,0,.2);opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,10px);transition:opacity .14s ease,transform .14s ease,visibility 0s linear .14s}
+.card:hover .variants,.card:focus-within .variants,.card.is-pinned .variants{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0);transition-delay:.5s,.5s,0s}
+.card.is-pinned .variants{transition-delay:0s}
+.variants-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.variants-title{min-width:0;color:#3f4652;font-size:13px;font-weight:800;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pin-variants{width:32px;height:32px;border:1px solid #ead4b5;border-radius:9px;background:#fff8ec;color:#9a5800;font-size:16px;line-height:1;cursor:pointer}
+.pin-variants:hover,.pin-variants[aria-pressed="true"]{background:#df7a12;color:#fff;border-color:#df7a12}
+.variants-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px}
+.variant{display:grid;gap:7px;min-width:0;border:1px solid #e5e7eb;border-radius:10px;background:#fff;padding:8px;cursor:pointer;text-align:center;font:inherit;color:inherit}
+.variant:hover,.variant:focus-visible{border-color:#e5b56e;background:#fff8ec;outline:0}
+.variant img{width:100%;height:112px;object-fit:contain;border-radius:8px;background:#f7f7f7}
+.variant span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#3f4652;font-size:13px;font-weight:800}
+.variant small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#7b838e;font-size:11px;font-weight:700}
 .load-error{margin:28px auto;color:#9a5800;font-weight:800;text-align:center}
 @container (max-width: 560px){.grid{gap:20px 18px;padding-left:24px;padding-right:24px}}
-@container (max-width: 390px){.grid{gap:18px 14px;padding:14px 18px 22px}.card{grid-template-rows:96px auto}.card img{height:96px}.variants{top:82px;grid-template-columns:repeat(auto-fit,minmax(82px,1fr))}}
-@container (max-width: 310px){.grid{gap:22px;padding:16px 28px 24px}.card{grid-template-rows:132px auto}.card img{height:132px}.card strong{font-size:15px}.variants{top:112px}}
+@container (max-width: 390px){.grid{gap:18px 14px;padding:14px 18px 22px}.card-main{grid-template-rows:96px auto}.card-main img{height:96px}.variants{top:82px}.variants-grid{grid-template-columns:repeat(auto-fit,minmax(112px,1fr))}.variant img{height:104px}}
+@container (max-width: 310px){.grid{gap:22px;padding:16px 28px 24px}.card-main{grid-template-rows:132px auto}.card-main img{height:132px}.card-main strong{font-size:15px}.variants{top:112px}}
 </style>
 </head>
 <body>
@@ -51,9 +60,9 @@ let lang=params.get("lang")||settings.lang||"ru";
 let role=params.get("role")||settings.role||"guest";
 const active=params.get("cat")||params.get("category")||"";
 const text={
-  ru:{title:"Атлас изделий",intro:"Выберите изделие: откроется расчёт, где можно задать размеры и подготовить позицию."},
-  uk:{title:"Атлас виробів",intro:"Виберіть виріб: відкриється розрахунок, де можна задати розміри та підготувати позицію."},
-  en:{title:"Product atlas",intro:"Choose a fitting to open its calculator, enter dimensions, and prepare a specification item."}
+  ru:{title:"Атлас изделий",intro:"Выберите изделие: откроется расчёт, где можно задать размеры и подготовить позицию.",pin:"Закрепить",unpin:"Открепить",variants:"Варианты"},
+  uk:{title:"Атлас виробів",intro:"Виберіть виріб: відкриється розрахунок, де можна задати розміри та підготувати позицію.",pin:"Закріпити",unpin:"Відкріпити",variants:"Варіанти"},
+  en:{title:"Product atlas",intro:"Choose a fitting to open its calculator, enter dimensions, and prepare a specification item.",pin:"Pin",unpin:"Unpin",variants:"Variants"}
 };
 if(!text[lang])lang="ru";
 document.documentElement.lang=lang;
@@ -74,23 +83,38 @@ function updateAtlasColumns(){
 }
 const resizeObserver=new ResizeObserver(updateAtlasColumns);
 function parentTargetOrigin(){return location.protocol==="file:"||location.origin==="null"?"*":location.origin}
-function openModule(key){
-  const url="../../modules/common/calculator.html?module="+encodeURIComponent(key)+"&lang="+encodeURIComponent(lang)+"&role="+encodeURIComponent(role);
+function openModule(key,extraParams={}){
+  const next=new URL("../../modules/common/calculator.html",location.href);
+  next.searchParams.set("module",key);
+  next.searchParams.set("lang",lang);
+  next.searchParams.set("role",role);
+  Object.entries(extraParams||{}).forEach(([param,value])=>{
+    if(value!==undefined&&value!==null&&value!=="")next.searchParams.set(param,value);
+  });
+  const url=next.href;
   if(window.parent&&window.parent!==window){
-    window.parent.postMessage({type:"calcSquare:open",url:new URL(url,location.href).href},parentTargetOrigin());
+    window.parent.postMessage({type:"calcSquare:open",url},parentTargetOrigin());
   }else{
     location.href=url;
   }
 }
-function renderVariants(item){
+function renderVariants(item,title){
   if(!Array.isArray(item.variants)||!item.variants.length)return "";
   const variants=item.variants.map(variant=>`
-    <span class="variant">
+    <button class="variant" type="button" data-variant='${JSON.stringify(variant.params||{}).replaceAll("'","&#39;")}'>
       <img src="${variant.image}" alt="">
       <span>${pick(variant.title)}</span>
-    </span>
+      ${variant.source?`<small>${variant.source}</small>`:""}
+    </button>
   `).join("");
-  return `<span class="variants" aria-hidden="true">${variants}</span>`;
+  const labels=text[lang]||text.ru;
+  return `<div class="variants" aria-label="${labels.variants}">
+    <div class="variants-head">
+      <span class="variants-title">${title}</span>
+      <button class="pin-variants" type="button" aria-pressed="false" title="${labels.pin}" aria-label="${labels.pin}">📎</button>
+    </div>
+    <div class="variants-grid">${variants}</div>
+  </div>`;
 }
 function renderCatalog(){
   cats.innerHTML="";
@@ -104,12 +128,28 @@ function renderCatalog(){
   details.innerHTML=`<summary>${pick(category.title)}</summary><div class="grid"></div>`;
   const grid=details.querySelector(".grid");
   category.items.forEach(item=>{
-    const button=document.createElement("button");
-    button.className="card";
-    button.type="button";
-    button.innerHTML=`<img src="${item.image}" alt=""><strong>${pick(item.title)}</strong>${renderVariants(item)}`;
-    button.addEventListener("click",()=>openModule(item.key));
-    grid.appendChild(button);
+    const card=document.createElement("article");
+    const title=pick(item.title);
+    card.className="card";
+    card.dataset.key=item.key;
+    card.innerHTML=`<button class="card-main" type="button"><img src="${item.image}" alt=""><strong>${title}</strong></button>${renderVariants(item,title)}`;
+    card.querySelector(".card-main").addEventListener("click",()=>openModule(item.key));
+    card.querySelectorAll(".variant").forEach(button=>button.addEventListener("click",(event)=>{
+      event.stopPropagation();
+      let extra={};
+      try{extra=JSON.parse(button.dataset.variant||"{}")}catch(e){extra={}}
+      openModule(item.key,extra);
+    }));
+    const pin=card.querySelector(".pin-variants");
+    if(pin)pin.addEventListener("click",(event)=>{
+      event.stopPropagation();
+      const labels=text[lang]||text.ru;
+      const pinned=card.classList.toggle("is-pinned");
+      pin.setAttribute("aria-pressed",String(pinned));
+      pin.title=pinned?labels.unpin:labels.pin;
+      pin.setAttribute("aria-label",pin.title);
+    });
+    grid.appendChild(card);
   });
   cats.appendChild(details);
   });
@@ -126,6 +166,26 @@ function loadCatalog(){
 }
 loadCatalog();
 window.addEventListener("resize",updateAtlasColumns);
+document.addEventListener("keydown",(event)=>{
+  if(event.key==="Escape"){
+    unpinCards();
+  }
+});
+document.addEventListener("click",(event)=>{
+  if(!event.target.closest(".card"))unpinCards();
+});
+function unpinCards(){
+  document.querySelectorAll(".card.is-pinned").forEach(card=>{
+    card.classList.remove("is-pinned");
+    const pin=card.querySelector(".pin-variants");
+    if(pin){
+      const labels=text[lang]||text.ru;
+      pin.setAttribute("aria-pressed","false");
+      pin.title=labels.pin;
+      pin.setAttribute("aria-label",labels.pin);
+    }
+  });
+}
 </script>
 </body>
 </html>
