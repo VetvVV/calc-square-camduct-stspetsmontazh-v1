@@ -260,7 +260,11 @@ function approxEqual(actual,expected,context,tolerance=1e-9){
   }
 }
 function checkCoreFormulaSmoke(source){
-  requireSource(source,'case"roundDuct":area=Math.PI*v.D*v.L*q/1e6;','round duct formula changed unexpectedly');
+  requireSource(source,'case"roundDuct":{const r=roundDuct(v);','round duct formula call changed unexpectedly');
+  requireSource(source,'function roundDuct(v){','round duct calculation function is missing');
+  requireSource(source,'const standardSectionLength=1250;','round duct standard split length changed unexpectedly');
+  requireSource(source,'D:values.A','round duct preview compatibility D=A is missing');
+  requireSource(source,'L:values.B','round duct preview compatibility L=B is missing');
   requireSource(source,'case"roundElbow":{const arc=Math.PI*v.R*v.Angle/180;area=Math.PI*v.D*arc*q/1e6;','round elbow formula changed unexpectedly');
   requireSource(source,'case"roundTransition":area=Math.PI*((v.D1+v.D2)/2)*Math.sqrt((v.L||0)**2+(v.Offset||0)**2)*q/1e6;','round transition formula changed unexpectedly');
   requireSource(source,'case"roundShell":area=Math.PI*v.D*v.L*q/1e6;','round shell formula changed unexpectedly');
