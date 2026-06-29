@@ -333,7 +333,7 @@ iframe{display:block;width:100%;height:100%;min-height:0;border:0;background:#ec
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
   <img src="assets/images/stspecmontazh-logo-dark.png" alt="">
 </div>
-<div class="build-marker" hidden data-cache="build-2026-06-30-004150">build 2026-06-30-0041</div>
+<div class="build-marker" hidden data-cache="build-2026-06-30-011635">build 2026-06-30-0116</div>
 <header class="topbar">
   <div class="brand">
     <img src="assets/images/stspecmontazh-logo-dark.png" alt="ST Spetsmontazh">
@@ -2230,7 +2230,7 @@ function displayDimensions(item){
     const diameter=item.dimensions.A;
     const length=item.dimensions.B;
     if(diameter!==""&&diameter!==null&&diameter!==undefined&&length!==""&&length!==null&&length!==undefined){
-      return `ØD ${diameter} × L ${length} мм`;
+      return `ØD ${diameter} × L ${length} ${lang.value==="en"?"mm":"мм"}`;
     }
   }
   return formatDimensions(item);
@@ -2312,6 +2312,7 @@ function openProjectItem(index){
   if(item.quantity)url.searchParams.set("Q",item.quantity);
   if(item.thickness)url.searchParams.set("thickness",item.thickness);
   if(item.materialKey)url.searchParams.set("material",item.materialKey);
+  if(item.productType==="spiral-duct"&&item.spiralSectionLength)url.searchParams.set("spiralSectionLength",item.spiralSectionLength);
   if(item.comment)url.searchParams.set("comment",item.comment);
   openUrl(url.href);
 }

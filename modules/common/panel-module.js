@@ -28,6 +28,12 @@
   Object.assign(i18n.ru,{none:"Нет",flange:"Фланец",bandage:"Бандаж",roundLongWarn:"Длина изделия превышает допустимую длину одной трубы. Требуется технологическое разбиение на участки. Разбиение подбирается с учётом расположения врезок и типа соединения: ниппель / муфта / нахлёст / зиг-трактор.",welding:"Сварка",russianLock:"Русский замок"});
   Object.assign(i18n.uk,{none:"Немає",flange:"Фланець",bandage:"Бандаж",roundLongWarn:"Довжина виробу перевищує допустиму довжину однієї труби. Потрібне технологічне розбиття на ділянки. Розбиття підбирається з урахуванням розташування врізок і типу з'єднання: ніпель / муфта / нахлест «трактор».",welding:"Зварювання",russianLock:"Руський замок"});
   Object.assign(i18n.en,{none:"None",flange:"Flange",bandage:"Bandage",roundLongWarn:"The product length exceeds the allowed length of one duct. Technological splitting into sections is required. Splitting is selected based on insets and the connection type: nipple / coupling / overlap.",welding:"Welding",russianLock:"Russian lock"});
+  Object.assign(i18n.ru,{spiralDuctName:"спирально-навивная труба",splitLabel:"разбиение",sectionsLabel:"секции",sectionsToLabel:"до",sectionJointLabel:"стык секций",notSelected:"Не выбран",notRequired:"Не требуется",nipple:"Ниппель",coupling:"Муфта",overlapTractor:"Нахлёст / зиг-трактор",endConnection1:"Торцевое соединение 1",endConnection2:"Торцевое соединение 2",internalJointType:"Тип межсекционного стыка",roundDuctHelp:"C1/C2 — крайние торцевые соединения всего изделия. Они не являются соединениями между секциями. Если длина больше 2000 мм, показывается информационное технологическое разбиение на секции. Внутренние стыки между секциями пока не создаются как J1/J2/J3 и не рассчитываются."});
+  Object.assign(i18n.uk,{spiralDuctName:"спірально-навивна труба",splitLabel:"розбиття",sectionsLabel:"секції",sectionsToLabel:"до",sectionJointLabel:"стик секцій",notSelected:"Не вибрано",notRequired:"Не потрібно",nipple:"Ніпель",coupling:"Муфта",overlapTractor:"Нахлест / зиг-трактор",endConnection1:"Торцеве з'єднання 1",endConnection2:"Торцеве з'єднання 2",internalJointType:"Тип міжсекційного стику",roundDuctHelp:"C1/C2 — крайні торцеві з'єднання всього виробу. Вони не є з'єднаннями між секціями. Якщо довжина більша за 2000 мм, показується інформаційне технологічне розбиття на секції. Внутрішні стики між секціями поки не створюються як J1/J2/J3 і не розраховуються."});
+  Object.assign(i18n.en,{spiralDuctName:"spiral duct",splitLabel:"split",sectionsLabel:"sections",sectionsToLabel:"up to",sectionJointLabel:"section joint",notSelected:"Not selected",notRequired:"Not required",nipple:"Nipple",coupling:"Coupling",overlapTractor:"Overlap / zig-tractor",endConnection1:"End connection 1",endConnection2:"End connection 2",internalJointType:"Section joint type",roundDuctHelp:"C1/C2 are the end connections of the whole product. They are not connections between sections. If length is greater than 2000 mm, an informational technological split into sections is shown. Internal section joints are not created as J1/J2/J3 and are not calculated yet."});
+  Object.assign(i18n.ru,{spiralSectionControl:"Делить ветку по",spiralSectionInfo:"Ветка будет разбита на секции по выбранной длине.",spiralSectionRemainderInfo:"Ветка будет разбита на секции по выбранной длине, последняя секция — доборная.",sectionsByLabel:"по"});
+  Object.assign(i18n.uk,{spiralSectionControl:"Ділити гілку по",spiralSectionInfo:"Гілка буде розбита на секції за вибраною довжиною.",spiralSectionRemainderInfo:"Гілка буде розбита на секції за вибраною довжиною, остання секція — добірна.",sectionsByLabel:"по"});
+  Object.assign(i18n.en,{spiralSectionControl:"Split branch by",spiralSectionInfo:"The branch will be split into sections by the selected length.",spiralSectionRemainderInfo:"The branch will be split into sections by the selected length; the last section is make-up length.",sectionsByLabel:"by"});
   Object.assign(i18n.ru,{openings:"Отверстия",openingType:"Тип отверстия",openingNone:"Без отверстий",openingRound:"Круглое",openingRect:"Прямоугольное",openingD:"Диаметр D",openingA:"Размер A",openingB:"Размер B",openingQty:"Количество отверстий",openingArea:"Площадь отверстий",addOpening:"Добавить отверстие",removeOpening:"Удалить отверстие",openingRow:"Отверстие"});
   Object.assign(i18n.uk,{openings:"Отвори",openingType:"Тип отвору",openingNone:"Без отворів",openingRound:"Круглий",openingRect:"Прямокутний",openingD:"Діаметр D",openingA:"Розмір A",openingB:"Розмір B",openingQty:"Кількість отворів",openingArea:"Площа отворів",addOpening:"Додати отвір",removeOpening:"Видалити отвір",openingRow:"Отвір"});
   Object.assign(i18n.en,{openings:"Openings",openingType:"Opening type",openingNone:"No openings",openingRound:"Round",openingRect:"Rectangular",openingD:"Diameter D",openingA:"Size A",openingB:"Size B",openingQty:"Opening quantity",openingArea:"Opening area",addOpening:"Add opening",removeOpening:"Remove opening",openingRow:"Opening"});
@@ -90,15 +96,28 @@
   // Display metadata is reserved for future USER / ADMIN / DEBUG parameter modes.
   const parameterMeta={
     "round-duct":{
-      A:{key:"A",camductKey:"A",uiIndex:1,uiLabel:"Диаметр",geometrySymbol:"ØD",formulaSymbol:"D",visualRole:"diameter",colorToken:"dimension-diameter"},
-      B:{key:"B",camductKey:"B",uiIndex:2,uiLabel:"Длина",geometrySymbol:"L",formulaSymbol:"L",visualRole:"length",colorToken:"dimension-length"}
+      A:{key:"A",camductKey:"A",uiIndex:1,uiLabel:{ru:"Диаметр",uk:"Діаметр",en:"Diameter"},geometrySymbol:"ØD",formulaSymbol:"D",visualRole:"diameter",colorToken:"dimension-diameter"},
+      B:{key:"B",camductKey:"B",uiIndex:2,uiLabel:{ru:"Длина",uk:"Довжина",en:"Length"},geometrySymbol:"L",formulaSymbol:"L",visualRole:"length",colorToken:"dimension-length"}
     },
     "spiral-duct":{
-      A:{key:"A",camductKey:"A",uiIndex:1,uiLabel:"Диаметр",geometrySymbol:"ØD",formulaSymbol:"D",visualRole:"diameter",colorToken:"dimension-diameter"},
-      B:{key:"B",camductKey:"B",uiIndex:2,uiLabel:"Длина",geometrySymbol:"L",formulaSymbol:"L",visualRole:"length",colorToken:"dimension-length"}
+      A:{key:"A",camductKey:"A",uiIndex:1,uiLabel:{ru:"Диаметр",uk:"Діаметр",en:"Diameter"},geometrySymbol:"ØD",formulaSymbol:"D",visualRole:"diameter",colorToken:"dimension-diameter"},
+      B:{key:"B",camductKey:"B",uiIndex:2,uiLabel:{ru:"Длина",uk:"Довжина",en:"Length"},geometrySymbol:"L",formulaSymbol:"L",visualRole:"length",colorToken:"dimension-length"}
     }
   };
   function parameterMetaFor(moduleKey,key){return parameterMeta[moduleKey]?.[key]||null}
+  function parameterUiLabel(meta){return pick(meta?.uiLabel)||meta?.uiLabel||""}
+  function sectionWord(count){
+    const n=Math.abs(Number(count||0));
+    if(lang==="en")return n===1?"section":"sections";
+    if(lang==="uk"){
+      if(n%10===1&&n%100!==11)return"секція";
+      if([2,3,4].includes(n%10)&&![12,13,14].includes(n%100))return"секції";
+      return"секцій";
+    }
+    if(n%10===1&&n%100!==11)return"секция";
+    if([2,3,4].includes(n%10)&&![12,13,14].includes(n%100))return"секции";
+    return"секций";
+  }
   function num(key,label,def){return{key,label,type:"number",default:def}}
   function select(key,label,options,def){return{key,label,type:"select",options,default:def}}
   function offset(key,label,options,def){return{key,label,type:"offset",options,default:def}}
@@ -166,7 +185,7 @@
   function fieldLabel(field){
     const meta=parameterMetaFor(moduleKey,field.key);
     if(!meta)return typeof field.label==="object"?pick(field.label):field.label;
-    return `${meta.uiIndex}. ${meta.uiLabel} ${meta.geometrySymbol}`;
+    return `${meta.uiIndex}. ${parameterUiLabel(meta)} ${meta.geometrySymbol}`;
   }
   function fieldsHtml(fields){return fields.map(field=>`<div class="field" data-field-key="${field.key}"><label for="f-${field.key}" data-base-label="${fieldLabel(field)}"><span class="field-label-main">${fieldLabel(field)}</span></label>${field.type==="select"?selectHtml(field):field.type==="offset"?offsetHtml(field):numberHtml(field)}</div>`).join("")}
   function setCamductLabels(active){
@@ -175,7 +194,7 @@
       const label=row.querySelector("label");
       const main=row.querySelector(".field-label-main");
       if(!meta||!label||!main)return;
-      main.textContent=active?`${meta.uiIndex}. ${meta.camductKey} — ${meta.uiLabel} ${meta.geometrySymbol}`:label.dataset.baseLabel;
+      main.textContent=active?`${meta.uiIndex}. ${meta.camductKey} — ${parameterUiLabel(meta)} ${meta.geometrySymbol}`:label.dataset.baseLabel;
     });
   }
   function sizeComboHtml(inputAttrs){return`<div class="size-combo"><input ${inputAttrs} type="number" inputmode="decimal" step="1" min="0"><button class="size-toggle" type="button" aria-label="${t.sizes}">▼</button><div class="size-menu" hidden>${standardSizes.map(v=>`<button type="button" data-size-value="${v}">${v}</button>`).join("")}</div></div>`}
@@ -206,6 +225,11 @@
              `<button class="chip" type="button" id="addOpeningBtn" style="margin-top:8px">+ ${t.addOpening}</button>`+
              `<p class="help-text" id="openingSummary" style="margin-top:6px"></p>`;
     }
+    if(moduleKey==="spiral-duct"){
+      const options=[6000,5000,4000,3000,2000].map(value=>`<option value="${value}" ${value===6000?"selected":""}>${value} ${t.mm}</option>`).join("");
+      return `<div class="field"><label for="spiralSectionLength">${t.spiralSectionControl}</label><select id="spiralSectionLength" data-key="spiralSectionLength">${options}</select></div>`+
+             `<p class="help-text" id="sheetWarn" style="color:#a85b08;font-weight:600;display:none"></p>`;
+    }
     return cfg.type==="table"?`<p class="tab-empty">${t.notReady}</p>`:(canViewFormulas?`<p class="tab-empty">${t.optionsReserved}</p>`:`<p class="tab-empty">${t.calcHidden}</p>`);
   }
   function detailHtml(){return`<div class="field"><label for="material">${t.material}</label><select id="material">${materials.map(m=>`<option value="${m.key}">${m.label}</option>`).join("")}</select></div><div class="field"><label for="thickness">${t.thickness}</label><select id="thickness"></select></div>`}
@@ -221,15 +245,15 @@
     if(moduleKey==="round-duct"){
       const opts=[["none",t.none],["flange",t.flange],["bandage",t.bandage]].map(([value,label])=>`<option value="${value}">${label}</option>`).join("");
       const jointOpts=[
-        ["not_selected","Не выбран"],
-        ["nipple","Ниппель"],
-        ["coupling","Муфта"],
-        ["tractor","Нахлёст / зиг-трактор"]
+        ["not_selected",t.notSelected],
+        ["nipple",t.nipple],
+        ["coupling",t.coupling],
+        ["tractor",t.overlapTractor]
       ].map(([value,label])=>`<option value="${value}">${label}</option>`).join("");
-      return`<div class="field"><label for="conn1">C1 — Торцевое соединение 1</label><select id="conn1">${opts}</select></div>`+
-             `<div class="field"><label for="conn2">C2 — Торцевое соединение 2</label><select id="conn2">${opts}</select></div>`+
-             `<div class="field" id="internalJointField" hidden style="display:none"><label for="internalJointType">Тип межсекционного стыка</label><select id="internalJointType">${jointOpts}</select></div>`+
-             `<p class="help-text">C1/C2 — крайние торцевые соединения всего изделия. Они не являются соединениями между секциями. Если длина больше 2000 мм, показывается информационное технологическое разбиение на секции. Внутренние стыки между секциями пока не создаются как J1/J2/J3 и не рассчитываются.</p>`+
+      return`<div class="field"><label for="conn1">C1 — ${t.endConnection1}</label><select id="conn1">${opts}</select></div>`+
+             `<div class="field"><label for="conn2">C2 — ${t.endConnection2}</label><select id="conn2">${opts}</select></div>`+
+             `<div class="field" id="internalJointField" hidden style="display:none"><label for="internalJointType">${t.internalJointType}</label><select id="internalJointType">${jointOpts}</select></div>`+
+             `<p class="help-text">${t.roundDuctHelp}</p>`+
              `<p class="help-text" id="sheetWarn" style="color:#a85b08;font-weight:600;display:none"></p>`;
     }
     if(!cfg.connections?.length)return`<p class="tab-empty">${t.connectionHelp}</p>`;
@@ -455,7 +479,10 @@
     values.material=document.getElementById("material").value;
     values.thickness=Number(document.getElementById("thickness").value||0.5);
     values.quantity=Math.max(1,Math.round(Number(values.Q||1)));
-    if(moduleKey==="spiral-duct")values.T=values.thickness;
+    if(moduleKey==="spiral-duct"){
+      values.T=values.thickness;
+      values.spiralSectionLength=Number(values.spiralSectionLength||6000);
+    }
     values.conn1=document.getElementById("conn1")?.value||"";
     values.conn2=document.getElementById("conn2")?.value||"";
     if(moduleKey==="round-duct"){
@@ -543,11 +570,11 @@
   function spiralDuct(v){
     const A=v.A||0,B=v.B||0,Q=v.quantity||1;
     if(A<=0||B<=0)return{area:0,error:"Диаметр и длина должны быть больше 0.",note:"SPIRAL-001: требуется A > 0 и B > 0.",help:"SPIRAL-001 — отдельный MVP-модуль спирально-навивной трубы."};
-    const split=spiralSectionSplit(B);
+    const split=spiralSectionSplit(B,v.spiralSectionLength);
     const area=Math.PI*A*B*Q/1e6;
     const rounded=Number(area.toFixed(3));
     const note=`SPIRAL-001 MVP: S = π × A × B × Q / 1 000 000 = π × ${nf(A,0)} × ${nf(B,0)} × ${Q} / 1 000 000 = ${nf(area)} м²`;
-    const sheetWarn=split.spiralSplitRequired?"Длина ветки превышает длину одной спирально-навивной трубы. Ветка будет разбита на секции до 6000 мм.":"";
+    const sheetWarn=split.spiralSplitRequired?(split.spiralHasRemainder?t.spiralSectionRemainderInfo:t.spiralSectionInfo):"";
     const help=[
       "SPIRAL-001 — труба спирально-навивная",
       "Это отдельный тип изделия, не R-001 и не прямошовная труба.",
@@ -564,8 +591,8 @@
       `Итог после округления: ${rounded.toFixed(3)} м²`,
       "",
       "РАЗБИЕНИЕ ВЕТКИ",
-      `Максимальная длина одной производственной секции: ${split.spiralSectionMaxLength} мм`,
-      split.spiralSplitRequired?`Секции: ${split.spiralSections.join("+")}`:"Разбиение не требуется.",
+      `Выбранная длина секции: ${split.spiralSectionLength} мм`,
+      split.spiralSplitRequired?`Секции: ${split.spiralSectionsSummary}`:"Разбиение не требуется.",
       "",
       "ТЕХНОЛОГИЧЕСКИЕ OPEN-ПОЛЯ",
       "Ориентировочная ширина штрипса: 154 мм, статус: требует подтверждения.",
@@ -579,21 +606,35 @@
     ].join("\n");
     return{area,note,help,sheetWarn};
   }
-  function spiralSectionSplit(length){
-    const spiralSectionMaxLength=6000;
-    const sections=[];
-    for(let rest=Number(length||0);rest>0;rest-=spiralSectionMaxLength){
-      sections.push(Math.min(spiralSectionMaxLength,rest));
-    }
+  function spiralSectionSplit(length,selectedLength=6000){
+    const allowed=[6000,5000,4000,3000,2000];
+    const spiralSectionLength=allowed.includes(Number(selectedLength))?Number(selectedLength):6000;
+    const total=Number(length||0);
+    const fullCount=Math.floor(total/spiralSectionLength);
+    const remainder=total%spiralSectionLength;
+    const sections=Array.from({length:fullCount},()=>spiralSectionLength);
+    if(remainder>0)sections.push(remainder);
+    if(!sections.length&&total>0)sections.push(total);
+    const summary=spiralSectionsSummary(fullCount,spiralSectionLength,remainder);
     return{
-      spiralSectionMaxLength,
+      spiralSectionLength,
       spiralSectionCount:sections.length||0,
       spiralSections:sections,
-      spiralSplitRequired:Number(length||0)>spiralSectionMaxLength
+      spiralSectionsSummary:summary,
+      spiralSplitRequired:(sections.length||0)>1,
+      spiralRemainder:remainder,
+      spiralHasRemainder:remainder>0
     };
   }
+  function spiralSectionsSummary(fullCount,sectionLength,remainder){
+    const parts=[];
+    if(fullCount===1)parts.push(String(sectionLength));
+    if(fullCount>1)parts.push(`${fullCount}×${sectionLength}`);
+    if(remainder>0)parts.push(String(remainder));
+    return parts.join("+");
+  }
   function spiralDuctMeta(v){
-    const split=spiralSectionSplit(v?.B||0);
+    const split=spiralSectionSplit(v?.B||0,v?.spiralSectionLength);
     return{
       ...split,
       stripWidth:154,
@@ -617,7 +658,7 @@
     return{code,label:roundConnectorLabel(code),allowance:roundConnectorAllowance(code)};
   }
   function internalJointTypeInfo(value){
-    const labels={not_selected:"Не выбран",nipple:"Ниппель",coupling:"Муфта",tractor:"Нахлёст / зиг-трактор",not_required:"Не требуется"};
+    const labels={not_selected:t.notSelected,nipple:t.nipple,coupling:t.coupling,tractor:t.overlapTractor,not_required:t.notRequired};
     const code=Object.prototype.hasOwnProperty.call(labels,value)?value:"not_selected";
     return{code,label:labels[code]};
   }
@@ -809,9 +850,9 @@
     return [dims+" "+t.mm,opening,conn,comment].filter(Boolean).join(" · ");
   }
   function spiralDescription(v){
-    const split=spiralSectionSplit(v.B);
-    const base="спирально-навивная труба";
-    return split.spiralSplitRequired?`${base}; разбиение: ${split.spiralSectionCount} секции до ${split.spiralSectionMaxLength}: ${split.spiralSections.join("+")}`:base;
+    const split=spiralSectionSplit(v.B,v.spiralSectionLength);
+    const base=t.spiralDuctName;
+    return split.spiralSplitRequired?`${base}; ${t.splitLabel}: ${split.spiralSectionCount} ${sectionWord(split.spiralSectionCount)} ${t.sectionsByLabel} ${split.spiralSectionLength}: ${split.spiralSectionsSummary}`:base;
   }
   function openingDescription(v){
     if(moduleKey!=="rectangular-duct")return "";
@@ -864,7 +905,7 @@
       if(B<=2000)return base;
       const split=standardSectionSplit(B);
       const joint=internalJointTypeInfo(document.getElementById("internalJointType")?.value||"not_selected");
-      return `${base}; разбиение: ${split.standardSections} секции по стандарту ${split.standardSectionLength}: ${split.standardSectionLengths.join("+")}; стык секций: ${joint.label}`;
+      return `${base}; ${t.splitLabel}: ${split.standardSections} ${t.sectionsLabel} ${t.sectionsToLabel} ${split.standardSectionLength}: ${split.standardSectionLengths.join("+")}; ${t.sectionJointLabel}: ${joint.label}`;
     }
     const rows=[...document.querySelectorAll(".connection-row")];
     return rows.map(row=>{
