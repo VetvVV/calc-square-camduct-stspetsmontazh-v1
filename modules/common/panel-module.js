@@ -746,6 +746,12 @@
       parts.push(`I ${typeof v.I==="number"?v.I:optionText(v.I)}`);
       return parts;
     }
+    if(moduleKey==="round-duct"){
+      return cfg.fields.filter(f=>["number","select"].includes(f.type)).map(f=>{
+        const meta=parameterMetaFor(moduleKey,f.key);
+        return `${meta?.geometrySymbol||f.key} ${v[f.key]}`;
+      });
+    }
     return cfg.fields.filter(f=>["number","select"].includes(f.type)).map(f=>`${f.key} ${v[f.key]}`);
   }
   function specDimensions(v){

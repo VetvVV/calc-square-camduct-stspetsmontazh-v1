@@ -1856,7 +1856,7 @@ function showProjectTip(index,event){
   projectTip.innerHTML=`
     <img src="${escapeHtml(productImage(item))}" alt="${escapeHtml(t("image"))}">
     <strong>${escapeHtml(displayProductName(item))}</strong>
-    <small>${escapeHtml(formatDimensions(item)||displayDescription(item))}</small>
+    <small>${escapeHtml(displayDimensions(item)||displayDescription(item))}</small>
   `;
   projectTip.style.display="block";
   positionProjectTip(event);
@@ -1988,7 +1988,7 @@ function renderProject(){
     const el=document.createElement("div");
     const issues=localizationIssues(item);
     el.className=`project-grid project-row${issues.length?" has-language-conflict":""}`;
-    const dimensions=formatDimensions(item);
+    const dimensions=displayDimensions(item);
     const issueTitle=issues.length?escapeHtml(`${t("languageConflictTitle")}: ${issues.join(", ")}`):"";
     el.innerHTML=`
       <span class="project-cell is-numeric project-pos" data-tip-index="${index}">${index+1}${issues.length?`<span class="language-conflict" title="${issueTitle}">!</span>`:""}</span>
@@ -2134,7 +2134,7 @@ function printSpecColumns(){
   }));
 }
 function printSpecCellValue(item,index,visibleIndex){
-  const dimensions=formatDimensions(item);
+  const dimensions=displayDimensions(item);
   if(index===0)return visibleIndex+1;
   if(index===1)return `<strong>${escapeHtml(displayProductName(item))}</strong>${showDimensionsUnderName()&&dimensions?`<br><small>${escapeHtml(dimensions)}</small>`:""}`;
   if(index===2)return escapeHtml(dimensions);
@@ -2221,6 +2221,16 @@ function formatDimensions(item){
     delete dimensions.Iv;
   }
   return Object.entries(dimensions).filter(([,value])=>value!==""&&value!==null&&value!==undefined).map(([key,value])=>`${key} ${value}`).join(" × ");
+}
+function displayDimensions(item){
+  if(item.productType==="round-duct"&&item.dimensions&&typeof item.dimensions==="object"){
+    const diameter=item.dimensions.A;
+    const length=item.dimensions.B;
+    if(diameter!==""&&diameter!==null&&diameter!==undefined&&length!==""&&length!==null&&length!==undefined){
+      return `ØD ${diameter} × L ${length} мм`;
+    }
+  }
+  return formatDimensions(item);
 }
 function normalizeLookupText(value){
   return String(value||"")
