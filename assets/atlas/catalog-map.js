@@ -4,8 +4,8 @@ window.CALC_CATALOG=[
     title:{ru:"Круглые",uk:"Круглі",en:"Round"},
     items:[
       {key:"round-duct",title:{ru:"Воздуховод круглый",uk:"Повітропровід круглий",en:"Round duct"},image:"../../assets/catalog-images/round-duct-v2.png",variants:[
-        {title:{ru:"Прямошовная",uk:"Прямошовна",en:"Straight seam"},image:"../../assets/catalog-images/round-duct-v2.png",source:"ST Spetsmontazh"},
-        {title:{ru:"Спирально-навивная",uk:"Спірально-навивна",en:"Spiral duct"},image:"../../assets/catalog-images/round-duct-spiro.png",source:"ST Spetsmontazh"}
+        {title:{ru:"Труба прямошовная",uk:"Труба прямошовна",en:"Straight seam duct"},image:"../../assets/catalog-images/round-duct-v2.png",source:"Текущий модуль R-001"},
+        {title:{ru:"Труба спирально-навивная",uk:"Труба спірально-навивна",en:"Spiral duct"},image:"../../assets/catalog-images/round-duct-spiro.png",source:"SPIRAL-001",params:{module:"spiral-duct"}}
       ]},
       {key:"round-elbow",title:{ru:"Отвод круглый",uk:"Відвід круглий",en:"Round elbow"},image:"../../assets/catalog-images/02-round-elbow-90.png",variants:[
         {title:{ru:"90°",uk:"90°",en:"90°"},image:"../../assets/catalog-images/02-round-elbow-90.png",source:"ST Spetsmontazh",params:{Angle:90}},

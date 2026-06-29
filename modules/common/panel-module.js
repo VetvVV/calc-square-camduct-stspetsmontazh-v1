@@ -47,6 +47,7 @@
   ];
   const modules={
     "round-duct":{category:"round",title:{ru:"Воздуховод круглый",uk:"Повітропровід круглий",en:"Round duct"},type:"formula",image:"../../assets/products/round_duct.svg",fields:[num("A","A — Диаметр",250),num("B","B — Длина",1000)],connections:["C1","C2"],formula:"roundDuct"},
+    "spiral-duct":{category:"round",title:{ru:"Труба спирально-навивная",uk:"Труба спірально-навивна",en:"Spiral duct"},type:"formula",image:"../../assets/products/round_duct.svg",fields:[num("A","A — Диаметр",250),num("B","B — Длина",6000)],formula:"spiralDuct"},
     "round-elbow":{category:"round",title:{ru:"Отвод круглый",uk:"Відвід круглий",en:"Round elbow"},type:"formula",image:"../../assets/products/round_elbow.svg",fields:[num("D","D",250),select("Angle",{ru:"Угол",uk:"Кут",en:"Angle"},[15,30,45,60,90],90),num("R","R",250)],connections:["D"],formula:"roundElbow"},
     "round-transition":{category:"round",title:{ru:"Переход круглый",uk:"Перехід круглий",en:"Round transition"},type:"formula",image:"../../assets/products/round_transition.svg",fields:[num("D1","D1",315),num("D2","D2",250),num("L","L",300)],connections:["D1","D2"],formula:"roundTransition"},
     "round-offset-transition":{category:"round",title:{ru:"Переход круглый со смещением",uk:"Перехід круглий зі зміщенням",en:"Offset round transition"},type:"formula",image:"../../assets/products/round_offset.svg",fields:[num("D1","D1",315),num("D2","D2",250),num("L","L",300),num("Offset","Offset",100)],connections:["D1","D2"],formula:"roundTransition"},
@@ -89,6 +90,10 @@
   // Display metadata is reserved for future USER / ADMIN / DEBUG parameter modes.
   const parameterMeta={
     "round-duct":{
+      A:{key:"A",camductKey:"A",uiIndex:1,uiLabel:"Диаметр",geometrySymbol:"ØD",formulaSymbol:"D",visualRole:"diameter",colorToken:"dimension-diameter"},
+      B:{key:"B",camductKey:"B",uiIndex:2,uiLabel:"Длина",geometrySymbol:"L",formulaSymbol:"L",visualRole:"length",colorToken:"dimension-length"}
+    },
+    "spiral-duct":{
       A:{key:"A",camductKey:"A",uiIndex:1,uiLabel:"Диаметр",geometrySymbol:"ØD",formulaSymbol:"D",visualRole:"diameter",colorToken:"dimension-diameter"},
       B:{key:"B",camductKey:"B",uiIndex:2,uiLabel:"Длина",geometrySymbol:"L",formulaSymbol:"L",visualRole:"length",colorToken:"dimension-length"}
     }
@@ -450,6 +455,7 @@
     values.material=document.getElementById("material").value;
     values.thickness=Number(document.getElementById("thickness").value||0.5);
     values.quantity=Math.max(1,Math.round(Number(values.Q||1)));
+    if(moduleKey==="spiral-duct")values.T=values.thickness;
     values.conn1=document.getElementById("conn1")?.value||"";
     values.conn2=document.getElementById("conn2")?.value||"";
     if(moduleKey==="round-duct"){
@@ -470,8 +476,10 @@
     document.getElementById("mass").textContent=nf(mDisp,2)+mU;
     document.getElementById("descLine").textContent=result.description;
     document.getElementById("statusLine").textContent=result.status||"";
+    const addBtn=document.getElementById("addBtn");
+    if(addBtn) addBtn.disabled=!!result.error;
     const resultWarn=document.getElementById("resultWarn");
-    if(resultWarn){if(result.sheetWarn){resultWarn.style.display="block";resultWarn.textContent="⚠ "+result.sheetWarn;}else resultWarn.style.display="none";}
+    if(resultWarn){if(result.error||result.sheetWarn){resultWarn.style.display="block";resultWarn.textContent="⚠ "+(result.error||result.sheetWarn);}else resultWarn.style.display="none";}
     const guestLimitNode=document.getElementById("guestLimitNote");
     if(guestLimitNode)guestLimitNode.textContent=guestLimitNote();
     const calcNote=document.getElementById("calcNote");
@@ -509,9 +517,10 @@
   }
   function calculate(v){
     const q=v.quantity||1;
-    let area=0,note="",help="",sheetWarn="",lockName="",lockSize="",openingArea=0;
+    let area=0,note="",help="",sheetWarn="",error="",lockName="",lockSize="",openingArea=0;
     switch(cfg.formula){
       case"roundDuct":{const r=roundDuct(v);area=r.area;note=r.note;help=r.help;sheetWarn=r.sheetWarn;lockName=r.lockName;lockSize=r.lockSize;break}
+      case"spiralDuct":{const r=spiralDuct(v);area=r.area;note=r.note;help=r.help;sheetWarn=r.sheetWarn;error=r.error||"";break}
       case"roundElbow":{const arc=Math.PI*v.R*v.Angle/180;area=Math.PI*v.D*arc*q/1e6;note=`S = π × D × arc × Q`;break}
       case"roundTransition":area=Math.PI*((v.D1+v.D2)/2)*Math.sqrt((v.L||0)**2+(v.Offset||0)**2)*q/1e6;note=`S = π × ${t.avgDiameter} × ${t.inclinedLength} × Q`;break;
       case"roundTee":area=(Math.PI*v.D*v.L+Math.PI*v.D1*v.H)*q/1e6;note=`S = ${t.main} + ${t.branch}`;break;
@@ -529,7 +538,73 @@
       case"roundRect":area=((Math.PI*v.D+2*(v.A+v.B))/2)*v.L*q/1e6;note=`S = ${t.avgPerimeter} × L`;break;
       default:area=0;note=t.notReady;
     }
-    return{area,description:"",note,help,sheetWarn,lockName,lockSize,openingArea,badge:cfg.type==="table"?tableBadge(v):t.formula,status:cfg.type==="table"?tableStatus(v):""};
+    return{area,description:"",note,help,sheetWarn,error,lockName,lockSize,openingArea,badge:cfg.type==="table"?tableBadge(v):t.formula,status:cfg.type==="table"?tableStatus(v):""};
+  }
+  function spiralDuct(v){
+    const A=v.A||0,B=v.B||0,Q=v.quantity||1;
+    if(A<=0||B<=0)return{area:0,error:"Диаметр и длина должны быть больше 0.",note:"SPIRAL-001: требуется A > 0 и B > 0.",help:"SPIRAL-001 — отдельный MVP-модуль спирально-навивной трубы."};
+    const split=spiralSectionSplit(B);
+    const area=Math.PI*A*B*Q/1e6;
+    const rounded=Number(area.toFixed(3));
+    const note=`SPIRAL-001 MVP: S = π × A × B × Q / 1 000 000 = π × ${nf(A,0)} × ${nf(B,0)} × ${Q} / 1 000 000 = ${nf(area)} м²`;
+    const sheetWarn=split.spiralSplitRequired?"Длина ветки превышает длину одной спирально-навивной трубы. Ветка будет разбита на секции до 6000 мм.":"";
+    const help=[
+      "SPIRAL-001 — труба спирально-навивная",
+      "Это отдельный тип изделия, не R-001 и не прямошовная труба.",
+      "",
+      "ВХОДНЫЕ ПАРАМЕТРЫ",
+      `A — диаметр: ${nf(A,0)} ${t.mm}`,
+      `B — длина: ${nf(B,0)} ${t.mm}`,
+      `Q — количество: ${Q}`,
+      `t — толщина: ${nf(v.thickness)} ${t.mm}`,
+      "",
+      "ФОРМУЛА MVP",
+      "S_one = π × A × B / 1 000 000",
+      "S_total = S_one × Q",
+      `Итог после округления: ${rounded.toFixed(3)} м²`,
+      "",
+      "РАЗБИЕНИЕ ВЕТКИ",
+      `Максимальная длина одной производственной секции: ${split.spiralSectionMaxLength} мм`,
+      split.spiralSplitRequired?`Секции: ${split.spiralSections.join("+")}`:"Разбиение не требуется.",
+      "",
+      "ТЕХНОЛОГИЧЕСКИЕ OPEN-ПОЛЯ",
+      "Ориентировочная ширина штрипса: 154 мм, статус: требует подтверждения.",
+      "Штрипс имеет две подготовленные кромки замка.",
+      "При навивке формируется один непрерывный спиральный замковый шов по винтовой линии.",
+      "effectiveStripWidth и stripConsumption пока не рассчитываются.",
+      "",
+      "ОГРАНИЧЕНИЯ MVP",
+      "Без S1, без сварки, без разбиения 1250, без внутреннего стыка секций, без J1/J2/J3.",
+      "Формула MVP: геометрическая площадь боковой поверхности. Штрипс 154 мм и расход на спиральный замок требуют отдельного подтверждения."
+    ].join("\n");
+    return{area,note,help,sheetWarn};
+  }
+  function spiralSectionSplit(length){
+    const spiralSectionMaxLength=6000;
+    const sections=[];
+    for(let rest=Number(length||0);rest>0;rest-=spiralSectionMaxLength){
+      sections.push(Math.min(spiralSectionMaxLength,rest));
+    }
+    return{
+      spiralSectionMaxLength,
+      spiralSectionCount:sections.length||0,
+      spiralSections:sections,
+      spiralSplitRequired:Number(length||0)>spiralSectionMaxLength
+    };
+  }
+  function spiralDuctMeta(v){
+    const split=spiralSectionSplit(v?.B||0);
+    return{
+      ...split,
+      stripWidth:154,
+      stripWidthStatus:"to_confirm",
+      spiralLockEdges:2,
+      spiralLockSeam:"one_continuous_helical_lock",
+      effectiveStripWidth:null,
+      effectiveStripWidthStatus:"open",
+      stripConsumption:null,
+      stripConsumptionStatus:"open"
+    };
   }
   function roundConnectorAllowance(value){
     return value==="flange"?10:value==="bandage"?7:0;
@@ -729,9 +804,14 @@
   function description(v,{includeComment=true}={}){
     const dims=specDimensionParts(v).join(" × ");
     const opening=openingDescription(v);
-    const conn=connectionDescription();
+    const conn=moduleKey==="spiral-duct"?spiralDescription(v):connectionDescription();
     const comment=includeComment?document.getElementById("comment")?.value.trim():"";
     return [dims+" "+t.mm,opening,conn,comment].filter(Boolean).join(" · ");
+  }
+  function spiralDescription(v){
+    const split=spiralSectionSplit(v.B);
+    const base="спирально-навивная труба";
+    return split.spiralSplitRequired?`${base}; разбиение: ${split.spiralSectionCount} секции до ${split.spiralSectionMaxLength}: ${split.spiralSections.join("+")}`:base;
   }
   function openingDescription(v){
     if(moduleKey!=="rectangular-duct")return "";
@@ -746,7 +826,7 @@
       parts.push(`I ${typeof v.I==="number"?v.I:optionText(v.I)}`);
       return parts;
     }
-    if(moduleKey==="round-duct"){
+    if(parameterMeta[moduleKey]){
       return cfg.fields.filter(f=>["number","select"].includes(f.type)).map(f=>{
         const meta=parameterMetaFor(moduleKey,f.key);
         return `${meta?.geometrySymbol||f.key} ${v[f.key]}`;
@@ -806,6 +886,7 @@
     if(editIndex!==null&&!canUpdateProject)return;
     if(editIndex===null&&!canAddProject)return;
     const v=currentValues();
+    if(result.error)return;
     const comment=document.getElementById("comment")?.value.trim()||"";
     const split=moduleKey==="round-duct"?standardSectionSplit(Number(v.B||0)):null;
     const roundDuctMeta=moduleKey==="round-duct"?{
@@ -839,6 +920,7 @@
       item.connectors={C1:v.conn1,C2:v.conn2,C1Label:roundDuctMeta.endConnectors.C1.label,C2Label:roundDuctMeta.endConnectors.C2.label,lock:result.lockName,lockSize:result.lockSize};
       Object.assign(item,roundDuctMeta);
     }
+    if(moduleKey==="spiral-duct")Object.assign(item,spiralDuctMeta(v));
     const message=editIndex!==null?{type:"calcSquare:updateProjectItem",index:editIndex,item}:{type:"calcSquare:addProjectItem",item};
     window.parent?.postMessage(message,parentTargetOrigin());
   }

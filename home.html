@@ -664,6 +664,7 @@ const UI_TEXT={
 };
 const PRODUCT_TEXT={
   "round-duct":{ru:"Воздуховод круглый",uk:"Повітропровід круглий",en:"Round duct"},
+  "spiral-duct":{ru:"Труба спирально-навивная",uk:"Труба спірально-навивна",en:"Spiral duct"},
   "round-elbow":{ru:"Отвод круглый",uk:"Відвід круглий",en:"Round elbow"},
   "round-transition":{ru:"Переход круглый",uk:"Перехід круглий",en:"Round transition"},
   "round-offset-transition":{ru:"Переход круглый со смещением",uk:"Перехід круглий зі зміщенням",en:"Offset round transition"},
@@ -705,6 +706,7 @@ const PRODUCT_TEXT={
 };
 const PRODUCT_ALIASES={
   "round-duct":["круглый воздуховод","круглий повітропровід","повітропровод круглий"],
+  "spiral-duct":["спирально-навивная труба","спірально-навивна труба","спиральный воздуховод","спіральний повітропровід"],
   "round-elbow":["колено круглое","коліно кругле"],
   "round-saddle":["седло","сідло"],
   "round-coupling":["муфта круглая","муфта кругла"],
@@ -725,6 +727,7 @@ const MATERIAL_TEXT={
 };
 const PRODUCT_IMAGES={
   "round-duct":"assets/catalog-images/round-duct-v2.png",
+  "spiral-duct":"assets/catalog-images/round-duct-spiro.png",
   "round-elbow":"assets/catalog-images/round-elbow-90.png",
   "round-transition":"assets/catalog-images/round-transition-v4.png",
   "round-offset-transition":"assets/catalog-images/round-offset-transition-v8.png",
@@ -2223,7 +2226,7 @@ function formatDimensions(item){
   return Object.entries(dimensions).filter(([,value])=>value!==""&&value!==null&&value!==undefined).map(([key,value])=>`${key} ${value}`).join(" × ");
 }
 function displayDimensions(item){
-  if(item.productType==="round-duct"&&item.dimensions&&typeof item.dimensions==="object"){
+  if(["round-duct","spiral-duct"].includes(item.productType)&&item.dimensions&&typeof item.dimensions==="object"){
     const diameter=item.dimensions.A;
     const length=item.dimensions.B;
     if(diameter!==""&&diameter!==null&&diameter!==undefined&&length!==""&&length!==null&&length!==undefined){

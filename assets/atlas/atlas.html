@@ -100,10 +100,17 @@ function openModule(key,extraParams={}){
     location.href=url;
   }
 }
+function openCatalogItem(key,variant={}){
+  const params=variant.params||{};
+  const targetKey=params.module||key;
+  const extraParams={...params};
+  delete extraParams.module;
+  openModule(targetKey,extraParams);
+}
 function renderVariants(item,title){
   if(!Array.isArray(item.variants)||!item.variants.length)return "";
   const variants=item.variants.map(variant=>`
-    <button class="variant" type="button" data-variant='${JSON.stringify(variant.params||{}).replaceAll("'","&#39;")}'>
+    <button class="variant" type="button" data-variant='${JSON.stringify({params:variant.params||{}}).replaceAll("'","&#39;")}'>
       <img src="${variant.image}" alt="">
       <span>${pick(variant.title)}</span>
       ${variant.source?`<small>${variant.source}</small>`:""}
@@ -246,9 +253,9 @@ function renderCatalog(){
     card.querySelector(".card-main").addEventListener("click",()=>openModule(item.key));
     card.querySelectorAll(".variant").forEach(button=>button.addEventListener("click",(event)=>{
       event.stopPropagation();
-      let extra={};
-      try{extra=JSON.parse(button.dataset.variant||"{}")}catch(e){extra={}}
-      openModule(item.key,extra);
+      let variant={};
+      try{variant=JSON.parse(button.dataset.variant||"{}")}catch(e){variant={}}
+      openCatalogItem(item.key,variant);
     }));
     const pin=card.querySelector(".pin-variants");
     if(pin)pin.addEventListener("click",(event)=>{
