@@ -86,10 +86,20 @@
     "rectangular-adapter":{category:"combined",title:{ru:"Адаптер прямоугольный",uk:"Адаптер прямокутний",en:"Rectangular adapter"},type:"formula",image:"../../modules/common/stub-preview.svg",fields:[num("A","A",400),num("B","B",300),num("L","L",300)],formula:"rectShell"},
     "grease-trap":{category:"combined",title:{ru:"Жироуловитель",uk:"Жировловлювач",en:"Grease trap"},type:"formula",image:"../../modules/common/stub-preview.svg",fields:[num("A","A",400),num("B","B",300),num("L","L",500)],formula:"stub"}
   };
+  // Display metadata is reserved for future USER / ADMIN / DEBUG parameter modes.
+  const parameterMeta={
+    "round-duct":{
+      A:{key:"A",camductKey:"A",uiIndex:1,uiLabel:"Диаметр",geometrySymbol:"ØD",formulaSymbol:"D",visualRole:"diameter",colorToken:"dimension-diameter"},
+      B:{key:"B",camductKey:"B",uiIndex:2,uiLabel:"Длина",geometrySymbol:"L",formulaSymbol:"L",visualRole:"length",colorToken:"dimension-length"}
+    }
+  };
+  function parameterMetaFor(moduleKey,key){return parameterMeta[moduleKey]?.[key]||null}
   function num(key,label,def){return{key,label,type:"number",default:def}}
   function select(key,label,options,def){return{key,label,type:"select",options,default:def}}
   function offset(key,label,options,def){return{key,label,type:"offset",options,default:def}}
   const cfg=modules[moduleKey]||modules["rectangular-transition"];
+  const hasParameterMeta=!!parameterMeta[moduleKey];
+  const canShowParameterMapping=role==="admin"&&hasParameterMeta;
   let state={};
   let result={area:0,mass:0,description:""};
   const canAddProject=["user","client","admin"].includes(role);
@@ -135,7 +145,7 @@
           </div>
           <section class="form-panel">
             <div class="panel-controls"><button class="ico" data-act="expand" title="${t.expand}" type="button">⊞</button><button class="ico" data-act="collapse" title="${t.collapse}" type="button">⊟</button><span class="seg"><button type="button" data-preset="simple">${t.simple}</button><button type="button" data-preset="full">${t.full}</button></span><button class="ico reset" data-act="reset" title="${t.reset}" type="button">↺</button></div>
-            <div class="panels" id="panels">${panel("sizes",t.sizes,unitRowHtml()+fieldsHtml(cfg.fields)+qtyHtml(),false)}${panel("options",t.options,optionsHtml(),true)}${panel("detail",t.detail,detailHtml(),false)}${panel("connectors",t.connectors,connectorsHtml(),true)}${panel("help",t.help,helpHtml(),true)}</div>
+            <div class="panels" id="panels">${panel("sizes",t.sizes+camductToggleHtml(),unitRowHtml()+fieldsHtml(cfg.fields)+qtyHtml(),false)}${panel("options",t.options,optionsHtml(),true)}${panel("detail",t.detail,detailHtml(),false)}${panel("connectors",t.connectors,connectorsHtml(),true)}${panel("help",t.help,helpHtml(),true)}</div>
             <div class="hidden-bar" id="hiddenBar" hidden></div>
           </section>
         </div>
@@ -147,8 +157,22 @@
   function categoryName(key){const map={round:{ru:"Круглые →",uk:"Круглі →",en:"Round →"},rectangular:{ru:"Прямоугольные →",uk:"Прямокутні →",en:"Rectangular →"},combined:{ru:"Комбинированные →",uk:"Комбіновані →",en:"Combined →"}};return pick(map[key])}
   function previewHtml(){return cfg.image?`<img src="${cfg.image}" alt="">`:`<svg class="preview-svg" viewBox="0 0 400 250"><rect x="80" y="70" width="240" height="110" fill="#e5e7eb" stroke="#555" stroke-width="2"/></svg>`}
   function panel(id,title,body,collapsed){return`<div class="panel ${collapsed?"collapsed":""}" id="panel-${id}"><div class="panel-head" draggable="true"><span class="drag">⠿</span><span class="caret">▼</span><span class="title">${title}</span><button class="hide" type="button">✕</button></div><div class="panel-body">${body}</div></div>`}
-  function fieldLabel(field){return typeof field.label==="object"?pick(field.label):field.label}
-  function fieldsHtml(fields){return fields.map(field=>`<div class="field"><label for="f-${field.key}">${fieldLabel(field)}</label>${field.type==="select"?selectHtml(field):field.type==="offset"?offsetHtml(field):numberHtml(field)}</div>`).join("")}
+  function camductToggleHtml(){return canShowParameterMapping?` <button class="camduct-toggle" id="camductToggle" type="button" aria-pressed="false">CAMduct</button>`:""}
+  function fieldLabel(field){
+    const meta=parameterMetaFor(moduleKey,field.key);
+    if(!meta)return typeof field.label==="object"?pick(field.label):field.label;
+    return `${meta.uiIndex}. ${meta.uiLabel} ${meta.geometrySymbol}`;
+  }
+  function fieldsHtml(fields){return fields.map(field=>`<div class="field" data-field-key="${field.key}"><label for="f-${field.key}" data-base-label="${fieldLabel(field)}"><span class="field-label-main">${fieldLabel(field)}</span></label>${field.type==="select"?selectHtml(field):field.type==="offset"?offsetHtml(field):numberHtml(field)}</div>`).join("")}
+  function setCamductLabels(active){
+    document.querySelectorAll("[data-field-key]").forEach(row=>{
+      const meta=parameterMetaFor(moduleKey,row.dataset.fieldKey);
+      const label=row.querySelector("label");
+      const main=row.querySelector(".field-label-main");
+      if(!meta||!label||!main)return;
+      main.textContent=active?`${meta.uiIndex}. ${meta.camductKey} — ${meta.uiLabel} ${meta.geometrySymbol}`:label.dataset.baseLabel;
+    });
+  }
   function sizeComboHtml(inputAttrs){return`<div class="size-combo"><input ${inputAttrs} type="number" inputmode="decimal" step="1" min="0"><button class="size-toggle" type="button" aria-label="${t.sizes}">▼</button><div class="size-menu" hidden>${standardSizes.map(v=>`<button type="button" data-size-value="${v}">${v}</button>`).join("")}</div></div>`}
   function numberHtml(field){return sizeComboHtml(`id="f-${field.key}" data-key="${field.key}" value="${field.default}"`)}
   function selectHtml(field){return`<select id="f-${field.key}" data-key="${field.key}">${field.options.map(v=>`<option value="${v}" ${v===field.default?"selected":""}>${optionText(v)}</option>`).join("")}</select>`}
@@ -214,6 +238,15 @@
   function bind(){
     document.getElementById("toAtlas").addEventListener("click",()=>sendOpen(moduleUrl("")));
     document.getElementById("toCategory").addEventListener("click",()=>sendOpen(moduleUrl(cfg.category)));
+    const camductToggle=document.getElementById("camductToggle");
+    if(camductToggle)camductToggle.addEventListener("click",event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      if(role!=="admin")return;
+      const active=camductToggle.getAttribute("aria-pressed")!=="true";
+      camductToggle.setAttribute("aria-pressed",String(active));
+      setCamductLabels(active);
+    });
     document.querySelectorAll("[data-key]").forEach(el=>{
       if(params.has(el.dataset.key))el.value=params.get(el.dataset.key);
       if(moduleKey==="round-duct"&&el.dataset.key==="A"&&params.has("D"))el.value=params.get("D");
