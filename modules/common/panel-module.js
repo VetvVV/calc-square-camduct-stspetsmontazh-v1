@@ -25,6 +25,9 @@
   Object.assign(i18n.ru,{optionsReserved:"Здесь будут настройки отверстий и дополнительных параметров изделия.",formulaHelpPending:"Инженерная расшифровка появится после расчёта."});
   Object.assign(i18n.uk,{optionsReserved:"Тут будуть налаштування отворів і додаткових параметрів виробу.",formulaHelpPending:"Інженерна розшифровка з'явиться після розрахунку."});
   Object.assign(i18n.en,{optionsReserved:"Opening and additional product options will appear here.",formulaHelpPending:"Engineering breakdown will appear after calculation."});
+  Object.assign(i18n.ru,{none:"Нет",flange:"Фланец",bandage:"Бандаж",roundLongWarn:"Длина изделия превышает допустимую длину одной трубы. Требуется технологическое разбиение на участки. Разбиение подбирается с учётом расположения врезок и типа соединения: ниппель / муфта / нахлёст / зиг-трактор.",welding:"Сварка",russianLock:"Русский замок"});
+  Object.assign(i18n.uk,{none:"Немає",flange:"Фланець",bandage:"Бандаж",roundLongWarn:"Довжина виробу перевищує допустиму довжину однієї труби. Потрібне технологічне розбиття на ділянки. Розбиття підбирається з урахуванням розташування врізок і типу з'єднання: ніпель / муфта / нахлест «трактор».",welding:"Зварювання",russianLock:"Руський замок"});
+  Object.assign(i18n.en,{none:"None",flange:"Flange",bandage:"Bandage",roundLongWarn:"The product length exceeds the allowed length of one duct. Technological splitting into sections is required. Splitting is selected based on insets and the connection type: nipple / coupling / overlap.",welding:"Welding",russianLock:"Russian lock"});
   Object.assign(i18n.ru,{openings:"Отверстия",openingType:"Тип отверстия",openingNone:"Без отверстий",openingRound:"Круглое",openingRect:"Прямоугольное",openingD:"Диаметр D",openingA:"Размер A",openingB:"Размер B",openingQty:"Количество отверстий",openingArea:"Площадь отверстий",addOpening:"Добавить отверстие",removeOpening:"Удалить отверстие",openingRow:"Отверстие"});
   Object.assign(i18n.uk,{openings:"Отвори",openingType:"Тип отвору",openingNone:"Без отворів",openingRound:"Круглий",openingRect:"Прямокутний",openingD:"Діаметр D",openingA:"Розмір A",openingB:"Розмір B",openingQty:"Кількість отворів",openingArea:"Площа отворів",addOpening:"Додати отвір",removeOpening:"Видалити отвір",openingRow:"Отвір"});
   Object.assign(i18n.en,{openings:"Openings",openingType:"Opening type",openingNone:"No openings",openingRound:"Round",openingRect:"Rectangular",openingD:"Diameter D",openingA:"Size A",openingB:"Size B",openingQty:"Opening quantity",openingArea:"Opening area",addOpening:"Add opening",removeOpening:"Remove opening",openingRow:"Opening"});
@@ -43,7 +46,7 @@
     {key:"aluminum",label:t.aluminum,density:2700,thickness:[0.5,0.7,0.8,1.0]}
   ];
   const modules={
-    "round-duct":{category:"round",title:{ru:"Воздуховод круглый",uk:"Повітропровід круглий",en:"Round duct"},type:"formula",image:"../../assets/products/round_duct.svg",fields:[num("D","D",250),num("L","L",1000)],connections:["D"],formula:"roundDuct"},
+    "round-duct":{category:"round",title:{ru:"Воздуховод круглый",uk:"Повітропровід круглий",en:"Round duct"},type:"formula",image:"../../assets/products/round_duct.svg",fields:[num("A","A — Диаметр",250),num("B","B — Длина",1000)],connections:["C1","C2"],formula:"roundDuct"},
     "round-elbow":{category:"round",title:{ru:"Отвод круглый",uk:"Відвід круглий",en:"Round elbow"},type:"formula",image:"../../assets/products/round_elbow.svg",fields:[num("D","D",250),select("Angle",{ru:"Угол",uk:"Кут",en:"Angle"},[15,30,45,60,90],90),num("R","R",250)],connections:["D"],formula:"roundElbow"},
     "round-transition":{category:"round",title:{ru:"Переход круглый",uk:"Перехід круглий",en:"Round transition"},type:"formula",image:"../../assets/products/round_transition.svg",fields:[num("D1","D1",315),num("D2","D2",250),num("L","L",300)],connections:["D1","D2"],formula:"roundTransition"},
     "round-offset-transition":{category:"round",title:{ru:"Переход круглый со смещением",uk:"Перехід круглий зі зміщенням",en:"Offset round transition"},type:"formula",image:"../../assets/products/round_offset.svg",fields:[num("D1","D1",315),num("D2","D2",250),num("L","L",300),num("Offset","Offset",100)],connections:["D1","D2"],formula:"roundTransition"},
@@ -123,6 +126,7 @@
               <div class="result-row">${t.area}<b id="area">0.000 м²</b></div>
               <div class="result-row">${t.mass}<b id="mass">0.00 ${t.kg}</b></div>
               <div class="result-row">${t.desc}<b id="descLine">-</b><small id="statusLine"></small></div>
+              <div class="guest-limit-note" id="resultWarn" style="display:none"></div>
               ${role==="guest"?`<div class="guest-limit-note" id="guestLimitNote">${guestLimitNote()}</div>`:""}
               ${canViewFormulas?`<details class="calc-details" open><summary>${t.calc}</summary><p id="calcNote"></p></details>`:""}
               ${role!=="guest"?`<div class="comment-label">${t.comment}</div><textarea id="comment" placeholder="${t.commentPh}"></textarea>`:""}
@@ -185,6 +189,20 @@
              `<div class="field"><label>${t.lockSize}</label><input id="lockSizeVal" readonly style="background:#ece4cf;color:#888;font-style:italic"></div>`+
              `<p class="help-text" id="sheetWarn" style="color:#a85b08;font-weight:600;display:none"></p>`;
     }
+    if(moduleKey==="round-duct"){
+      const opts=[["none",t.none],["flange",t.flange],["bandage",t.bandage]].map(([value,label])=>`<option value="${value}">${label}</option>`).join("");
+      const jointOpts=[
+        ["not_selected","Не выбран"],
+        ["nipple","Ниппель"],
+        ["coupling","Муфта"],
+        ["tractor","Нахлёст / зиг-трактор"]
+      ].map(([value,label])=>`<option value="${value}">${label}</option>`).join("");
+      return`<div class="field"><label for="conn1">C1 — Торцевое соединение 1</label><select id="conn1">${opts}</select></div>`+
+             `<div class="field"><label for="conn2">C2 — Торцевое соединение 2</label><select id="conn2">${opts}</select></div>`+
+             `<div class="field" id="internalJointField" hidden style="display:none"><label for="internalJointType">Тип межсекционного стыка</label><select id="internalJointType">${jointOpts}</select></div>`+
+             `<p class="help-text">C1/C2 — крайние торцевые соединения всего изделия. Они не являются соединениями между секциями. Если длина больше 2000 мм, показывается информационное технологическое разбиение на секции. Внутренние стыки между секциями пока не создаются как J1/J2/J3 и не рассчитываются.</p>`+
+             `<p class="help-text" id="sheetWarn" style="color:#a85b08;font-weight:600;display:none"></p>`;
+    }
     if(!cfg.connections?.length)return`<p class="tab-empty">${t.connectionHelp}</p>`;
     return`<div class="connection-grid">${cfg.connections.map(key=>`<div class="connection-row" data-conn="${key}"><span>${key}</span><label><input type="checkbox" data-conn-kind="minus" checked>${t.minus}</label><label><input type="checkbox" data-conn-kind="nom">${t.nom}</label><label><input type="checkbox" data-conn-kind="plus">${t.plus}</label></div>`).join("")}</div>`;
   }
@@ -198,6 +216,8 @@
     document.getElementById("toCategory").addEventListener("click",()=>sendOpen(moduleUrl(cfg.category)));
     document.querySelectorAll("[data-key]").forEach(el=>{
       if(params.has(el.dataset.key))el.value=params.get(el.dataset.key);
+      if(moduleKey==="round-duct"&&el.dataset.key==="A"&&params.has("D"))el.value=params.get("D");
+      if(moduleKey==="round-duct"&&el.dataset.key==="B"&&params.has("L"))el.value=params.get("L");
       if(el.dataset.key==="H"&&el.value==="value"&&params.has("Hv"))el.value=params.get("Hv");
       if(el.dataset.key==="I"&&el.value==="value"&&params.has("Iv"))el.value=params.get("Iv");
       if(el.type==="text")el.value=offsetDisplay(el.value);
@@ -215,6 +235,7 @@
       }
       el.addEventListener("input",()=>{state[el.dataset.key]=el.value;update()});
       el.addEventListener("change",()=>{state[el.dataset.key]=el.value;update()});
+      if(el.tagName==="INPUT")el.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();state[el.dataset.key]=el.value;const menu=el.closest(".size-combo")?.querySelector(".size-menu");if(menu)menu.hidden=true;update();el.blur();}});
     });
     document.querySelectorAll(".offset-combo").forEach(combo=>{
       const input=combo.querySelector("[data-key]");
@@ -253,8 +274,8 @@
     material.addEventListener("change",()=>{renderThicknessOptions();update()});
     renderThicknessOptions();
     const thickness=document.getElementById("thickness");
-    if(params.has("thickness")&&[...thickness.options].some(option=>option.value===params.get("thickness")))thickness.value=params.get("thickness");
-    document.getElementById("thickness").addEventListener("change",update);
+    if(params.has("thickness")&&[...thickness.options].some(option=>option.value===params.get("thickness"))){thickness.value=params.get("thickness");thickness.dataset.manual="1";}
+    document.getElementById("thickness").addEventListener("change",event=>{event.target.dataset.manual="1";update();});
     document.querySelectorAll("[data-conn-kind]").forEach(input=>input.addEventListener("change",event=>{
       const row=event.target.closest(".connection-row");
       if(event.target.dataset.connKind==="nom"&&event.target.checked){row.querySelectorAll("[data-conn-kind]").forEach(i=>{if(i!==event.target)i.checked=false})}
@@ -270,8 +291,10 @@
     document.getElementById("addBtn")?.addEventListener("click",addToProject);
     const unitsSel=document.getElementById("units");if(unitsSel)unitsSel.addEventListener("change",()=>setUnit(unitsSel.value));
     const c1=document.getElementById("conn1"),c2=document.getElementById("conn2");
-    if(c1)c1.addEventListener("change",()=>{setRail("conn1","F");update();});
-    if(c2)c2.addEventListener("change",()=>{setRail("conn2","G");update();});
+    if(c1)c1.addEventListener("change",()=>{if(moduleKey!=="round-duct")setRail("conn1","F");update();});
+    if(c2)c2.addEventListener("change",()=>{if(moduleKey!=="round-duct")setRail("conn2","G");update();});
+    const internalJointType=document.getElementById("internalJointType");
+    if(internalJointType)internalJointType.addEventListener("change",update);
     initOpenings();
   }
   function bindSizeCombos(root){
@@ -371,8 +394,23 @@
     const prev=tnode.value;
     tnode.innerHTML=material.thickness.map(v=>`<option value="${v}">${v}</option>`).join("");
     if([...tnode.options].some(o=>o.value===prev))tnode.value=prev;
+    syncRoundAutoThickness();
+  }
+  function roundAutoThickness(diameter){
+    if(diameter>=1000)return 0.9;
+    if(diameter>=500)return 0.7;
+    return 0.5;
+  }
+  function syncRoundAutoThickness(){
+    if(moduleKey!=="round-duct")return;
+    const tnode=document.getElementById("thickness");
+    const dia=Number(document.getElementById("f-A")?.value||0);
+    if(!tnode||tnode.dataset.manual==="1"||!dia)return;
+    const wanted=String(roundAutoThickness(dia));
+    if([...tnode.options].some(o=>o.value===wanted))tnode.value=wanted;
   }
   function currentValues(){
+    syncRoundAutoThickness();
     const values={};
     document.querySelectorAll("[data-key]").forEach(el=>values[el.dataset.key]=el.type==="number"?Number(el.value||0):el.type==="text"?offsetCode(el.value):el.value);
     if(moduleKey==="rectangular-duct")values.openings=getOpenings();
@@ -381,6 +419,9 @@
     values.quantity=Math.max(1,Math.round(Number(values.Q||1)));
     values.conn1=document.getElementById("conn1")?.value||"";
     values.conn2=document.getElementById("conn2")?.value||"";
+    if(moduleKey==="round-duct"){
+      values.internalJointType=Number(values.B||0)>2000?(document.getElementById("internalJointType")?.value||"not_selected"):"not_required";
+    }
     return values;
   }
   function update(){
@@ -396,12 +437,22 @@
     document.getElementById("mass").textContent=nf(mDisp,2)+mU;
     document.getElementById("descLine").textContent=result.description;
     document.getElementById("statusLine").textContent=result.status||"";
+    const resultWarn=document.getElementById("resultWarn");
+    if(resultWarn){if(result.sheetWarn){resultWarn.style.display="block";resultWarn.textContent="⚠ "+result.sheetWarn;}else resultWarn.style.display="none";}
     const guestLimitNode=document.getElementById("guestLimitNote");
     if(guestLimitNode)guestLimitNode.textContent=guestLimitNote();
     const calcNote=document.getElementById("calcNote");
     if(calcNote)calcNote.textContent=result.note||"";
     const formulaHelp=document.getElementById("formulaHelp");
     if(formulaHelp)formulaHelp.textContent=result.help||result.note||"";
+    if(moduleKey==="round-duct"){
+      const jointField=document.getElementById("internalJointField");
+      if(jointField){
+        const showJointField=Number(values.B||0)>2000;
+        jointField.hidden=!showJointField;
+        jointField.style.display=showJointField?"":"none";
+      }
+    }
     document.getElementById("modeBadge").textContent=canViewFormulas?(result.badge||document.getElementById("modeBadge").textContent):(cfg.type==="table"?result.badge:t.calc);
     if(cfg.category==="rectangular"){
       const lv=document.getElementById("lockVal");
@@ -411,18 +462,23 @@
       const sw=document.getElementById("sheetWarn");
       if(sw){if(result.sheetWarn){sw.style.display="block";sw.textContent="⚠ "+result.sheetWarn;}else sw.style.display="none";}
     }
+    if(cfg.category!=="rectangular"){
+      const sw=document.getElementById("sheetWarn");
+      if(sw){if(result.sheetWarn){sw.style.display="block";sw.textContent="⚠ "+result.sheetWarn;}else sw.style.display="none";}
+    }
     refreshOpeningRows();
     const openingSummary=document.getElementById("openingSummary");
     if(openingSummary)openingSummary.textContent=result.openingArea?`${t.openingArea}: ${nf(result.openingArea)} м²`:"";
     const box=document.getElementById("previewBox");
-    const pv=window.CalcSquarePreview?window.CalcSquarePreview(moduleKey,values,lang):null;
+    const previewValues=moduleKey==="round-duct"?{...values,D:values.A,L:values.B}:values;
+    const pv=window.CalcSquarePreview?window.CalcSquarePreview(moduleKey,previewValues,lang):null;
     if(pv&&box){box.innerHTML=pv;}else{updateLabels(values);}
   }
   function calculate(v){
     const q=v.quantity||1;
     let area=0,note="",help="",sheetWarn="",lockName="",lockSize="",openingArea=0;
     switch(cfg.formula){
-      case"roundDuct":area=Math.PI*v.D*v.L*q/1e6;note=`S = π × D × L × Q`;break;
+      case"roundDuct":{const r=roundDuct(v);area=r.area;note=r.note;help=r.help;sheetWarn=r.sheetWarn;lockName=r.lockName;lockSize=r.lockSize;break}
       case"roundElbow":{const arc=Math.PI*v.R*v.Angle/180;area=Math.PI*v.D*arc*q/1e6;note=`S = π × D × arc × Q`;break}
       case"roundTransition":area=Math.PI*((v.D1+v.D2)/2)*Math.sqrt((v.L||0)**2+(v.Offset||0)**2)*q/1e6;note=`S = π × ${t.avgDiameter} × ${t.inclinedLength} × Q`;break;
       case"roundTee":area=(Math.PI*v.D*v.L+Math.PI*v.D1*v.H)*q/1e6;note=`S = ${t.main} + ${t.branch}`;break;
@@ -441,6 +497,99 @@
       default:area=0;note=t.notReady;
     }
     return{area,description:"",note,help,sheetWarn,lockName,lockSize,openingArea,badge:cfg.type==="table"?tableBadge(v):t.formula,status:cfg.type==="table"?tableStatus(v):""};
+  }
+  function roundConnectorAllowance(value){
+    return value==="flange"?10:value==="bandage"?7:0;
+  }
+  function roundConnectorLabel(value){
+    return value==="flange"?t.flange:value==="bandage"?t.bandage:t.none;
+  }
+  function roundConnectorInfo(value){
+    const code=["flange","bandage"].includes(value)?value:"none";
+    return{code,label:roundConnectorLabel(code),allowance:roundConnectorAllowance(code)};
+  }
+  function internalJointTypeInfo(value){
+    const labels={not_selected:"Не выбран",nipple:"Ниппель",coupling:"Муфта",tractor:"Нахлёст / зиг-трактор",not_required:"Не требуется"};
+    const code=Object.prototype.hasOwnProperty.call(labels,value)?value:"not_selected";
+    return{code,label:labels[code]};
+  }
+  function standardSectionSplit(length){
+    const standardSectionLength=1250;
+    if(length<=2000)return{standardSectionLength,standardSections:1,standardSectionLengths:[length]};
+    const standardSections=Math.ceil(length/standardSectionLength);
+    const standardSectionLengths=[];
+    for(let rest=length;rest>0;rest-=standardSectionLength){
+      standardSectionLengths.push(Math.min(standardSectionLength,rest));
+    }
+    return{standardSectionLength,standardSections,standardSectionLengths};
+  }
+  function roundDuct(v){
+    const A=v.A||0,B=v.B||0,Q=v.quantity||1,T=v.thickness||roundAutoThickness(A);
+    const c1=roundConnectorAllowance(v.conn1),c2=roundConnectorAllowance(v.conn2);
+    const Bcalc=B+c1+c2;
+    const welded=B<=449;
+    const add=welded?8:(T>=0.9?28:25);
+    const area=(Math.PI*A+add)*Bcalc*Q/1e6;
+    const rounded=Number(area.toFixed(3));
+    const lockName=welded?t.welding:t.russianLock;
+    const lockSize=welded?"8":(T>=0.9?"14/14":"12.5/12.5");
+    const sheetWarn=B>2000?t.roundLongWarn:"";
+    const split=standardSectionSplit(B);
+    const note=`CAMduct R-001: A=${nf(A,0)} ${t.mm}, B=${nf(B,0)} ${t.mm}, C1=${roundConnectorLabel(v.conn1)} +${c1} ${t.mm}, C2=${roundConnectorLabel(v.conn2)} +${c2} ${t.mm}; Bcalc=${nf(Bcalc,0)} ${t.mm}; ${lockName} S1 ${lockSize}; S = (π × A + ${add}) × Bcalc × Q / 1 000 000 = ${nf(area)} м²`;
+    const help=[
+      "R-001 — труба прямошовная / воздуховод круглый",
+      "Статус формулы: подтверждена для базового расчёта площади.",
+      "",
+      "КАРТА CAMduct → расчёт",
+      "CAMduct A = диаметр → A",
+      "CAMduct B = длина → B",
+      "CAMduct C = левое удлинение → не используется",
+      "CAMduct D = правое удлинение → не используется",
+      "C1 = соединение торца 1",
+      "C2 = соединение торца 2",
+      "Q = количество",
+      "",
+      "ВХОДНЫЕ ПАРАМЕТРЫ",
+      `A — диаметр: ${nf(A,0)} ${t.mm}`,
+      `B — базовая длина: ${nf(B,0)} ${t.mm}`,
+      `C1 — ${roundConnectorLabel(v.conn1)}: +${c1} ${t.mm}`,
+      `C2 — ${roundConnectorLabel(v.conn2)}: +${c2} ${t.mm}`,
+      `Q — количество: ${Q}`,
+      `t — толщина: ${nf(T)} ${t.mm}`,
+      "",
+      "ПРАВИЛА, КОТОРЫЕ СРАБОТАЛИ",
+      `Bcalc = B + C1 + C2 = ${nf(Bcalc,0)} ${t.mm}`,
+      welded?`B ≤ 449, выбран режим: ${lockName}, добавка ${add} ${t.mm}`:`B ≥ 450, выбран режим: ${lockName} S1 ${lockSize}, добавка ${add} ${t.mm}`,
+      T>=0.9?"Толщина 0.9 мм: русский замок 14/14 = 28 мм":"Толщина 0.5/0.7 мм: русский замок 12.5/12.5 = 25 мм",
+      "",
+      "ФОРМУЛА",
+      "S = (π × A + добавка S1) × Bcalc × Q / 1 000 000",
+      `S = (π × ${nf(A,0)} + ${add}) × ${nf(Bcalc,0)} × ${Q} / 1 000 000`,
+      `Итог до округления: ${area.toFixed(6)} м²`,
+      `Итог после округления: ${rounded.toFixed(3)} м²`,
+      "",
+      "ТЕХНОЛОГИЧЕСКИЕ ПРЕДУПРЕЖДЕНИЯ",
+      sheetWarn||"Нет.",
+      "",
+      "ДЛИННЫЕ ТРУБЫ И РАЗБИЕНИЕ",
+      "C1/C2 = крайние торцы изделия",
+      "J1/J2 = внутренние межсекционные стыки",
+      "J-стыки сейчас не рассчитываются автоматически",
+      `Стандарт секции = ${split.standardSectionLength} мм`,
+      B>2000?`Стандартная схема = ${split.standardSectionLengths.join("+")}`:"Стандартная схема = не требуется",
+      "2000 мм — максимальная допустимая длина ручной секции, не стандарт",
+      "C1 и C2 — только крайние торцевые соединения всего изделия.",
+      "C1/C2 не умножаются на количество секций и не используются как межсекционные стыки.",
+      "При будущем разбиении должны появиться отдельные внутренние стыки: J1, J2, J3...",
+      "Пример: C1 -- section 1 -- J1 -- section 2 -- J2 -- section 3 -- C2.",
+      "Типы J-стыков: ниппель, муфта, нахлёст / трактор.",
+      "Нахлёст / зиг-трактор: гофрированный участок одной секции входит в другую; глубина захода пока не рассчитывается.",
+      "На текущем этапе секции и J-стыки не рассчитываются.",
+      "",
+      "ОТКРЫТЫЕ ВОПРОСЫ",
+      "Автоматическое разбиение длинных труб на участки пока не реализовано."
+    ].join("\n");
+    return{area,note,help,sheetWarn,lockName,lockSize};
   }
   function normalizeOpenings(v){
     const source=Array.isArray(v.openings)?v.openings:(v.HoleType&&v.HoleType!=="none"?[{type:v.HoleType,a:v.HoleA,b:v.HoleB,q:v.HoleQ}]:[]);
@@ -588,6 +737,16 @@
     return dimensions;
   }
   function connectionDescription(){
+    if(moduleKey==="round-duct"){
+      const c1=document.getElementById("conn1")?.value||"none";
+      const c2=document.getElementById("conn2")?.value||"none";
+      const base=`C1 ${roundConnectorLabel(c1)}, C2 ${roundConnectorLabel(c2)}`;
+      const B=Number(document.getElementById("f-B")?.value||0);
+      if(B<=2000)return base;
+      const split=standardSectionSplit(B);
+      const joint=internalJointTypeInfo(document.getElementById("internalJointType")?.value||"not_selected");
+      return `${base}; разбиение: ${split.standardSections} секции по стандарту ${split.standardSectionLength}: ${split.standardSectionLengths.join("+")}; стык секций: ${joint.label}`;
+    }
     const rows=[...document.querySelectorAll(".connection-row")];
     return rows.map(row=>{
       const name=row.dataset.conn;
@@ -609,6 +768,19 @@
     if(editIndex===null&&!canAddProject)return;
     const v=currentValues();
     const comment=document.getElementById("comment")?.value.trim()||"";
+    const split=moduleKey==="round-duct"?standardSectionSplit(Number(v.B||0)):null;
+    const roundDuctMeta=moduleKey==="round-duct"?{
+      endConnectors:{C1:roundConnectorInfo(v.conn1),C2:roundConnectorInfo(v.conn2)},
+      internalJointType:internalJointTypeInfo(Number(v.B||0)>2000?v.internalJointType:"not_required"),
+      internalJoints:[],
+      splitCalculated:false,
+      splitMode:Number(v.B||0)>2000?"standard_1250":"not_required",
+      standardSectionLength:split.standardSectionLength,
+      splitSectionsCount:split.standardSections,
+      splitSectionLengths:split.standardSectionLengths,
+      splitMinimumSections:split.standardSections,
+      longSplitStatus:(Number(v.B||0)>2000)?"not_calculated":"not_required"
+    }:null;
     const item={
       name:pick(cfg.title),
       productType:moduleKey,
@@ -624,6 +796,10 @@
       mass:result.mass,
       connectors:cfg.category==="rectangular"?{conn1:v.conn1,conn2:v.conn2,lock:(v.thickness>=0.9?"5/28":"6/30")}:undefined
     };
+    if(roundDuctMeta){
+      item.connectors={C1:v.conn1,C2:v.conn2,C1Label:roundDuctMeta.endConnectors.C1.label,C2Label:roundDuctMeta.endConnectors.C2.label,lock:result.lockName,lockSize:result.lockSize};
+      Object.assign(item,roundDuctMeta);
+    }
     const message=editIndex!==null?{type:"calcSquare:updateProjectItem",index:editIndex,item}:{type:"calcSquare:addProjectItem",item};
     window.parent?.postMessage(message,parentTargetOrigin());
   }
