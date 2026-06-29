@@ -132,7 +132,13 @@ if ($Errors.Count -eq 0) {
     if ($FontCssText -match 'https?://') {
         Add-Error 'assets/fonts/exo2.css contains an external font URL.'
     }
-    $FontUrls = [regex]::Matches($FontCssText, 'url\("([^"]+)"\)') | ForEach-Object { $_.Groups[1].Value }
+    $FontUrls = New-Object System.Collections.Generic.List[string]
+    $FontUrlPattern = [regex]'url\("([^"]+)"\)'
+    foreach ($FontCssLine in [System.IO.File]::ReadLines($FontCssPath)) {
+        foreach ($Match in $FontUrlPattern.Matches($FontCssLine)) {
+            [void]$FontUrls.Add($Match.Groups[1].Value)
+        }
+    }
     if (-not $FontUrls -or $FontUrls.Count -eq 0) {
         Add-Error 'assets/fonts/exo2.css does not reference local font files.'
     }

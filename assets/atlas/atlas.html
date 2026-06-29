@@ -24,9 +24,9 @@ summary::-webkit-details-marker{display:none}
 .card:hover .card-main strong,.card-main:focus-visible strong{color:#df7a12}
 .card-main img{width:100%;height:86px;object-fit:contain;filter:drop-shadow(0 2px 1px rgba(0,0,0,.08))}
 .card-main strong{font-size:14px;line-height:1.15;font-weight:700;color:#3f4652}
-.variants{position:absolute;z-index:20;left:50%;top:72px;width:min(420px,calc(100vw - 32px));padding:14px;border:1px solid rgba(214,205,183,.95);border-radius:14px;background:rgba(255,255,255,.98);box-shadow:0 18px 44px rgba(0,0,0,.2);opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,10px);transition:opacity .14s ease,transform .14s ease,visibility 0s linear .14s}
-.card:hover .variants,.card:focus-within .variants,.card.is-pinned .variants{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0);transition-delay:.5s,.5s,0s}
-.card.is-pinned .variants{transition-delay:0s}
+.variants{position:fixed;z-index:10000;left:var(--variants-left,12px);top:var(--variants-top,12px);width:min(420px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;padding:14px;border:1px solid rgba(214,205,183,.95);border-radius:14px;background:rgba(255,255,255,.98);box-shadow:0 18px 44px rgba(0,0,0,.2);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(10px);transition:opacity .14s ease,transform .14s ease,visibility 0s linear .14s}
+.card.is-open .variants,.card.is-pinned .variants{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0);transition-delay:0s,0s,0s}
+.card.is-pinned .variants{transition-delay:0s;border-color:#df7a12}
 .variants-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
 .variants-title{min-width:0;color:#3f4652;font-size:13px;font-weight:800;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pin-variants{width:32px;height:32px;border:1px solid #ead4b5;border-radius:9px;background:#fff8ec;color:#9a5800;font-size:16px;line-height:1;cursor:pointer}
@@ -39,7 +39,7 @@ summary::-webkit-details-marker{display:none}
 .variant small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#7b838e;font-size:11px;font-weight:700}
 .load-error{margin:28px auto;color:#9a5800;font-weight:800;text-align:center}
 @container (max-width: 560px){.grid{gap:20px 18px;padding-left:24px;padding-right:24px}}
-@container (max-width: 390px){.grid{gap:18px 14px;padding:14px 18px 22px}.card-main{grid-template-rows:96px auto}.card-main img{height:96px}.variants{top:82px}.variants-grid{grid-template-columns:repeat(auto-fit,minmax(112px,1fr))}.variant img{height:104px}}
+@container (max-width: 390px){.grid{gap:18px 14px;padding:14px 18px 22px}.card-main{grid-template-rows:96px auto}.card-main img{height:96px}.variants-grid{grid-template-columns:repeat(auto-fit,minmax(112px,1fr))}.variant img{height:104px}}
 @container (max-width: 310px){.grid{gap:22px;padding:16px 28px 24px}.card-main{grid-template-rows:132px auto}.card-main img{height:132px}.card-main strong{font-size:15px}.variants{top:112px}}
 </style>
 </head>
@@ -71,6 +71,7 @@ document.getElementById("intro").textContent=(text[lang]||text.ru).intro;
 document.querySelector(".version").textContent=params.get("label")||params.get("v")||"dev";
 document.title="Calc Square · "+(text[lang]||text.ru).title;
 const cats=document.getElementById("cats");
+const pinnedPreviewKey="calcSquareAtlasPinnedPreview";
 function pick(value){return value?.[lang]||value?.ru||value?.en||""}
 function clamp(value,min,max){return Math.max(min,Math.min(max,value))}
 function updateAtlasColumns(){
@@ -84,6 +85,7 @@ function updateAtlasColumns(){
 const resizeObserver=new ResizeObserver(updateAtlasColumns);
 function parentTargetOrigin(){return location.protocol==="file:"||location.origin==="null"?"*":location.origin}
 function openModule(key,extraParams={}){
+  clearPendingHover();
   const next=new URL("../../modules/common/calculator.html",location.href);
   next.searchParams.set("module",key);
   next.searchParams.set("lang",lang);
@@ -116,6 +118,106 @@ function renderVariants(item,title){
     <div class="variants-grid">${variants}</div>
   </div>`;
 }
+const closeTimers=new WeakMap();
+let hoverTimer=0,hoverCard=null;
+function clearPendingHover(card=null){
+  if(card&&hoverCard!==card)return;
+  if(hoverTimer){
+    clearTimeout(hoverTimer);
+    hoverTimer=0;
+  }
+  hoverCard=null;
+}
+function scheduleVariantOpen(card){
+  clearPendingHover();
+  hoverCard=card;
+  hoverTimer=setTimeout(()=>{
+    if(hoverCard===card)openVariantMenu(card);
+    clearPendingHover(card);
+  },700);
+}
+function cancelVariantClose(card){
+  const timer=closeTimers.get(card);
+  if(timer){
+    clearTimeout(timer);
+    closeTimers.delete(card);
+  }
+}
+function openVariantMenu(card){
+  if(!card.querySelector(".variants"))return;
+  clearPendingHover(card);
+  cancelVariantClose(card);
+  document.querySelectorAll(".card.is-open:not(.is-pinned)").forEach(openCard=>{
+    if(openCard!==card){
+      cancelVariantClose(openCard);
+      openCard.classList.remove("is-open");
+    }
+  });
+  card.classList.add("is-open");
+  positionVariantMenu(card);
+}
+function scheduleVariantClose(card){
+  if(card.classList.contains("is-pinned"))return;
+  clearPendingHover(card);
+  cancelVariantClose(card);
+  closeTimers.set(card,setTimeout(()=>{
+    card.classList.remove("is-open");
+    closeTimers.delete(card);
+  },1000));
+}
+function setVariantPinned(card,pinned){
+  const pin=card.querySelector(".pin-variants");
+  const labels=text[lang]||text.ru;
+  cancelVariantClose(card);
+  clearPendingHover(card);
+  card.classList.toggle("is-pinned",pinned);
+  card.classList.toggle("is-open",pinned);
+  if(pinned)sessionStorage.setItem(pinnedPreviewKey,card.dataset.key||"");
+  else if(sessionStorage.getItem(pinnedPreviewKey)===(card.dataset.key||""))sessionStorage.removeItem(pinnedPreviewKey);
+  if(pinned)positionVariantMenu(card);
+  if(pin){
+    pin.setAttribute("aria-pressed",String(pinned));
+    pin.title=pinned?labels.unpin:labels.pin;
+    pin.setAttribute("aria-label",pin.title);
+  }
+}
+function positionVariantMenu(card){
+  const menu=card.querySelector(".variants");
+  if(!menu)return;
+  const gap=12;
+  const cardRect=card.getBoundingClientRect();
+  const viewportWidth=document.documentElement.clientWidth||window.innerWidth;
+  const viewportHeight=document.documentElement.clientHeight||window.innerHeight;
+  menu.style.maxHeight="";
+  menu.style.overflowY="";
+  const width=Math.min(420,Math.max(0,viewportWidth-gap*2));
+  menu.style.width=width+"px";
+  let left=cardRect.left+cardRect.width/2-width/2;
+  left=Math.min(Math.max(gap,left),viewportWidth-gap-width);
+  const height=menu.getBoundingClientRect().height;
+  let top=cardRect.bottom+8;
+  if(top+height>viewportHeight-gap)top=cardRect.top-height-8;
+  if(top<gap){
+    top=gap;
+    menu.style.maxHeight=Math.max(160,viewportHeight-gap*2)+"px";
+    menu.style.overflowY="auto";
+  }
+  menu.style.setProperty("--variants-left",left+"px");
+  menu.style.setProperty("--variants-top",top+"px");
+}
+function positionOpenVariantMenus(){
+  document.querySelectorAll(".card:hover,.card:focus-within,.card.is-open,.card.is-pinned").forEach(positionVariantMenu);
+}
+function restorePinnedPreview(){
+  const key=sessionStorage.getItem(pinnedPreviewKey);
+  if(!key)return;
+  const card=document.querySelector(`.card[data-key="${CSS.escape(key)}"]`);
+  if(!card){
+    sessionStorage.removeItem(pinnedPreviewKey);
+    return;
+  }
+  setVariantPinned(card,true);
+}
 function renderCatalog(){
   cats.innerHTML="";
   if(!Array.isArray(window.CALC_CATALOG)||!window.CALC_CATALOG.length){
@@ -133,6 +235,14 @@ function renderCatalog(){
     card.className="card";
     card.dataset.key=item.key;
     card.innerHTML=`<button class="card-main" type="button"><img src="${item.image}" alt=""><strong>${title}</strong></button>${renderVariants(item,title)}`;
+    card.addEventListener("pointerenter",()=>scheduleVariantOpen(card));
+    card.addEventListener("pointerleave",()=>scheduleVariantClose(card));
+    card.addEventListener("focusin",()=>openVariantMenu(card));
+    const menu=card.querySelector(".variants");
+    if(menu){
+      menu.addEventListener("pointerenter",()=>openVariantMenu(card));
+      menu.addEventListener("pointerleave",()=>scheduleVariantClose(card));
+    }
     card.querySelector(".card-main").addEventListener("click",()=>openModule(item.key));
     card.querySelectorAll(".variant").forEach(button=>button.addEventListener("click",(event)=>{
       event.stopPropagation();
@@ -143,11 +253,7 @@ function renderCatalog(){
     const pin=card.querySelector(".pin-variants");
     if(pin)pin.addEventListener("click",(event)=>{
       event.stopPropagation();
-      const labels=text[lang]||text.ru;
-      const pinned=card.classList.toggle("is-pinned");
-      pin.setAttribute("aria-pressed",String(pinned));
-      pin.title=pinned?labels.unpin:labels.pin;
-      pin.setAttribute("aria-label",pin.title);
+      setVariantPinned(card,!card.classList.contains("is-pinned"));
     });
     grid.appendChild(card);
   });
@@ -155,6 +261,7 @@ function renderCatalog(){
   });
   document.querySelectorAll(".grid").forEach(grid=>resizeObserver.observe(grid));
   updateAtlasColumns();
+  restorePinnedPreview();
 }
 function loadCatalog(){
   const script=document.createElement("script");
@@ -165,7 +272,8 @@ function loadCatalog(){
   document.head.appendChild(script);
 }
 loadCatalog();
-window.addEventListener("resize",updateAtlasColumns);
+window.addEventListener("resize",()=>{updateAtlasColumns();positionOpenVariantMenus();});
+window.addEventListener("scroll",positionOpenVariantMenus,{passive:true});
 document.addEventListener("keydown",(event)=>{
   if(event.key==="Escape"){
     unpinCards();
@@ -175,15 +283,13 @@ document.addEventListener("click",(event)=>{
   if(!event.target.closest(".card"))unpinCards();
 });
 function unpinCards(){
+  clearPendingHover();
   document.querySelectorAll(".card.is-pinned").forEach(card=>{
-    card.classList.remove("is-pinned");
-    const pin=card.querySelector(".pin-variants");
-    if(pin){
-      const labels=text[lang]||text.ru;
-      pin.setAttribute("aria-pressed","false");
-      pin.title=labels.pin;
-      pin.setAttribute("aria-label",labels.pin);
-    }
+    setVariantPinned(card,false);
+  });
+  document.querySelectorAll(".card.is-open").forEach(card=>{
+    cancelVariantClose(card);
+    card.classList.remove("is-open");
   });
 }
 </script>
