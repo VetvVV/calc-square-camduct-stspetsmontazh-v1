@@ -7,33 +7,33 @@ window.CALC_CATALOG=[
         {title:{ru:"Фото",uk:"Фото",en:"Photo"},image:"../../assets/catalog-images/round-duct-v2.png",source:"ST Spetsmontazh"},
         {title:{ru:"Схема",uk:"Схема",en:"Diagram"},image:"../../assets/products/round_duct.svg",source:"Calc Square"}
       ]},
-      {key:"round-elbow",title:{ru:"Отвод круглый",uk:"Відвід круглий",en:"Round elbow"},image:"../../assets/catalog-images/round-elbow-90.png",variants:[
-        {title:{ru:"90°",uk:"90°",en:"90°"},image:"../../assets/catalog-images/round-elbow-90.png",source:"ST Spetsmontazh",params:{Angle:90}},
+      {key:"round-elbow",title:{ru:"Отвод круглый",uk:"Відвід круглий",en:"Round elbow"},image:"../../assets/catalog-images/02-round-elbow-90.png",variants:[
+        {title:{ru:"90°",uk:"90°",en:"90°"},image:"../../assets/catalog-images/02-round-elbow-90.png",source:"ST Spetsmontazh",params:{Angle:90}},
         {title:{ru:"45°",uk:"45°",en:"45°"},image:"../../assets/catalog-images/round-elbow-dalap-45.jpg",source:"Dalap",params:{Angle:45}},
         {title:{ru:"Схема",uk:"Схема",en:"Diagram"},image:"../../assets/products/round_elbow.svg",source:"Calc Square"}
       ]},
-      {key:"round-transition",title:{ru:"Переход круглый",uk:"Перехід круглий",en:"Round transition"},image:"../../assets/catalog-images/round-transition-v4.png",variants:[
-        {title:{ru:"Фото",uk:"Фото",en:"Photo"},image:"../../assets/catalog-images/round-transition-v4.png",source:"ST Spetsmontazh"},
+      {key:"round-transition",title:{ru:"Переход круглый",uk:"Перехід круглий",en:"Round transition"},image:"../../assets/catalog-images/03-round-transition.png",variants:[
+        {title:{ru:"Фото",uk:"Фото",en:"Photo"},image:"../../assets/catalog-images/03-round-transition.png",source:"ST Spetsmontazh"},
         {title:{ru:"Схема",uk:"Схема",en:"Diagram"},image:"../../assets/products/round_transition.svg",source:"Calc Square"}
       ]},
-      {key:"round-offset-transition",title:{ru:"Переход круглый со смещением",uk:"Перехід круглий зі зміщенням",en:"Offset round transition"},image:"../../assets/catalog-images/round-offset-transition-v8.png",variants:[
-        {title:{ru:"Фото",uk:"Фото",en:"Photo"},image:"../../assets/catalog-images/round-offset-transition-v8.png",source:"ST Spetsmontazh"},
+      {key:"round-offset-transition",title:{ru:"Переход круглый со смещением",uk:"Перехід круглий зі зміщенням",en:"Offset round transition"},image:"../../assets/catalog-images/04-round-offset-transition.png",variants:[
+        {title:{ru:"Фото",uk:"Фото",en:"Photo"},image:"../../assets/catalog-images/04-round-offset-transition.png",source:"ST Spetsmontazh"},
         {title:{ru:"Схема",uk:"Схема",en:"Diagram"},image:"../../assets/products/round_offset.svg",source:"Calc Square"}
       ]},
-      {key:"round-tee",title:{ru:"Тройник круглый",uk:"Трійник круглий",en:"Round tee"},image:"../../assets/catalog-images/round-tee-dalap.jpg",variants:[
+      {key:"round-tee",title:{ru:"Тройник круглый",uk:"Трійник круглий",en:"Round tee"},image:"../../assets/catalog-images/05-round-tee.png",variants:[
         {title:{ru:"Схема",uk:"Схема",en:"Diagram"},image:"../../assets/products/round_tee.svg",source:"Calc Square"}
       ]},
-      {key:"round-tee-custom",title:{ru:"Тройник нестандартный круглый",uk:"Трійник нестандартний круглий",en:"Custom round tee"},image:"../../modules/common/stub-preview.svg"},
-      {key:"round-cap",title:{ru:"Заглушка круглая",uk:"Заглушка кругла",en:"Round cap"},image:"../../assets/catalog-images/round-cap-dalap.jpg",variants:[
+      {key:"round-tee-custom",title:{ru:"Тройник нестандартный круглый",uk:"Трійник нестандартний круглий",en:"Custom round tee"},image:"../../assets/catalog-images/06-round-tee-custom.png"},
+      {key:"round-cap",title:{ru:"Заглушка круглая",uk:"Заглушка кругла",en:"Round cap"},image:"../../assets/catalog-images/round-cap.png",variants:[
         {title:{ru:"Схема",uk:"Схема",en:"Diagram"},image:"../../modules/round/cap/preview.svg",source:"Calc Square"}
       ]},
-      {key:"round-inset",title:{ru:"Врезка круглая",uk:"Врізка кругла",en:"Round inset"},image:"../../modules/common/stub-preview.svg"},
-      {key:"round-saddle",title:{ru:"Седло",uk:"Сідло",en:"Saddle"},image:"../../assets/catalog-images/round-saddle-dalap.jpg",variants:[
+      {key:"round-inset",title:{ru:"Врезка круглая",uk:"Врізка кругла",en:"Round inset"},image:"../../assets/catalog-images/08-round-inset.png"},
+      {key:"round-saddle",title:{ru:"Седло",uk:"Сідло",en:"Saddle"},image:"../../assets/catalog-images/09-round-saddle.png",variants:[
         {title:{ru:"Схема",uk:"Схема",en:"Diagram"},image:"../../modules/round/saddle/preview.svg",source:"Calc Square"}
       ]},
-      {key:"round-nipple",title:{ru:"Ниппель круглый",uk:"Ніпель круглий",en:"Round nipple"},image:"../../modules/round/nipple/preview.svg"},
-      {key:"round-silencer",title:{ru:"Шумоглушитель круглый",uk:"Шумоглушник круглий",en:"Round silencer"},image:"../../modules/round/silencer/preview.svg"},
-      {key:"round-umbrella",title:{ru:"Зонт круглый",uk:"Зонт круглий",en:"Round umbrella"},image:"../../modules/round/umbrella/preview.svg"},
+      {key:"round-nipple",title:{ru:"Ниппель круглый",uk:"Ніпель круглий",en:"Round nipple"},image:"../../assets/catalog-images/10-round-nipple.png"},
+      {key:"round-silencer",title:{ru:"Шумоглушитель круглый",uk:"Шумоглушник круглий",en:"Round silencer"},image:"../../assets/catalog-images/11-round-silencer.png"},
+      {key:"round-umbrella",title:{ru:"Зонт круглый",uk:"Зонт круглий",en:"Round umbrella"},image:"../../assets/catalog-images/round-umbrella.png"},
       {key:"round-damper",title:{ru:"Дроссель круглый",uk:"Дросель круглий",en:"Round damper"},image:"../../modules/round/damper/preview.svg"},
       {key:"round-flange",title:{ru:"Фланец круглый",uk:"Фланець круглий",en:"Round flange"},image:"../../modules/round/flange/preview.svg"},
       {key:"round-cross",title:{ru:"Крестовина круглая",uk:"Хрестовина кругла",en:"Round cross"},image:"../../modules/round/cross/preview.svg"},
